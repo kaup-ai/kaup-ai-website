@@ -512,56 +512,79 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 /* 紧跟 hero：hero 底 padding 已给出 40–64px，本节顶 padding 收成 40px
    （默认 --section-y 96px 会让 hero 与首节的间距读起来「断层」） */
 .chain-section { padding-top: var(--space-10); }
-.chain-section .sec-head { margin-bottom: 0; }
-.chain-section .split { align-items: center; }
 
-/* ---------- ledger (hero diagram) ---------- */
-.ledger {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  box-shadow: var(--elev-3);
-  overflow: hidden;
+/* ---------- 链路步骤条（整宽横向五步） ---------- */
+/* 2026-09-11 改版：原为「左 sec-head + 右 ledger 面板」的双列 split，
+   左列实测 188px 对右列 521px，垂直居中后上下大片空白、高度失衡。
+   改为整宽横向步骤条：五张等高卡片以箭头串联，贴合「链路推进」的心智；
+   ≤900px 退化为竖向五步列表，箭头转向下。 */
+.chain-track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-6);
 }
 
-.ledger-head {
+.step-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+/* 卡片间隙中的串联箭头：绝对定位铺满 24px gap，水平/垂直居中 */
+.step-card:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * var(--space-6));
+  width: var(--space-6);
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--muted-2);
+}
+
+.step-card .step-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
-  padding: var(--space-4) var(--space-5);
-  border-bottom: 1px solid var(--border);
-  background: var(--surface-2);
-  font-size: var(--text-xs);
-  letter-spacing: var(--tracking-caps);
-  text-transform: uppercase;
-  color: var(--muted);
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
-.ledger-body { padding: var(--space-2) var(--space-5) var(--space-5); }
-
-.chain { position: relative; }
-
-.chain li {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4) 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.chain li:last-child { border-bottom: 0; }
-
-.chain .idx {
+.step-card .idx {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--muted-2);
 }
 
-.chain .name { display: block; font-size: var(--text-base); font-weight: 500; }
+.step-card .name { font-size: var(--text-base); font-weight: 600; }
 
-.chain .desc { display: block; font-size: var(--text-xs); color: var(--muted); margin-top: 3px; }
+.step-card .desc { font-size: var(--text-xs); color: var(--muted); }
+
+.chain-note {
+  margin-top: var(--space-6);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .chain-track { grid-template-columns: minmax(0, 1fr); }
+  .step-card:not(:last-child)::after {
+    content: "↓";
+    top: auto;
+    bottom: calc(-1 * var(--space-6));
+    right: 50%;
+    width: auto;
+    height: var(--space-6);
+    line-height: var(--space-6);
+    transform: translateX(50%);
+  }
+}
 
 .tag {
   display: inline-flex;
@@ -580,14 +603,6 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .tag-agent { background: var(--brand-soft); border-color: transparent; color: var(--brand); }
 .tag-hitl { background: var(--accent-soft); border-color: transparent; color: #92400E; }
 [data-theme="dark"] .tag-hitl { color: #F2B260; }
-
-.ledger-foot {
-  padding: var(--space-4) var(--space-5);
-  border-top: 1px solid var(--border);
-  background: var(--surface-2);
-  font-size: var(--text-xs);
-  color: var(--muted);
-}
 
 /* ---------- facts ---------- */
 .facts {
