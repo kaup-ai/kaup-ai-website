@@ -952,7 +952,10 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
 
 .footer-col h4 {
   font-family: var(--font-en);
-  font-size: var(--text-xs);
+  /* 栏目标题必须比下面的条目大一档：条目统一 --text-sm（13px），
+     标题取 --text-base（15px）。设计系统里页脚 h4 是 12px 的说明性小标签，
+     但此处标题字号小于正文，层级会被读成反的（原稿即如此）。 */
+  font-size: var(--text-base);
   font-weight: 600;
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
