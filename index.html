@@ -198,6 +198,9 @@
             <g transform="translate(68 19.37)">
               <g transform="rotate(-15 50 50)">
                 <path class="hero-logo-mark" d="M 15 15 C 25 20, 55 35, 80 50 C 55 65, 25 80, 15 85 L 40 85 C 50 78, 75 65, 85 50 C 75 35, 50 22, 40 15 Z"/>
+                <!-- 光晕在核心点下层：同一条 4.2s 呼吸曲线，峰值时晕开、波谷时归零，
+                     让「呼吸」在手机上（核心点渲染仅约 9px 宽）也读得出来 -->
+                <circle class="kaup-dot-glow" cx="76" cy="50" r="11" fill="#E89B3C"/>
                 <circle class="kaup-dot" cx="76" cy="50" r="5" fill="#E89B3C"/>
               </g>
             </g>
@@ -467,7 +470,7 @@
   <section class="wrap" style="padding-bottom:var(--space-16)">
     <div class="cta-band reveal">
       <div>
-        <h2 class="h2">先聊聊你现在的获客链路</h2>
+        <h2 class="h2">先聊聊<br class="claim-br">你现在的获客链路</h2>
         <p>一次需求沟通，足以判断哪些环节值得先交给 Agent，以及用哪种部署方式更合适。</p>
       </div>
       <div class="cta-actions">
