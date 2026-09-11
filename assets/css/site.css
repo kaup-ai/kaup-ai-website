@@ -866,26 +866,37 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .step:first-child::before { background: var(--brand); }
 
 .step .n { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--muted-2); }
-.step h3 { font-size: var(--text-base); margin: var(--space-3) 0 var(--space-2); }
+.step h3 { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-base); margin: var(--space-3) 0 var(--space-2); }
+.step h3 svg { width: 17px; height: 17px; flex: none; color: var(--brand); }
 .step p { font-size: var(--text-sm); color: var(--muted); }
 
 @media (max-width: 900px) {
-  /* 横向时间轴（顶边一条线 + 每列顶上一个圆点）在窄屏降级成多行/单行后，
-     圆点会落到上一项的正文旁边，看起来像是「上一项描述前的点」。
-     窄屏改成：圆点直接内联在该项自己的「01」前面，
-     点与文字同一行，归属明确。 */
-  .steps-track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-6); border-top: 0; }
+  /* 窄屏改竖向时间线（与获客链路同一语言）：左侧 2px 轨道 + 描边圆点节点，
+     序号保留在文字区，与桌面版「线 + 圆点 + 序号」的构成一致。
+     原「2 列网格 + 圆点内联在序号前」归属感弱、观感单调。 */
+  .steps-track { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); border-top: 0; padding-left: 40px; }
+  .step { padding: 0; }
   .step::before {
-    position: static;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: var(--space-3);
+    position: absolute;
+    left: -33px;
+    top: 3px;
+    width: 9px;
+    height: 9px;
+    margin: 0;
+    background: var(--bg);
+    border: 2px solid var(--border-2);
   }
-}
-
-@media (max-width: 560px) {
-  .steps-track { grid-template-columns: minmax(0, 1fr); }
-  .step { padding-right: 0; }
+  .step:first-child::before { background: var(--brand); border-color: var(--brand); }
+  /* 轨道段：本节点圆心 → 下一节点圆心（两端都被圆点遮住） */
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: -27px;
+    top: 10px;
+    bottom: calc(-1 * var(--space-6) - 10px);
+    width: 2px;
+    background: var(--border);
+  }
 }
 
 /* ---------- table ---------- */
