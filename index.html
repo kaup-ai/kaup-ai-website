@@ -133,8 +133,8 @@
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand-logo" href="index.html" aria-label="智御无疆 Kaup — 首页">
-      <img class="logo-light" src="assets/logo/logo-horizontal.svg" alt="智御无疆 Kaup" height="30">
-      <img class="logo-dark" src="assets/logo/logo-horizontal-dark.svg" alt="" aria-hidden="true" height="30">
+      <img class="logo-light" src="assets/logo/logo-horizontal.svg" alt="智御无疆 Kaup" height="40">
+      <img class="logo-dark" src="assets/logo/logo-horizontal-dark.svg" alt="" aria-hidden="true" height="40">
     </a>
     <nav class="nav" id="site-nav" aria-label="主导航">
       <a href="index.html" aria-current="page">首页</a>
@@ -166,9 +166,11 @@
       <div class="hero-stage">
         <h1 class="hero-logo">
         <!-- hero 主视觉 · 横向 lockup，字形、字距、颜色 1:1 沿用 assets/logo/logo-horizontal-centered.svg。
-             构图按「两个互不迁就的居中单元」定稿（2026-09-11）：
+             构图（2026-09-11 改定）：
                · 单元一 = mark + 「智御无疆」 —— 两个元素绑成一个整体，整体以页面中线居中；
-               · 单元二 = 「Kaup」 —— 从词标里打散出来，单独以页面中线居中，不再与「智御无疆」同轴。
+               · 单元二 = 「Kaup」 —— 从属于「智御无疆」，对 CN 词标的墨迹中轴居中，
+                 不再对页面中线居中（此前曾定稿为单独对页面中线居中，实际观感是
+                 「Kaup」相对「智御无疆」明显左偏、像是挂错了位置，遂改）。
              在该资产基础上做四处「光学对齐」修正，然后收紧 viewBox：
                1) mark 上移 10.63 —— 原资产里 mark 墨迹中心在 y=85.63，比文字块（CN+EN）墨迹中心 y=75 低 10.63，
                   视觉上「左边图形往下坠」；上移后 mark 与文字块上下沿齐平，中心同高。
@@ -178,10 +180,9 @@
                3) 词标整体左移 20.07 —— 居中变体（translate(68 30)）相对左对齐变体多塞了 20 的间距
                   （左对齐变体 mark 右缘→词标 = 16.5，居中变体是 36.75），收回设计文档 §4.2 硬规则 2
                   规定的 mark↔词标 ≈ 21，mark 与「智御无疆」重新咬合成一个整体（= 单元一）。
-               4) EN 单独居中：anchor:start + x = 207.19 —— 「Kaup」的墨迹中轴落在 231.03，
-                  正好等于 viewBox 中轴 = 页面中线，也等于单元一的中轴（231.0），
-                  即「Kaup」既居中于页面、又居中于「mark + 智御无疆」这个整体，
-                  但两行不再互相牵制：EN 墨迹完全落在 CN 墨迹跨度内，后续调 CN 字号/字距不必连带动 EN。
+               4) EN 居中于 CN：anchor:start + x = 258.09 —— 「Kaup」的墨迹中轴落在 284.25
+                  = 「智御无疆」的墨迹中轴（getBBox 实测，Chromium / WebKit 像素级一致），
+                  即「Kaup」左右居中于「智御无疆」；EN 墨迹仍完全落在 CN 墨迹跨度内。
              5) viewBox 相对「mark + 智御无疆」整块墨迹的中轴（x = 231.03）左右对称。
                 实测整块墨迹 x 75.11 → 386.71（宽 311.60，Chromium / WebKit 像素级一致），中轴 231.0。
                 viewBox 宽取 407.5（= 2 × 203.75），保证 lockup 渲染尺寸与之前完全相同，
@@ -191,8 +192,8 @@
         <svg viewBox="27.28 38 407.5 73.75" role="img" aria-label="智御无疆 Kaup">
           <!-- 6) 整块 lockup 等比缩到 87%（「智御无疆」等效 48 → 42，比原始小一档半）。
                 缩放中心取整块墨迹中心 (231.03, 74.77) —— 缩放后
-                「mark + 智御无疆」的中轴、以及打散出来的「Kaup」的中轴，
-                依然都落在 viewBox 中轴（= 页面中线）上，居中关系原样保留；
+                「mark + 智御无疆」的中轴依然落在 viewBox 中轴（= 页面中线）上，
+                「Kaup」对「智御无疆」的居中关系随等比缩放原样保留；
                 mark↔词标 ≈ 21、CN↔EN 的行距随比例一起收，构图不散。 -->
           <g transform="translate(231.03 74.77) scale(0.87) translate(-231.03 -74.77)">
             <g transform="translate(68 19.37)">
@@ -210,7 +211,7 @@
                 会横向差半个字距。改成 anchor:start 后，尾随字距对渲染不再有任何影响，
                 两个内核的墨迹落点逐像素一致（x = 前进宽度起点）。 -->
             <text class="hero-logo-cn" x="170.97" y="78">智御无疆</text>
-            <text class="hero-logo-en" x="207.19" y="110">Kaup</text>
+            <text class="hero-logo-en" x="258.09" y="110">Kaup</text>
           </g>
         </svg>
         </h1>
@@ -486,8 +487,8 @@
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <img class="logo-light" src="assets/logo/logo-horizontal.svg" alt="智御无疆 Kaup" height="30">
-        <img class="logo-dark" src="assets/logo/logo-horizontal-dark.svg" alt="" aria-hidden="true" height="30">
+        <img class="logo-light" src="assets/logo/logo-horizontal.svg" alt="智御无疆 Kaup" height="36">
+        <img class="logo-dark" src="assets/logo/logo-horizontal-dark.svg" alt="" aria-hidden="true" height="36">
         <p class="footer-claim">以 AI 助力企业超越能力和效率的边界，重新定义无限可能。</p>
         <p>赋能企业的 AI 全链路编排与智能调度平台。立足大连，服务全国外贸企业。</p>
       </div>

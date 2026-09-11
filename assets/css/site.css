@@ -5,7 +5,7 @@
    ============================================================ */
 
 :root {
-  /* .site-header 的实测高度 —— hero 满屏高度扣掉它 */
+  /* .site-header 的实测高度 —— hero 从视口高度里扣掉它 */
   --header-h: 69px;
 }
 
@@ -254,7 +254,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 }
 
 .brand-logo { display: inline-flex; align-items: center; flex: none; }
-.brand-logo img { display: block; height: 30px; width: auto; }
+.brand-logo img { display: block; height: 40px; width: auto; }
 .brand-logo:hover { opacity: 0.82; }
 
 .brand-logo .logo-dark { display: none; }
@@ -347,9 +347,11 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   place-items: center;
   /* 顶栏透明，主视觉从视口顶端铺起 —— 负外边距把它垫到顶栏下面 */
   margin-top: calc(-1 * var(--header-h));
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: calc(var(--header-h) + clamp(32px, 5vh, 72px)) 0 clamp(28px, 4.5vh, 64px);
+  /* 高度由内容决定，不用 svh 撑屏：满屏（100svh）会在内容上下各留约 200px
+     空当，86svh 收紧后用户实测仍「离顶栏和下一节都太远」。
+     改为内容驱动 + 固定舒适 padding —— 间距与视口高度无关，
+     顶栏→内容 ≈ 32–56px，内容→下一节 ≈ 40–64px + 下一节自身 padding。 */
+  padding: calc(var(--header-h) + clamp(32px, 5vh, 56px)) 0 clamp(40px, 6vh, 64px);
   /* 设计文档 §Hero：浅色 hero 用 --bg（冰川白）铺底 —— 不加渐变、不加暖色。
      mark 的墨色见下方 .hero-logo svg。 */
   background: var(--bg);
@@ -368,7 +370,8 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
    viewBox 关于「mark + 智御无疆」整块墨迹的中轴左右对称（中轴 = 墨迹中轴 231.03），
    两者视为一个整体 —— 容器居中 == 单元一在页面里居中，而不是词标单独居中；
    左右留白对称（各 48.2 单位），lockup 渲染尺寸不受影响。
-   （「Kaup」已从词标里打散，在 SVG 内部单独以同一条中轴 231.03 居中，见 index.html hero 注释 4/5）
+   （「Kaup」从属于「智御无疆」：在 SVG 内部对 CN 词标的墨迹中轴居中，
+   不再占用页面中线，见 index.html hero 注释 4/5）
    （设计文档 §4.2 硬规则 1：横向 lockup 不加容器方块） */
 .hero-stage {
   display: flex;
@@ -414,8 +417,9 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   font-size: 13px;
   font-weight: 500;
   fill: var(--muted);
-  /* 打散后的独立居中单元：x = 207.19 让「Kaup」的墨迹中轴落在 viewBox 中轴 231.03
-     （= 页面中线 = 单元一「mark + 智御无疆」的中轴），与 CN 的 x 不再联动 */
+  /* 从属于 CN 词标的居中：x = 258.09 让「Kaup」的墨迹中轴落在 284.25
+     （= 「智御无疆」的墨迹中轴，Chromium / WebKit getBBox 实测一致），
+     即「Kaup」左右居中于「智御无疆」，而不是居中于页面（2026-09-11 改定） */
   text-anchor: start;
   letter-spacing: 0.4em;
 }
@@ -487,6 +491,9 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 
 
 /* ---------- 获客链路 section ---------- */
+/* 紧跟 hero：hero 底 padding 已给出 40–64px，本节顶 padding 收成 40px
+   （默认 --section-y 96px 会让 hero 与首节的间距读起来「断层」） */
+.chain-section { padding-top: var(--space-10); }
 .chain-section .sec-head { margin-bottom: 0; }
 .chain-section .split { align-items: center; }
 
@@ -957,7 +964,7 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
 
 .footer-top { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
 
-.footer-brand img { display: block; height: 30px; width: auto; margin-bottom: var(--space-5); }
+.footer-brand img { display: block; height: 36px; width: auto; margin-bottom: var(--space-5); }
 .footer-brand .logo-dark { display: none; }
 [data-theme="dark"] .footer-brand .logo-light { display: none; }
 [data-theme="dark"] .footer-brand .logo-dark { display: block; }
