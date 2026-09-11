@@ -377,14 +377,16 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(100%, 152vh, 1200px);
+  /* 600px 上限（原 1200px 实测在桌面端过大、喧宾夺主；720px 用户仍嫌大）；
+     88% 给移动端留两侧喘息；76vh 负责在矮窗口里回收高度（高 = 宽 / 5.53） */
+  width: min(88%, 76vh, 600px);
 }
 
 /* 内联横向 lockup —— 与 assets/logo/logo-horizontal-centered.svg 同源 */
 .hero-logo { margin: 0; width: 100%; }
 
 /* 横向 lockup 的宽高比 ≈ 5.53 : 1（407.5 × 73.75 的中轴对称 viewBox），
-   尺寸约束主要落在宽度上；152vh 那一项负责在矮窗口里回收高度（高 = 宽 / 5.53）。
+   尺寸约束主要落在宽度上；76vh 那一项负责在矮窗口里回收高度（高 = 宽 / 5.53）。
    （设计文档 §4.2 硬规则 1：横向 lockup 不带冰川白容器方块） */
 /* lockup 墨色 1:1 对齐官方资产：
    浅色底取 logo-horizontal-centered.svg 的 #0E2A47（= --brand）+ #5B6B7E（= --muted），
@@ -449,6 +451,22 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   0%, 100% { opacity: 0.55; }
   50% { opacity: 0; }
 }
+
+/* hero 产品截图：浅色/深色两张，随 data-theme 显隐切换
+   （与顶栏/页脚 logo 同一套机制：默认显 light，dark 主题显 dark） */
+.hero-shot {
+  width: min(100%, 1080px);
+  margin: clamp(28px, 4vh, 44px) auto 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--elev-3);
+}
+
+.hero-shot img { display: block; width: 100%; height: auto; }
+.hero-shot .shot-dark { display: none; }
+[data-theme="dark"] .hero-shot .shot-light { display: none; }
+[data-theme="dark"] .hero-shot .shot-dark { display: block; }
 
 .hero-claim {
   color: var(--fg);

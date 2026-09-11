@@ -219,6 +219,20 @@
 
       <p class="hero-claim">以 AI 助力企业超越能力和效率的边界，<br class="claim-br">重新定义无限可能</p>
 
+      <!-- 产品实拍：浅色/深色两张，随主题切换（与顶栏 logo 同一套显隐机制）。
+           srcset 三档宽度（1280/1920/2560）——避免浏览器把 2560 原图一次性
+           缩到渲染宽度导致 UI 小字发虚；width/height 写死固有尺寸防 CLS。 -->
+      <div class="hero-shot">
+        <img class="shot-light" src="kaup-desktop-light.png"
+             srcset="kaup-desktop-light-1280.png 1280w, kaup-desktop-light-1920.png 1920w, kaup-desktop-light.png 2560w"
+             sizes="(max-width: 1160px) calc(100vw - 40px), 1080px"
+             alt="智御无疆桌面端：线索工作台界面" width="2560" height="1600" decoding="async">
+        <img class="shot-dark" src="kaup-desktop-dark.png"
+             srcset="kaup-desktop-dark-1280.png 1280w, kaup-desktop-dark-1920.png 1920w, kaup-desktop-dark.png 2560w"
+             sizes="(max-width: 1160px) calc(100vw - 40px), 1080px"
+             alt="" aria-hidden="true" width="2560" height="1600" decoding="async" loading="lazy">
+      </div>
+
       <div class="hero-actions">
         <a class="btn btn-primary btn-lg" href="contact.html">预约方案沟通</a>
         <a class="btn btn-secondary btn-lg" href="capabilities.html">查看能力图谱</a>
