@@ -573,17 +573,54 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 }
 
 @media (max-width: 900px) {
-  .chain-track { grid-template-columns: minmax(0, 1fr); }
-  .step-card:not(:last-child)::after {
-    content: "↓";
-    top: auto;
-    bottom: calc(-1 * var(--space-6));
-    right: 50%;
-    width: auto;
-    height: var(--space-6);
-    line-height: var(--space-6);
-    transform: translateX(50%);
+  /* 窄屏改时间线：左侧竖轨道 + 序号节点圆点把五步串成「链路」，
+     去掉卡片盒子与浮动箭头（一摞白卡 + ↓ 观感廉价）；
+     名称与标签同行、描述整行，人工确认节点琥珀描边呼应 tag。 */
+  .chain-track {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 44px;
   }
+  .step-card {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--space-2);
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+  .step-card .step-top { display: contents; }
+  .step-card .idx {
+    position: absolute;
+    left: -44px;
+    top: -2px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-card .name { order: 1; }
+  .step-card .tag { order: 2; }
+  .step-card .desc { order: 3; flex-basis: 100%; margin-top: var(--space-1); }
+  /* 轨道段：从本节点圆心（top:12px）连到下一张卡片的节点圆心 */
+  .step-card:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: -31px;
+    top: 12px;
+    bottom: calc(-1 * var(--space-6) - 12px);
+    width: 2px;
+    background: var(--border);
+  }
+  .step-card:not(:last-child)::after { content: none; }
+  /* 人工确认节点：琥珀描边 + 琥珀序号，呼应 tag-hitl（全屏琥珀仍 ≤2 处） */
+  .step-card:has(.tag-hitl) .idx { border-color: var(--accent); color: #92400E; }
+  [data-theme="dark"] .step-card:has(.tag-hitl) .idx { color: #F2B260; }
 }
 
 .tag {
