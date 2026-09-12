@@ -5,6 +5,8 @@
    环境变量（Vercel 项目 Settings → Environment Variables，仅服务端可见）：
    - FEISHU_WEBHOOK_URL  飞书「官网线索」群自定义机器人 webhook 地址
    - FEISHU_BOT_SECRET   机器人安全设置「签名校验」的密钥
+   - FEISHU_APP_ID / FEISHU_APP_SECRET  自建应用凭证（写多维表格用）
+   - FEISHU_BASE_APP_TOKEN / FEISHU_BASE_TABLE_ID  「官网线索」多维表格定位
 
    防 spam：honeypot 字段 + 服务端格式校验 + 进程内滑动窗口限流。
    限流说明：serverless 实例在温热期内复用进程，窗口随之保留；
@@ -109,6 +111,58 @@ function json(res, status, payload) {
   res.end(JSON.stringify(payload));
 }
 
+/* ---------- 多维表格写入 ----------
+   群卡片管「及时通知」，Base 管「留存与跟进」。
+   未配置应用凭证时静默跳过（保证表单主链路永远可用）。 */
+
+/* tenant_access_token 有效期 2 小时，进程内缓存（提前 5 分钟续约） */
+let tokenCache = { token: null, expireAt: 0 };
+
+async function getTenantAccessToken(appId, appSecret) {
+  const now = Date.now();
+  if (tokenCache.token && now < tokenCache.expireAt) return tokenCache.token;
+  const resp = await fetch("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ app_id: appId, app_secret: appSecret }),
+  });
+  const result = await resp.json().catch(() => ({}));
+  if (!resp.ok || result.code !== 0) {
+    throw new Error(`tenant_access_token failed: ${resp.status} ${JSON.stringify(result)}`);
+  }
+  tokenCache = { token: result.tenant_access_token, expireAt: now + (result.expire - 300) * 1000 };
+  return tokenCache.token;
+}
+
+async function createBaseRecord(lead) {
+  const { FEISHU_APP_ID, FEISHU_APP_SECRET, FEISHU_BASE_APP_TOKEN, FEISHU_BASE_TABLE_ID } = process.env;
+  if (!FEISHU_APP_ID || !FEISHU_APP_SECRET || !FEISHU_BASE_APP_TOKEN || !FEISHU_BASE_TABLE_ID) {
+    return { skipped: true };
+  }
+  const token = await getTenantAccessToken(FEISHU_APP_ID, FEISHU_APP_SECRET);
+  const resp = await fetch(
+    `https://open.feishu.cn/open-apis/bitable/v1/apps/${FEISHU_BASE_APP_TOKEN}/tables/${FEISHU_BASE_TABLE_ID}/records`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        fields: {
+          公司名称: lead.company,
+          联系人: lead.name,
+          联系电话: lead.phone,
+          提交时间: Date.now(), // Base 日期字段收 Unix 毫秒时间戳
+          跟进状态: "待跟进",
+        },
+      }),
+    }
+  );
+  const result = await resp.json().catch(() => ({}));
+  if (!resp.ok || result.code !== 0) {
+    throw new Error(`base record create failed: ${resp.status} ${JSON.stringify(result)}`);
+  }
+  return { skipped: false, recordId: result.data && result.data.record && result.data.record.record_id };
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -165,7 +219,16 @@ module.exports = async function handler(req, res) {
       console.error("contact: feishu webhook failed", resp.status, result);
       return json(res, 502, { ok: false, error: "提交失败，请稍后重试或直接发邮件至 sales@kaup.ai" });
     }
-    return json(res, 200, { ok: true });
+
+    /* 群卡片已送达（主链路成立）→ 再写多维表格留存。
+       Base 写失败只记日志、不影响用户侧成功反馈，避免用户重试造成群里重复 @all */
+    let base = { skipped: true };
+    try {
+      base = await createBaseRecord(lead);
+    } catch (err) {
+      console.error("contact: base record write failed (lead already in group)", err);
+    }
+    return json(res, 200, { ok: true, base: !base.skipped });
   } catch (err) {
     console.error("contact: feishu webhook error", err);
     return json(res, 502, { ok: false, error: "提交失败，请稍后重试或直接发邮件至 sales@kaup.ai" });
