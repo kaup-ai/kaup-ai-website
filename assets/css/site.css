@@ -367,9 +367,8 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .hero-eyebrow { margin-bottom: clamp(22px, 3.4vh, 44px); }
 
 /* 主视觉容器：宽度就是 lockup viewBox 框的宽度。
-   viewBox 关于「mark + 智御无疆」整块墨迹的中轴左右对称（中轴 = 墨迹中轴 231.03），
-   两者视为一个整体 —— 容器居中 == 单元一在页面里居中，而不是词标单独居中；
-   左右留白对称（各 48.2 单位），lockup 渲染尺寸不受影响。
+   viewBox 中轴 = 整块 lockup（mark + 智御无疆 + Kaup）墨迹中轴 235.64（viewBox x = 31.89），
+   容器居中 == 整体墨迹在页面里居中，而不是词标单独居中。
    （「Kaup」从属于「智御无疆」：在 SVG 内部对 CN 词标的墨迹中轴居中，
    不再占用页面中线，见 index.html hero 注释 4/5）
    （设计文档 §4.2 硬规则 1：横向 lockup 不加容器方块） */
