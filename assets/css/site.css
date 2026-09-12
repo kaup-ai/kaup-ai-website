@@ -375,7 +375,15 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   align-items: center;
 }
 
-.hero-eyebrow { margin-bottom: clamp(22px, 3.4vh, 44px); }
+/* hero 顶部标语：沿用 eyebrow 的字级/字距/颜色，但不带琥珀圆点（2026-09-12 改为品牌主张文案），
+   也不 uppercase —— 「Kaup Your Trade」保持原大小写 */
+.hero-eyebrow {
+  margin-bottom: clamp(22px, 3.4vh, 44px);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caps);
+  color: var(--muted);
+}
 
 /* 主视觉容器：宽度就是 lockup viewBox 框的宽度。
    viewBox 中轴 = 整块 lockup（mark + 智御无疆 + Kaup）墨迹中轴 235.64（viewBox x = 31.89），
