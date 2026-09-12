@@ -89,10 +89,14 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .rule { border-top: 1px solid var(--border); }
 
 /* ---------- typography helpers ---------- */
+/* 全站统一的栏目标签：琥珀小圆点 + 大写小字。
+   2026-09-12 起 section 标题（获客链路/现实/形态/能力图谱…）统一用 eyebrow，
+   margin-bottom 沿用原 kicker 的 space-4，保证标签与标题间距不变。 */
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  margin-bottom: var(--space-4);
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-caps);
@@ -100,6 +104,11 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   color: var(--muted);
 }
 
+/* 页头 h1 自带 space-5 上外边距，eyebrow 不再叠加下间距，否则页头标签与标题会被撑开 */
+.page-head .eyebrow { margin-bottom: 0; }
+
+/* 琥珀预算提醒：eyebrow 圆点已占每屏 1 处琥珀（hero 屏另有呼吸点，链路屏另有 HITL 标签），
+   新增琥珀元素前先数屏内已有几处（硬约束：≤2 处/屏） */
 .eyebrow::before {
   content: "";
   width: 6px;
@@ -109,6 +118,8 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   flex: none;
 }
 
+/* 卡片内字段小标签（about 定位卡的 企业定位/品牌主张/Slogan）——
+   不带琥珀圆点的 eyebrow 变体；section 标题请用 .eyebrow */
 .kicker {
   display: inline-block;
   font-size: var(--text-xs);
