@@ -375,10 +375,10 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   align-items: center;
 }
 
-/* hero 顶部标语：沿用 eyebrow 的字级/字距/颜色，但不带琥珀圆点（2026-09-12 改为品牌主张文案），
-   也不 uppercase —— 「Kaup Your Trade」保持原大小写 */
+/* hero 品牌主张：位于 lockup（mark + 智御无疆 + Kaup）正下方（2026-09-12 从 lockup 上方移下），
+   沿用 eyebrow 的字级/字距/颜色，但不带琥珀圆点、不 uppercase —— 「Kaup Your Trade」保持原大小写 */
 .hero-eyebrow {
-  margin-bottom: clamp(22px, 3.4vh, 44px);
+  margin: clamp(20px, 3vh, 32px) 0 0;
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-caps);
