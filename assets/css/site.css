@@ -377,9 +377,9 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* 600px 上限（原 1200px 实测在桌面端过大、喧宾夺主；720px 用户仍嫌大）；
+  /* 500px 上限（原 1200px 实测在桌面端过大、喧宾夺主；720px、600px 用户仍嫌大）；
      88% 给移动端留两侧喘息；76vh 负责在矮窗口里回收高度（高 = 宽 / 5.53） */
-  width: min(88%, 76vh, 600px);
+  width: min(88%, 76vh, 500px);
 }
 
 /* 内联横向 lockup —— 与 assets/logo/logo-horizontal-centered.svg 同源 */
