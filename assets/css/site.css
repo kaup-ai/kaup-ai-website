@@ -1052,6 +1052,52 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
 .contact-list .v { font-size: var(--text-base); }
 .contact-list .v a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
+/* ---------- contact form（contact.html 在线提交） ---------- */
+.contact-form { display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-8); }
+
+.contact-form .field label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="tel"] {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+
+.contact-form input::placeholder { color: var(--muted-2); }
+
+.contact-form input:focus-visible { border-color: var(--brand); }
+
+.field-hint { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--muted); }
+
+/* 校验失败：输入框描边变 danger 色 + 下方错误文案（由 site.js 增删 .has-error 与文案） */
+.field.has-error input { border-color: var(--danger); }
+.field-error { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--danger); }
+
+/* honeypot：移出视口而不是 display:none —— 部分爬虫会跳过不可见字段，off-screen 更能骗它填 */
+.hp { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.form-note { font-size: var(--text-xs); color: var(--muted); }
+
+/* 提交状态行：空时不占位；成功/失败用软底色 pill，不用琥珀（不占每屏琥珀预算） */
+.form-status { display: none; margin: 0; padding: var(--space-3) var(--space-4); border-radius: var(--radius); font-size: var(--text-sm); }
+.form-status[data-state="ok"] { display: block; background: var(--success-soft); color: var(--success); }
+.form-status[data-state="error"] { display: block; background: var(--danger-soft); color: var(--danger); }
+
+/* 提交中按钮禁用态 */
+.contact-form [data-submit]:disabled { opacity: 0.6; cursor: default; }
+
 /* ---------- cta band ---------- */
 .cta-band {
   background: var(--brand);

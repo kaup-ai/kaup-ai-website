@@ -17,3 +17,8 @@ Thumbs.db
 
 # Serena
 .serena/
+
+# Env（Vercel serverless function 本地联调用；密钥绝不入库）
+.env
+.env.*
+!.env.example

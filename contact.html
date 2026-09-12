@@ -10,7 +10,7 @@
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
 <title>联系我们 — 智御无疆 Kaup</title>
-<meta name="description" content="以 AI 助力企业超越能力和效率的边界，重新定义无限可能。联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。商务联系：183 4086 1898、sales@kaup.ai。扫码关注公众号或添加联系人微信。">
+<meta name="description" content="以 AI 助力企业超越能力和效率的边界，重新定义无限可能。联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 sales@kaup.ai、扫码关注公众号或添加联系人微信。">
 <meta name="theme-color" content="#F7F9FC">
 <!-- Windows 开始菜单磁贴（Bing/Edge 生态）：品牌深蓝底 + 应用图标 -->
 <meta name="msapplication-TileColor" content="#0E2A47">
@@ -26,7 +26,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:url" content="https://kaup.ai/contact.html">
 <meta property="og:title" content="联系我们 — 智御无疆 Kaup">
-<meta property="og:description" content="联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。商务联系：183 4086 1898、sales@kaup.ai。扫码关注公众号或添加联系人微信。">
+<meta property="og:description" content="联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 sales@kaup.ai、扫码关注公众号或添加联系人微信。">
 <meta property="og:image" content="https://kaup.ai/og-image.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -34,7 +34,7 @@
 <meta property="og:image:alt" content="智御无疆 Kaup — 以 AI 助力企业超越能力和效率的边界">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="联系我们 — 智御无疆 Kaup">
-<meta name="twitter:description" content="联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。商务联系：183 4086 1898、sales@kaup.ai。扫码关注公众号或添加联系人微信。">
+<meta name="twitter:description" content="联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 sales@kaup.ai、扫码关注公众号或添加联系人微信。">
 <meta name="twitter:image" content="https://kaup.ai/og-image.png">
 <script type="application/ld+json">
 {
@@ -51,7 +51,6 @@
       "description": "赋能企业的 AI 全链路编排与智能调度平台，面向中国 B2B 外贸企业提供 AI Agent 平台订阅、定制开发与本地/私有化部署。",
       "slogan": "以 AI 助力企业超越能力和效率的边界，重新定义无限可能",
       "email": "sales@kaup.ai",
-      "telephone": "+86-183-4086-1898",
       "address": {
         "@type": "PostalAddress",
         "addressRegion": "辽宁省",
@@ -78,7 +77,6 @@
         {
           "@type": "ContactPoint",
           "contactType": "sales",
-          "telephone": "+86-183-4086-1898",
           "email": "sales@kaup.ai",
           "availableLanguage": [
             "zh-CN"
@@ -101,7 +99,7 @@
       "@id": "https://kaup.ai/contact.html#webpage",
       "url": "https://kaup.ai/contact.html",
       "name": "联系我们 — 智御无疆 Kaup",
-      "description": "联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。商务联系：183 4086 1898、sales@kaup.ai。扫码关注公众号或添加联系人微信。",
+      "description": "联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 sales@kaup.ai、扫码关注公众号或添加联系人微信。",
       "isPartOf": {
         "@id": "https://kaup.ai/#website"
       },
@@ -193,7 +191,7 @@
       <span class="eyebrow">联系我们</span>
       <h1>沟通定制开发与本地部署事宜</h1>
       <p class="claim">以 AI 助力企业超越能力和效率的边界，<br class="claim-br">重新定义无限可能</p>
-      <p class="lede">你可以直接致电或发邮件给商务联系人，也可以扫码添加微信，我们会就行业属性、业务流程与合规要求做一次需求沟通。</p>
+      <p class="lede">填写下方表单，商务联系人会在一个工作日内回电；也可以直接发邮件或扫码添加微信，我们会就行业属性、业务流程与合规要求做一次需求沟通。</p>
     </div>
   </section>
 
@@ -201,12 +199,38 @@
     <div class="wrap">
       <div class="split">
         <div>
-          <span class="eyebrow">商务联系</span>
+          <span class="eyebrow">在线提交</span>
+          <!-- 表单提交逻辑见 assets/js/site.js「联系表单」一节；后端为 /api/contact（Vercel serverless function） -->
+          <form class="card contact-form" data-contact-form novalidate>
+            <div class="field">
+              <label for="cf-company">公司名称</label>
+              <input id="cf-company" name="company" type="text" required maxlength="100" autocomplete="organization" placeholder="例：大连某某贸易有限公司">
+            </div>
+            <div class="field">
+              <label for="cf-name">联系人姓名</label>
+              <input id="cf-name" name="name" type="text" required maxlength="50" autocomplete="name" placeholder="怎么称呼您">
+            </div>
+            <div class="field">
+              <label for="cf-phone">联系电话</label>
+              <input id="cf-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="手机号，或带区号座机（如 0411-8XXXXXXX）">
+              <p class="field-hint">回电只用这个号码，请填写商务时间方便接听的</p>
+            </div>
+            <!-- honeypot：对真人不可见（CSS 移出视口 + tabindex -1），爬虫填了即被识别。
+                 不用 aria-hidden：内部有可聚焦 input 会违反 axe aria-hidden-focus 规则 -->
+            <div class="hp">
+              <label for="cf-website">网站</label>
+              <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <button class="btn btn-primary btn-lg" type="submit" data-submit>提交，等待回电</button>
+            <p class="form-note">提交即表示同意我们仅将以上信息用于业务联系。</p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <div>
+          <!-- kicker 是不带琥珀圆点的 eyebrow 变体：本屏琥珀预算已留给「在线提交」1 处 -->
+          <span class="kicker">其他联系方式</span>
           <ul class="contact-list">
-            <li>
-              <span class="k">电话</span>
-              <span class="v"><a class="mono" href="tel:18340861898">183 4086 1898</a></span>
-            </li>
             <li>
               <span class="k">邮箱</span>
               <span class="v"><a class="mono" href="mailto:sales@kaup.ai">sales@kaup.ai</a></span>
@@ -221,17 +245,14 @@
             </li>
           </ul>
 
-        </div>
-
-        <div class="card">
-          <h3>为了让沟通更高效</h3>
-          <p style="margin-bottom:var(--space-4)">建议先大致明确以下几点，我们可以在一次沟通内给出可行的落地顺序：</p>
-          <ul class="cap-list">
-            <li><span class="n">01</span><span>行业与主营品类，以及主要出口市场</span></li>
-            <li><span class="n">02</span><span>当前获客方式与团队规模（业务员 / 跟单员人数）</span></li>
-            <li><span class="n">03</span><span>正在使用的 CRM / ERP 或订单系统</span></li>
-            <li><span class="n">04</span><span>对数据留存与合规的要求（是否要求私有化）</span></li>
-          </ul>
+          <div class="card" style="margin-top:var(--space-8)">
+            <h3>提交后会发生什么</h3>
+            <ul class="cap-list">
+              <li><span class="n">01</span><span>一个工作日内，商务联系人按你留的电话回电</span></li>
+              <li><span class="n">02</span><span>一次需求沟通，聚焦行业属性、业务流程与合规要求</span></li>
+              <li><span class="n">03</span><span>沟通后给出可行的落地顺序与部署方式建议</span></li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -302,7 +323,6 @@
       <div class="footer-col">
         <h4>联系</h4>
         <ul>
-          <li><a href="tel:18340861898">183 4086 1898</a></li>
           <li><a href="mailto:sales@kaup.ai">sales@kaup.ai</a></li>
           <li><a href="contact.html">公众号 / 微信二维码</a></li>
           <li>辽宁 · 大连</li>

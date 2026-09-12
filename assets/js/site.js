@@ -1,5 +1,5 @@
 /* Kaup · 智御无疆 — 官网交互
-   主题切换 · 移动导航 · 滚动入场 · 年份
+   主题切换 · 移动导航 · 滚动入场 · 联系表单 · 年份
    主题的首次应用在 <head> 内联脚本中完成（避免闪烁）。 */
 (function () {
   "use strict";
@@ -94,6 +94,90 @@
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
     reveals.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ---------- 联系表单（contact.html） ----------
+     提交到 /api/contact（Vercel serverless function），成功后页内反馈，不跳转。
+     校验规则与 api/contact.js 保持一致：11 位手机号 或 区号-座机。 */
+  var form = document.querySelector("[data-contact-form]");
+
+  if (form) {
+    var RE_MOBILE = /^1[3-9]\d{9}$/;
+    var RE_LANDLINE = /^0\d{2,3}-?\d{7,8}$/;
+    var submitBtn = form.querySelector("[data-submit]");
+    var status = form.querySelector("[data-form-status]");
+
+    function fieldOf(name) { return form.querySelector('[name="' + name + '"]').closest(".field"); }
+
+    function setFieldError(name, message) {
+      var field = fieldOf(name);
+      var old = field.querySelector(".field-error");
+      if (old) old.remove();
+      field.classList.toggle("has-error", !!message);
+      if (message) {
+        var p = document.createElement("p");
+        p.className = "field-error";
+        p.textContent = message;
+        field.appendChild(p);
+      }
+    }
+
+    function setStatus(state, message) {
+      status.setAttribute("data-state", state || "");
+      status.textContent = message || "";
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      setStatus("", "");
+
+      /* 用 namedItem 而不是 form.<name> 直取：form.name 依赖 HTMLFormElement
+         的 [LegacyOverrideBuiltIns] 怪癖（命名控件遮蔽内置 name 属性），
+         浏览器虽都支持，但显式写法不赌实现细节 */
+      var company = form.elements.namedItem("company").value.trim();
+      var name = form.elements.namedItem("name").value.trim();
+      var phone = form.elements.namedItem("phone").value.replace(/\s+/g, "");
+
+      var bad = false;
+      setFieldError("company", company.length >= 2 ? "" : "请填写公司名称");
+      if (company.length < 2) bad = true;
+      setFieldError("name", name ? "" : "请填写联系人姓名");
+      if (!name) bad = true;
+      var phoneOk = RE_MOBILE.test(phone) || RE_LANDLINE.test(phone);
+      setFieldError("phone", phoneOk ? "" : "请填写 11 位手机号，或带区号的座机号");
+      if (!phoneOk) bad = true;
+      if (bad) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "提交中…";
+
+      fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          company: company,
+          name: name,
+          phone: phone,
+          website: form.elements.namedItem("website").value /* honeypot，正常人留空 */
+        })
+      })
+        .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+        .then(function (r) {
+          if (r.ok && r.data.ok) {
+            form.reset();
+            setStatus("ok", "已收到，我们会在一个工作日内按你留的电话回电。");
+          } else {
+            setStatus("error", (r.data && r.data.error) || "提交失败，请稍后重试，或直接发邮件至 sales@kaup.ai。");
+          }
+        })
+        .catch(function () {
+          setStatus("error", "网络异常，提交未成功。请稍后重试，或直接发邮件至 sales@kaup.ai。");
+        })
+        .then(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "提交，等待回电";
+        });
+    });
   }
 
   /* ---------- 年份 ---------- */
