@@ -139,28 +139,42 @@ async function createBaseRecord(lead) {
   if (!FEISHU_APP_ID || !FEISHU_APP_SECRET || !FEISHU_BASE_APP_TOKEN || !FEISHU_BASE_TABLE_ID) {
     return { skipped: true };
   }
-  const token = await getTenantAccessToken(FEISHU_APP_ID, FEISHU_APP_SECRET);
-  const resp = await fetch(
-    `https://open.feishu.cn/open-apis/bitable/v1/apps/${FEISHU_BASE_APP_TOKEN}/tables/${FEISHU_BASE_TABLE_ID}/records`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({
-        fields: {
-          公司名称: lead.company,
-          联系人: lead.name,
-          联系电话: lead.phone,
-          提交时间: Date.now(), // Base 日期字段收 Unix 毫秒时间戳
-          跟进状态: "待跟进",
-        },
-      }),
+  /* 最多两次尝试：token 失效类错误清缓存强制刷新后重试一次 */
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const token = await getTenantAccessToken(FEISHU_APP_ID, FEISHU_APP_SECRET);
+      const resp = await fetch(
+        `https://open.feishu.cn/open-apis/bitable/v1/apps/${FEISHU_BASE_APP_TOKEN}/tables/${FEISHU_BASE_TABLE_ID}/records`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            fields: {
+              公司名称: lead.company,
+              联系人: lead.name,
+              联系电话: lead.phone,
+              提交时间: Date.now(), // Base 日期字段收 Unix 毫秒时间戳
+              跟进状态: "待跟进",
+            },
+          }),
+        }
+      );
+      const result = await resp.json().catch(() => ({}));
+      if (resp.status === 401 || result.code === 99991663) {
+        tokenCache = { token: null, expireAt: 0 };
+        lastErr = new Error(`token rejected: ${resp.status} ${JSON.stringify(result)}`);
+        continue;
+      }
+      if (!resp.ok || result.code !== 0) {
+        throw new Error(`base record create failed: ${resp.status} ${JSON.stringify(result)}`);
+      }
+      return { skipped: false, recordId: result.data && result.data.record && result.data.record.record_id };
+    } catch (err) {
+      lastErr = err;
     }
-  );
-  const result = await resp.json().catch(() => ({}));
-  if (!resp.ok || result.code !== 0) {
-    throw new Error(`base record create failed: ${resp.status} ${JSON.stringify(result)}`);
   }
-  return { skipped: false, recordId: result.data && result.data.record && result.data.record.record_id };
+  throw lastErr;
 }
 
 module.exports = async function handler(req, res) {
@@ -201,6 +215,17 @@ module.exports = async function handler(req, res) {
     return json(res, 500, { ok: false, error: "服务配置缺失，请稍后重试" });
   }
 
+  /* 顺序：先写 Base（事实源），再发群卡片（通知）。
+     Base 失败 → 502 让用户重试 —— 此时群里还没发卡片，重试零副作用，
+     不会产生「群里有、表里无」的静默丢失。 */
+  let base = { skipped: true };
+  try {
+    base = await createBaseRecord(lead);
+  } catch (err) {
+    console.error("contact: base record write failed", err);
+    return json(res, 502, { ok: false, error: "提交失败，请稍后重试或直接发邮件至 sales@kaup.ai" });
+  }
+
   const timestamp = Math.floor(Date.now() / 1000);
   const payload = {
     timestamp: String(timestamp),
@@ -208,6 +233,8 @@ module.exports = async function handler(req, res) {
     ...buildLeadCard(lead),
   };
 
+  /* 注意：若此处卡片发送失败，Base 里已有记录，用户重试会产生一条重复行
+     —— 但只是表里静默多一行（可按提交时间去重），不会重复 @all 打扰全群 */
   try {
     const resp = await fetch(webhook, {
       method: "POST",
@@ -216,21 +243,12 @@ module.exports = async function handler(req, res) {
     });
     const result = await resp.json().catch(() => ({}));
     if (!resp.ok || result.code !== 0) {
-      console.error("contact: feishu webhook failed", resp.status, result);
+      console.error("contact: feishu webhook failed (lead already in base)", resp.status, result);
       return json(res, 502, { ok: false, error: "提交失败，请稍后重试或直接发邮件至 sales@kaup.ai" });
-    }
-
-    /* 群卡片已送达（主链路成立）→ 再写多维表格留存。
-       Base 写失败只记日志、不影响用户侧成功反馈，避免用户重试造成群里重复 @all */
-    let base = { skipped: true };
-    try {
-      base = await createBaseRecord(lead);
-    } catch (err) {
-      console.error("contact: base record write failed (lead already in group)", err);
     }
     return json(res, 200, { ok: true, base: !base.skipped });
   } catch (err) {
-    console.error("contact: feishu webhook error", err);
+    console.error("contact: feishu webhook error (lead already in base)", err);
     return json(res, 502, { ok: false, error: "提交失败，请稍后重试或直接发邮件至 sales@kaup.ai" });
   }
 };
