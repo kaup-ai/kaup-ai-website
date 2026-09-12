@@ -47,6 +47,7 @@
   --accent:     #E89B3C;                       /* viking amber · polaris dot · MAX 2/screen */
   --accent-2:   #D8892A;                       /* hover/active amber */
   --accent-soft:#FCEFD9;                       /* amber tinted bg · badge · progress fill */
+  --accent-ink: #92400E;                       /* deep amber ink · HITL tag/step text on accent-soft */
 
   /* ---------- Semantic (status, paired soft bg) ---------- */
   --success:    #16A34A;
@@ -145,6 +146,7 @@
   --accent:     #F2B260;                       /* slightly brighter amber for dark */
   --accent-2:   #E89B3C;
   --accent-soft:#3A2A14;
+  --accent-ink: #F2B260;                       /* light amber ink · HITL tag/step text on accent-soft */
 
   /* Semantic */
   --success:    #4ADE80;

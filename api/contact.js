@@ -191,8 +191,11 @@ module.exports = async function handler(req, res) {
     return json(res, 200, { ok: true });
   }
 
-  /* 限流：Vercel 在 x-forwarded-for 写入真实客户端 IP */
-  const ip = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "unknown";
+  /* 限流取客户端 IP：优先 Vercel 注入的 x-real-ip（客户端不可伪造）；
+     回退用 x-forwarded-for 的最后一段 —— Vercel 把真实 IP 追加在末尾，
+     首段是客户端自带的可伪造值，取首段会被轮换伪造绕过限流 */
+  const xff = String(req.headers["x-forwarded-for"] || "").split(",");
+  const ip = String(req.headers["x-real-ip"] || xff[xff.length - 1] || "").trim() || "unknown";
   if (isRateLimited(ip)) {
     return json(res, 429, { ok: false, error: "提交太频繁，请稍后再试，或直接发邮件至 sales@kaup.ai" });
   }
