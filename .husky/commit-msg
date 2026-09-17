@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# husky v9 commit-msg hook — enforce conventional commits (feat/fix/docs/chore/test/refactor/perf/ci)
+pnpm exec commitlint --edit "$1"

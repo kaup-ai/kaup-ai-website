@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Kaup favicon — dark variant (curved chevron in glacier white, 15° up-right tilt)">
+  <title>Kaup — Curved Chevron (15° tilt) + amber north-star dot — dark variant</title>
+  <g transform="rotate(-15 50 50)">
+    <!-- The Kaup Curve v5.2: curved chevron, glacier white for dark backgrounds -->
+<path d="M 15 15 C 25 20, 55 35, 80 50 C 55 65, 25 80, 15 85 L 40 85 C 50 78, 75 65, 85 50 C 75 35, 50 22, 40 15 Z" fill="#F7F9FC"/>
+    <!-- Amber north-star dot — brand promise: always #E89B3C, no color variants. r=5 so the dot is ~10px at 100px favicon (= ~0.1*100). -->
+    <circle cx="76" cy="50" r="5" fill="#E89B3C"/>
+  </g>
+</svg>

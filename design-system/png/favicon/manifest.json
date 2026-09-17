@@ -1,0 +1,11 @@
+{
+  "asset": "favicon",
+  "viewBox": "0 0 100 100",
+  "source_svgs": ["favicon.svg", "favicon-dark.svg"],
+  "purpose": "Browser tab / bookmark icon — mark only, no wordmark",
+  "sizes": {
+    "64": "high-density favicon (Chrome pinned tab, large bookmark)",
+    "32": "standard favicon (default browser tab)",
+    "16": "small favicon (legacy browser tab, taskbar)"
+  }
+}

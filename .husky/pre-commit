@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+# husky v9 pre-commit hook（移植自 kaup-frontend，决策 B + B2-fix 通用卫生）
+# 分层：pre-commit = 快检查（秒级，无全量 build/test）
+#   1. 通用卫生：merge conflict 标记 + 大文件拦截（对齐 kaup-core check-merge-conflict / check-added-large-files）
+#   2. lint-staged：ESLint+Prettier + secretlint（密钥检测）
+#
+# B2-fix2: pipe subshell 会吞 exit 1（while 在管道右侧 = 子 shell，exit 1
+# 不传主脚本）。用 xargs -0 + sh -c：内部 exit 1 → xargs 123（非 0 = 拦截）。
+#
+# 只查 staged 文件（git diff --cached），不影响未暂存内容
+
+git diff --cached --name-only --diff-filter=ACM -z | xargs -0 sh -c '
+  MAX_FILE_SIZE=512000  # 500KB（对齐 kaup-core check-added-large-files）
+  for file do
+    # 跳过被删除的文件（diff-filter=ACM 已排除 D，但保险）
+    [ -f "$file" ] || continue
+
+    # merge conflict 标记检测（行首 <<<<<<< / ======= / >>>>>>>）
+    if grep -lE "^(<<<<<<<|=======|>>>>>>>)([[:space:]]|$)" "$file" >/dev/null 2>&1; then
+      echo "ERROR: merge conflict markers found in: $file" >&2
+      echo "  resolve conflicts, then re-commit." >&2
+      exit 1
+    fi
+
+    # 大文件检测（bytes）
+    file_size=$(wc -c < "$file" 2>/dev/null | tr -d " ")
+    if [ -n "$file_size" ] && [ "$file_size" -gt "$MAX_FILE_SIZE" ]; then
+      echo "ERROR: file too large: $file (${file_size} bytes > ${MAX_FILE_SIZE} / 500KB)" >&2
+      echo "  reduce size or use git-lfs, then re-commit." >&2
+      exit 1
+    fi
+  done
+' _ || exit 1
+
+# ── lint-staged：按扩展名路由（ESLint --fix / Prettier / secretlint）──
+# --no-stash：本项目常有多会话并行操作 git，lint-staged 默认的 backup stash
+# push/pop 与外部 git 操作竞争会互相吞状态（2026-09-17 实测事故），故禁用。
+pnpm exec lint-staged --no-stash

@@ -1,0 +1,16 @@
+{
+  "asset": "logo-horizontal",
+  "alignment": "left-aligned (text-anchor: start, x=100)",
+  "viewBox": "0 0 480 160",
+  "aspect": "3:1 (horizontal lockup)",
+  "source_svgs": ["logo-horizontal.svg", "logo-horizontal-dark.svg"],
+  "purpose": "Horizontal lockup, left-aligned — chevron mark on the left edge, 智御无疆 + Kaup wordmark stack on the right. Designed for application headers, navigation bars, and any horizontal layout where the lockup should hug the left edge of its container (Apple / Nike / Stripe / Vercel / Linear convention).",
+  "sizes": {
+    "1024w": "large marketing headers, hero banners (1024×341 px)",
+    "512w":  "desktop app header / nav bar (512×170 px)",
+    "256w":  "compact header, mobile nav bar (256×85 px)",
+    "128w":  "footer watermark, small inline reference (128×43 px)"
+  },
+  "min_physical_size": "30mm width at 300dpi — below this the chevron stroke starts to feather",
+  "use_when": "horizontal real-estate is available and the lockup should align to a left nav edge (default app header choice)"
+}

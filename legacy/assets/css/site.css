@@ -1,0 +1,1338 @@
+/* ============================================================
+   Kaup · 智御无疆 — 官网样式表
+   Depends on assets/css/tokens.css (design system v1.0)
+   Rules: fjord-cold restraint · amber ≤ 2 visible uses / screen
+   ============================================================ */
+
+:root {
+  /* .site-header 的实测高度 —— hero 从视口高度里扣掉它 */
+  --header-h: 69px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Inter", -apple-system, "SF Pro Display", "PingFang SC",
+    "HarmonyOS Sans SC", "Source Han Sans SC", "Noto Sans SC", "Microsoft YaHei",
+    system-ui, sans-serif;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+  /* 正文换行尽量不留「尾行只剩一两个字」的孤字（Chrome 117+ / Safari 17.4+） */
+  text-wrap: pretty;
+}
+
+img, svg { max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, h4 {
+  margin: 0;
+  /* 多行标题两端均衡，避免最后一行只剩一两个字 */
+  text-wrap: balance;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-display);
+  font-weight: 600;
+}
+
+p { margin: 0; }
+
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
+
+::selection { background: var(--brand-soft); color: var(--fg); }
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--radius-sm);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 100;
+  background: var(--brand);
+  color: var(--on-brand);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+}
+
+.skip-link:focus { left: 16px; }
+
+/* 屏幕阅读器专用（视觉隐藏）：表格 caption 等无障碍文本用，
+   取代散落在各页 caption 上的 position/left 内联样式 */
+.sr-only { position: absolute; left: -9999px; }
+
+/* ---------- layout ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section { padding: var(--section-y) 0; }
+
+.section-tight { padding: var(--space-16) 0; }
+
+/* 凹槽线：1px --border 灰线 + 底部 1px 内亮线（光从槽底反上来），
+   替代上下双色倒角 —— 倒角的暗线在亮色主题下读作「脏边」。
+   原 border-top 改为 background，视觉仍是一条细分隔线 */
+.rule {
+  border-top: 0;
+  height: 1px;
+  background: var(--border);
+  box-shadow: 0 1px 0 var(--edge-hi);
+}
+
+/* ---------- typography helpers ---------- */
+/* 全站统一的栏目标签：琥珀小圆点 + 大写小字。
+   2026-09-12 起 section 标题（获客链路/现实/形态/能力图谱…）统一用 eyebrow，
+   margin-bottom 沿用原 kicker 的 space-4，保证标签与标题间距不变。 */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--space-4);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* 页头 h1 自带 space-5 上外边距，eyebrow 不再叠加下间距，否则页头标签与标题会被撑开 */
+.page-head .eyebrow { margin-bottom: 0; }
+
+/* 琥珀预算提醒：eyebrow 圆点已占每屏 1 处琥珀（hero 屏另有呼吸点，链路屏另有 HITL 标签），
+   新增琥珀元素前先数屏内已有几处（硬约束：≤2 处/屏） */
+.eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  flex: none;
+}
+
+/* 卡片内字段小标签（about 定位卡的 企业定位/品牌主张/Slogan）——
+   不带琥珀圆点的 eyebrow 变体；section 标题请用 .eyebrow */
+.kicker {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: var(--space-4);
+}
+
+/* 紧凑变体：about 定位卡字段标签（企业定位/品牌主张/Slogan），
+   取代原先 3 处 style="margin:0 0 6px" 内联补丁 */
+.kicker-tight { margin: 0 0 6px; }
+
+.h1 { font-size: clamp(34px, 5.4vw, 60px); line-height: 1.06; }
+.h2 { font-size: clamp(26px, 3.4vw, 38px); line-height: 1.12; }
+.h3 { font-size: var(--text-lg); line-height: 1.25; }
+
+.lede {
+  font-size: clamp(16px, 1.5vw, 19px);
+  color: var(--fg-2);
+  line-height: 1.6;
+}
+
+/* ---------- 品牌主张 · brand claim ----------
+ * 统一元素：紧随各自主标题出现的一次主张陈述。
+ * 用品牌色竖线 + 正文色强调，不占用琥珀配额。 */
+.claim {
+  margin: 0 0 var(--space-5);
+  padding-left: var(--space-5);
+  border-left: 3px solid var(--brand);
+  font-size: clamp(16px, 1.5vw, 19px);
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--fg);
+  max-width: 34em;
+}
+
+/* 窄屏时在逗号后换行，避免「效率 / 重新定义」被拦腰截断 */
+.claim-br { display: none; }
+
+@media (max-width: 820px) { .claim-br { display: inline; } }
+
+.muted { color: var(--muted); }
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.src {
+  font-size: var(--text-xs);
+  color: var(--muted-2);
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background-color: var(--brand);
+  border-color: var(--brand);
+  color: var(--on-brand);
+  /* 机加工按键帽（2026-09-17）：双层背景 —— 底层 --btn-metal 亮度曲线
+     （顶亮受光 → 深基座），上层扫光（2026-09-16 的抛光微交互保留）。
+     用 background-position 动画（合成器友好），常态停在视区外（115%）。
+     注意：这里和 :hover 都必须用 background-color 简写属性，
+     否则 background 简写会清掉这层 background-image。
+     帽光 --btn-cap-shadow：顶缘内亮 + 底缘内暗 + 接触影 + 悬浮影；
+     :active 换 --btn-cap-shadow-press（帽光塌陷 = 按下）。
+     prefers-reduced-motion 已在文件末尾统一冻结 transition。 */
+  background-image: var(--btn-metal),
+    linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%);
+  background-size: 100% 100%, 220% 100%;
+  background-position: 0 0, 115% 0;
+  box-shadow: var(--btn-cap-shadow);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease),
+    background-position var(--t-slow) var(--ease);
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-2);
+  border-color: var(--brand-2);
+  background-position: 0 0, -25% 0;
+}
+
+.btn-primary:active { box-shadow: var(--btn-cap-shadow-press); }
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border-2);
+  color: var(--fg);
+  box-shadow: inset 0 1px 0 var(--edge-hi);
+}
+
+.btn-secondary:hover { border-color: var(--muted-2); background: var(--surface-2); }
+
+.btn-ghost { background: transparent; color: var(--fg-2); }
+
+.btn-ghost:hover { color: var(--fg); background: var(--surface-2); }
+
+.btn-lg { min-height: 48px; padding: 0 24px; font-size: var(--text-base); }
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--brand);
+  min-height: 44px;
+}
+
+[data-theme="dark"] .link { color: var(--brand); }
+
+.link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.link svg { width: 14px; height: 14px; flex: none; transition: transform var(--t-fast) var(--ease); }
+.link:hover svg { transform: translateX(3px); }
+
+/* ---------- header ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* 顶端时透明：首页 hero 从视口顶端铺起，顶栏不切一道白边。
+     滚过顶端立刻升起冰川白毛玻璃遮罩（.is-scrolled），
+     否则 hero 里的字会直接从导航上穿过去。 */
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background var(--t-base) var(--ease),
+              border-color var(--t-base) var(--ease),
+              box-shadow var(--t-base) var(--ease);
+}
+
+/* 遮罩：滚过顶端（或移动菜单展开）后升起 —— 毛玻璃 + 发丝线 + 极浅投影 */
+.site-header.is-scrolled {
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom-color: var(--border);
+  /* 凹槽底缘：发丝暗线 + 下缘 1px 亮线（槽底反光），与 .rule 同一语言 */
+  box-shadow: var(--elev-2), 0 1px 0 var(--edge-hi);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  height: 68px;
+}
+
+.brand-logo { display: inline-flex; align-items: center; flex: none; }
+.brand-logo img { display: block; height: 40px; width: auto; }
+.brand-logo:hover { opacity: 0.82; }
+
+.brand-logo .logo-dark { display: none; }
+[data-theme="dark"] .brand-logo .logo-light { display: none; }
+[data-theme="dark"] .brand-logo .logo-dark { display: block; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--fg-2);
+  transition: color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+
+.nav a:hover { color: var(--fg); background: var(--surface-2); }
+
+.nav a[aria-current="page"] { color: var(--fg); font-weight: 500; }
+
+.header-actions { display: flex; align-items: center; gap: var(--space-2); flex: none; }
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--fg-2);
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+
+.icon-btn:hover { background: var(--surface-2); color: var(--fg); }
+.icon-btn svg { width: 18px; height: 18px; }
+
+.theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+.nav-toggle { display: none; }
+
+@media (max-width: 900px) {
+  .nav-toggle { display: inline-flex; }
+  .header-actions .btn-primary { display: none; }
+  /* 窄屏下导航收进抽屉（.nav 转为 fixed 脱离流），
+     于是 .nav 原来的 margin-left:auto 一起失效 ——
+     主题切换 + 汉堡包会被留在品牌 logo 右边、贴在版面中间。
+     这里把自动外边距交给 .header-actions，两个按钮回到右侧。 */
+  .header-actions { margin-left: auto; }
+  .nav {
+    position: fixed;
+    inset: 68px 0 auto;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    padding: var(--space-3) var(--gutter) var(--space-6);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--elev-3);
+  }
+  .nav[data-open="true"] { display: flex; }
+  .nav a {
+    justify-content: space-between;
+    padding: 0 8px;
+    font-size: var(--text-md);
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+  }
+  .nav a:last-child { border-bottom: 0; }
+}
+
+/* ---------- hero · 品牌主视觉（超大居中竖版 lockup） ---------- */
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* 顶栏透明，主视觉从视口顶端铺起 —— 负外边距把它垫到顶栏下面 */
+  margin-top: calc(-1 * var(--header-h));
+  /* 高度由内容决定，不用 svh 撑屏：满屏（100svh）会在内容上下各留约 200px
+     空当，86svh 收紧后用户实测仍「离顶栏和下一节都太远」。
+     改为内容驱动 + 固定舒适 padding —— 间距与视口高度无关，
+     顶栏→内容 ≈ 32–56px，内容→下一节 ≈ 40–64px + 下一节自身 padding。 */
+  padding: calc(var(--header-h) + clamp(32px, 5vh, 56px)) 0 clamp(40px, 6vh, 64px);
+  /* 设计文档 §Hero（2026-09-16 修订）：默认仍用 --bg 平铺；
+     金属变体经评审许可 —— 容器加 .metal 类（当前工艺：钛金属磨砂，
+     参数全部在 tokens.css --metal-*，分层见下方 .metal 块），金属表面 ≤2 处/屏。
+     mark 的墨色见下方 .hero-logo svg。 */
+  background: var(--bg);
+  text-align: center;
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* hero 品牌主张：位于 lockup（mark + 智御无疆 + Kaup）正下方（2026-09-12 从 lockup 上方移下），
+   沿用 eyebrow 的字级/字距/颜色，但不带琥珀圆点、不 uppercase —— 「Kaup Your Trade」保持原大小写 */
+.hero-eyebrow {
+  margin: clamp(20px, 3vh, 32px) 0 0;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caps);
+  color: var(--muted);
+}
+
+/* 主视觉容器：宽度就是 lockup viewBox 框的宽度。
+   viewBox 中轴 = 整块 lockup（mark + 智御无疆 + Kaup）墨迹中轴 235.64（viewBox x = 31.89），
+   容器居中 == 整体墨迹在页面里居中，而不是词标单独居中。
+   （「Kaup」从属于「智御无疆」：在 SVG 内部对 CN 词标的墨迹中轴居中，
+   不再占用页面中线，见 index.html hero 注释 4/5）
+   （设计文档 §4.2 硬规则 1：横向 lockup 不加容器方块） */
+.hero-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 500px 上限（原 1200px 实测在桌面端过大、喧宾夺主；720px、600px 用户仍嫌大）；
+     88% 给移动端留两侧喘息；76vh 负责在矮窗口里回收高度（高 = 宽 / 5.53） */
+  width: min(88%, 76vh, 500px);
+}
+
+/* 内联横向 lockup —— 与 assets/logo/logo-horizontal-centered.svg 同源 */
+.hero-logo { margin: 0; width: 100%; }
+
+/* 横向 lockup 的宽高比 ≈ 5.53 : 1（407.5 × 73.75 的中轴对称 viewBox），
+   尺寸约束主要落在宽度上；76vh 那一项负责在矮窗口里回收高度（高 = 宽 / 5.53）。
+   （设计文档 §4.2 硬规则 1：横向 lockup 不带冰川白容器方块） */
+/* lockup 墨色 1:1 对齐官方资产：
+   浅色底取 logo-horizontal-centered.svg 的 #0E2A47（= --brand）+ #5B6B7E（= --muted），
+   深色主题取 logo-horizontal-centered-dark.svg 的 #F7F9FC + #8EA0B8（= --muted 深色值）。 */
+.hero-logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--brand);
+}
+
+[data-theme="dark"] .hero-logo svg { color: var(--fg); }
+
+.hero-logo-mark,
+.hero-logo-cn { fill: currentColor; }
+
+/* 字号与字距 1:1 沿用 logo-horizontal-centered.svg 的 viewBox 内取值 */
+.hero-logo-cn {
+  font-family: var(--font-cn);
+  font-size: 48px;
+  font-weight: 600;
+  /* anchor:start + 显式 x（见 index.html hero 注释）—— 消除 Chromium / WebKit 对
+     “middle + 尾随字距” 口径差异，两内核渲染逐像素一致 */
+  text-anchor: start;
+  letter-spacing: 0.18em;
+}
+
+.hero-logo-en {
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--muted);
+  /* 从属于 CN 词标的居中：x = 258.09 让「Kaup」的墨迹中轴落在 284.25
+     （= 「智御无疆」的墨迹中轴，Chromium / WebKit getBBox 实测一致），
+     即「Kaup」左右居中于「智御无疆」，而不是居中于页面（2026-09-11 改定） */
+  text-anchor: start;
+  letter-spacing: 0.4em;
+}
+
+/* 琥珀点 · 自然呼吸 —— 4.2s 纯正弦缓动：明暗两端速度为 0，
+   所以转折不生硬，读起来像呼吸而不是闪烁。核心点只改亮度，尺寸/位置/颜色不变。
+   （prefers-reduced-motion 已在文件末尾统一降级为静止） */
+.kaup-dot { animation: kaup-dot-breathe 4.2s cubic-bezier(0.37, 0, 0.63, 1) infinite; }
+
+@keyframes kaup-dot-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* 呼吸灯光晕 —— 与核心点同一条呼吸曲线、同一相位：
+   峰值 opacity 0.55（晕开）、波谷 0（归零）。
+   手机上核心点渲染仅约 9px 宽，单靠不透明度脉动肉眼几乎不可辨；
+   光晕把亮度变化的覆盖面积放大到约 3 倍，呼吸在小屏上也成立。
+   桌面端同时受益：「呼吸灯」本就应有光晕。
+   只动画 opacity，blur 为静态值 —— 合成器可整层淡入淡出，不逐帧重算模糊。 */
+.kaup-dot-glow {
+  filter: blur(4.5px);
+  animation: kaup-dot-glow-breathe 4.2s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+
+@keyframes kaup-dot-glow-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0; }
+}
+
+/* hero 产品截图：浅色/深色两张，随 data-theme 显隐切换
+   （与顶栏/页脚 logo 同一套机制：默认显 light，dark 主题显 dark） */
+.hero-shot {
+  width: min(100%, 1080px);
+  margin: clamp(28px, 4vh, 44px) auto 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  /* 仪表边框：深悬浮影 + 内圈 1px 亮环（屏幕玻璃缘受光） */
+  box-shadow: var(--elev-4), inset 0 0 0 1px var(--edge-hi);
+}
+
+.hero-shot img { display: block; width: 100%; height: auto; }
+.hero-shot .shot-dark { display: none; }
+[data-theme="dark"] .hero-shot .shot-light { display: none; }
+[data-theme="dark"] .hero-shot .shot-dark { display: block; }
+
+.hero-claim {
+  color: var(--fg);
+  margin: clamp(32px, 5vh, 64px) 0 0;
+  font-size: clamp(17px, 1.55vw, 22px);
+  font-weight: 500;
+  line-height: 1.6;
+  max-width: 32em;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: clamp(24px, 3.5vh, 40px);
+}
+
+.hero-note {
+  margin-top: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--muted);
+  max-width: 48em;
+}
+
+.hero-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: clamp(24px, 4vh, 48px);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  color: var(--muted);
+}
+
+.hero-scroll svg { width: 14px; height: 14px; }
+
+.hero-scroll:hover { color: var(--fg); }
+
+/* ---------- 金属效果 · .metal 变体（2026-09-17 定稿：拉丝铝底 + 机加工板边框） ----------
+ * 背景分层（自下而上）：容器自身 background（兜底/底色）→ ::before 漫反射底渐变 +
+ * 各向异性拉丝纹 + 机加工细丝线 → ::after 内容区薄纱（压平文字背后的亮度起伏，
+ * 对比度保障）→ 内容。两层伪元素 z-index:-1 + isolation:isolate，不打扰内容层叠。
+ * 边框：不在这里写死 —— 各边框元素引用 tokens.css --plate-* / --edge-hi（机加工板）。
+ * 色值零硬编码（token 纪律）；换材质只改 tokens.css 里的值。
+ * 用法：hero 加 .metal 用 --metal-hero；.cta-band.metal 换 --metal-cta。 */
+.metal { position: relative; isolation: isolate; }
+
+.metal::before,
+.metal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+/* 背景层序：不规则拉丝纹在最上，机加工细丝线居中，漫反射底兜底 */
+.metal::before {
+  background-image: var(--metal-grain), var(--metal-lines), var(--metal-hero);
+  background-size: 240px 240px, auto, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+.metal::after { background: var(--metal-veil); }
+
+/* CTA 带：底色仍是 --brand，漫反射底换品牌蓝铝 */
+.cta-band.metal::before {
+  background-image: var(--metal-grain), var(--metal-lines), var(--metal-cta);
+}
+.cta-band.metal::after { background: var(--metal-veil-cta); }
+
+
+
+/* ---------- 获客链路 section ---------- */
+/* 紧跟 hero：hero 底 padding 已给出 40–64px，本节顶 padding 收成 40px
+   （默认 --section-y 96px 会让 hero 与首节的间距读起来「断层」） */
+.chain-section { padding-top: var(--space-10); }
+
+/* ---------- 链路步骤条（整宽横向五步） ---------- */
+/* 2026-09-11 改版：原为「左 sec-head + 右 ledger 面板」的双列 split，
+   左列实测 188px 对右列 521px，垂直居中后上下大片空白、高度失衡。
+   改为整宽横向步骤条：五张等高卡片以箭头串联，贴合「链路推进」的心智；
+   ≤900px 退化为竖向五步列表，箭头转向下。 */
+.chain-track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+.step-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--metal-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--plate-shadow);
+}
+
+/* 卡片间隙中的串联箭头：绝对定位铺满 24px gap，水平/垂直居中 */
+.step-card:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * var(--space-6));
+  width: var(--space-6);
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--muted-2);
+}
+
+.step-card .step-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.step-card .idx {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--muted-2);
+}
+
+.step-card .name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.step-card .name svg { width: 18px; height: 18px; flex: none; color: var(--brand); }
+
+.step-card .desc { font-size: var(--text-xs); color: var(--muted); }
+
+.chain-note {
+  margin-top: var(--space-6);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  /* 窄屏改时间线：左侧竖轨道 + 序号节点圆点把五步串成「链路」，
+     去掉卡片盒子与浮动箭头（一摞白卡 + ↓ 观感廉价）；
+     名称与标签同行、描述整行，人工确认节点琥珀描边呼应 tag。 */
+  .chain-track {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 44px;
+  }
+  .step-card {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--space-2);
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+  .step-card .step-top { display: contents; }
+  .step-card .idx {
+    position: absolute;
+    left: -44px;
+    top: -2px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-card .name { order: 1; }
+  .step-card .tag { order: 2; }
+  .step-card .desc { order: 3; flex-basis: 100%; margin-top: var(--space-1); }
+  /* 轨道段：从本节点圆心（top:12px）连到下一张卡片的节点圆心 */
+  .step-card:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: -31px;
+    top: 12px;
+    bottom: calc(-1 * var(--space-6) - 12px);
+    width: 2px;
+    background: var(--border);
+  }
+  .step-card:not(:last-child)::after { content: none; }
+  /* 人工确认节点：琥珀描边 + 琥珀序号，呼应 tag-hitl（全屏琥珀仍 ≤2 处）；
+     文字色走 --accent-ink（tokens.css 按主题给出，不再各自写 hex） */
+  .step-card:has(.tag-hitl) .idx { border-color: var(--accent); color: var(--accent-ink); }
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tag-agent { background: var(--brand-soft); border-color: transparent; color: var(--brand); }
+.tag-hitl { background: var(--accent-soft); border-color: transparent; color: var(--accent-ink); }
+
+/* ---------- facts ---------- */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.fact { padding: var(--space-8) var(--space-8) var(--space-8) 0; border-right: 1px solid var(--border); }
+.fact:last-child { border-right: 0; }
+.fact + .fact { padding-left: var(--space-8); }
+
+.fact .num {
+  display: block;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  /* 金属墨：--metal-text 亮度曲线剪进字形（fjord 墨色族，色相锁定） */
+  background: var(--metal-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 单位 span 恢复实色：text-fill-color 会被继承成透明，必须显式盖回 */
+.fact .num span {
+  font-size: 0.5em; font-weight: 500; color: var(--muted); margin-left: 6px; letter-spacing: 0;
+  -webkit-text-fill-color: var(--muted);
+}
+
+.fact .label { margin-top: var(--space-3); font-size: var(--text-sm); color: var(--fg-2); }
+.fact .src { display: block; margin-top: var(--space-2); }
+
+/* 数字上方的主题图标：给纯文字数据条增加视觉锚点（brand 蓝描边图标，不占琥珀额度） */
+.fact-icon { display: block; margin-bottom: var(--space-3); color: var(--brand); }
+.fact-icon svg { display: block; width: 22px; height: 22px; }
+
+@media (max-width: 800px) {
+  .facts { grid-template-columns: minmax(0, 1fr); }
+  .fact { padding: var(--space-6) 0; border-right: 0; border-bottom: 1px solid var(--border); }
+  .fact:last-child { border-bottom: 0; }
+  .fact + .fact { padding-left: 0; }
+}
+
+/* ---------- section head ---------- */
+.sec-head { max-width: 62ch; margin-bottom: var(--space-12); }
+/* 栏目标题金属墨（与 .fact .num 同一 --metal-text；CTA 带 h2 在深板上保持纯白） */
+.sec-head h2 {
+  margin-bottom: var(--space-4);
+  background: var(--metal-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sec-head p { color: var(--fg-2); }
+
+.sec-head-split {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-8);
+  max-width: none;
+}
+
+.sec-head-split > div { max-width: 62ch; }
+
+@media (max-width: 760px) {
+  .sec-head-split { flex-direction: column; align-items: flex-start; }
+  .sec-head { margin-bottom: var(--space-8); }
+}
+
+/* ---------- grids & cards ---------- */
+.grid { display: grid; gap: var(--space-6); }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (max-width: 980px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* 短语义块（导语 / 适合… / 能力条目 / 标语）折行时两端均衡，
+   避免两行里第二行只剩两三个字 —— 长正文仍走 body 的 text-wrap: pretty */
+.lede,
+.fit,
+.claim,
+.hero-claim,
+.cap-list li,
+.card h3,
+.mode-tag,
+.card p,
+.cta-band p,
+.step p,
+.check-list p,
+.char p,
+.src,
+.chain .desc,
+.split p,
+.footer-col li,
+.steps li,
+.contact-list .v { text-wrap: balance; }
+
+.card {
+  /* 凸起金属板：--metal-card 亮度曲线（白 → 微蓝灰，板材微曲率）+
+     机加工板投影（顶缘内高光 + 接触影 + 悬浮影） */
+  background: var(--metal-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--plate-shadow);
+  padding: var(--space-6);
+  transition: box-shadow var(--t-base) var(--ease),
+    transform var(--t-base) var(--ease);
+}
+
+.card-flat { background: transparent; box-shadow: none; }
+
+/* 悬停板子物理抬升 2px：光从板下透出（影子加深拉开），
+   顶缘内高光保留在 hover 栈里；reduced-motion 下过渡即时，无位移动画 */
+.card:hover { box-shadow: var(--plate-shadow-hover); transform: translateY(-2px); }
+
+.card h3 { font-size: var(--text-md); margin-bottom: var(--space-3); }
+.card p { color: var(--fg-2); font-size: var(--text-sm); }
+
+.card .idx {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--muted-2);
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+.card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: var(--space-5);
+  border-radius: var(--radius);
+  /* 拉丝芯片座：--chip-bg 亮度曲线 + 顶缘内高光 + 接触影（--elev-1） */
+  background: var(--chip-bg);
+  color: var(--brand);
+  box-shadow: inset 0 1px 0 var(--edge-hi), var(--elev-1);
+}
+
+.card-icon svg { width: 17px; height: 17px; }
+
+/* capability group card */
+.group-card { display: flex; flex-direction: column; }
+.group-card .group-count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--muted-2);
+}
+
+.group-head { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-5); }
+
+.group-head h3 { display: flex; align-items: center; gap: var(--space-2); }
+
+.group-head h3 svg { width: 18px; height: 18px; flex: none; color: var(--brand); }
+
+.cap-list { display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-5); }
+
+.cap-list li { display: flex; gap: var(--space-3); font-size: var(--text-sm); color: var(--fg-2); }
+
+.cap-list .n {
+  flex: none;
+  width: 20px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--muted-2);
+  padding-top: 2px;
+}
+
+.cap-list strong { color: var(--fg); font-weight: 500; }
+
+/* ---------- compare ---------- */
+.compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--plate-shadow);
+}
+
+.compare > div { padding: var(--space-8); }
+.compare > div + div { border-left: 1px solid var(--border); }
+
+.compare .head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+
+.compare .steps { display: flex; flex-direction: column; gap: var(--space-3); font-size: var(--text-sm); color: var(--fg-2); }
+.compare .steps li { display: flex; gap: 10px; }
+.compare .steps .dot { flex: none; width: 5px; height: 5px; margin-top: 9px; border-radius: 50%; background: var(--muted-2); }
+
+.compare .highlight .dot { background: var(--brand); }
+
+@media (max-width: 760px) {
+  .compare { grid-template-columns: minmax(0, 1fr); }
+  .compare > div + div { border-left: 0; border-top: 1px solid var(--border); }
+}
+
+/* ---------- steps ---------- */
+.steps-track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+}
+
+.step { padding: var(--space-6) var(--space-5) 0 0; position: relative; }
+
+.step::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-2);
+}
+
+.step:first-child::before { background: var(--brand); }
+
+.step .n { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--muted-2); }
+.step h3 { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-base); margin: var(--space-3) 0 var(--space-2); }
+.step h3 svg { width: 17px; height: 17px; flex: none; color: var(--brand); }
+.step p { font-size: var(--text-sm); color: var(--muted); }
+
+@media (max-width: 900px) {
+  /* 窄屏改竖向时间线（与获客链路同一语言）：左侧 2px 轨道 + 描边圆点节点，
+     序号保留在文字区，与桌面版「线 + 圆点 + 序号」的构成一致。
+     原「2 列网格 + 圆点内联在序号前」归属感弱、观感单调。 */
+  .steps-track { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); border-top: 0; padding-left: 40px; }
+  .step { padding: 0; }
+  .step::before {
+    position: absolute;
+    left: -33px;
+    top: 3px;
+    width: 9px;
+    height: 9px;
+    margin: 0;
+    background: var(--bg);
+    border: 2px solid var(--border-2);
+  }
+  .step:first-child::before { background: var(--brand); border-color: var(--brand); }
+  /* 轨道段：本节点圆心 → 下一节点圆心（两端都被圆点遮住） */
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: -27px;
+    top: 10px;
+    bottom: calc(-1 * var(--space-6) - 10px);
+    width: 2px;
+    background: var(--border);
+  }
+}
+
+/* ---------- table ---------- */
+.table-wrap { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--surface); box-shadow: var(--plate-shadow); }
+
+table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+
+th, td { text-align: left; padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); vertical-align: top; }
+
+th {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  /* 拉丝导轨：机加工细丝线铺在 surface-2 上 + 顶缘内高光（与 .metal 同源纹理） */
+  background-color: var(--surface-2);
+  background-image: var(--metal-lines);
+  box-shadow: inset 0 1px 0 var(--edge-hi);
+}
+
+/* 列宽只约束行头列（tbody th）。
+   若把 width 挂在 th 上，thead 的三个列头会各分走 30%，
+   about/services 的三列表在窄屏把长文本列挤成竖排单字。 */
+tbody th { width: 30%; }
+
+tr:last-child th, tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 640px) {
+  tbody th { width: 38%; }
+  th, td { padding: var(--space-3) var(--space-4); }
+}
+
+/* 无底色行头表（services 模式对比 / about 层级定位）：
+   取代散落在各行 th 上的 style="background:transparent" 内联补丁 */
+.table-plain tbody th { background: transparent; }
+
+/* ---------- mode cards ---------- */
+.mode { display: flex; flex-direction: column; }
+.mode .mode-tag { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--muted-2); }
+.mode h3 { margin: var(--space-4) 0 var(--space-3); font-size: var(--text-md); }
+.mode p { color: var(--fg-2); font-size: var(--text-sm); }
+.mode .fit {
+  margin-top: auto;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+/* 「模式三 · 完整组合」的强调只落在 mode-tag 的颜色上（--brand 深蓝小字）——
+   不加深色描边、不加阴影：三张卡片的边框/投影完全一致，
+   否则单张卡片的 --brand 边框会被读成「这张卡被描了黑边」。
+   （三张卡片并排时，层次靠 mode-tag 与标题本身，不靠边框差） */
+.mode.is-featured { border-color: var(--border); }
+.mode.is-featured .mode-tag { color: var(--brand); }
+
+/* ---------- split feature ---------- */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+@media (max-width: 900px) { .split { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); } }
+
+.check-list { display: flex; flex-direction: column; }
+.check-list li {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--border);
+}
+.check-list li:first-child { padding-top: 0; }
+.check-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+
+.check-list .m {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--muted-2);
+  padding-top: 3px;
+}
+
+.check-list strong { display: block; font-weight: 500; margin-bottom: 4px; }
+.check-list p { font-size: var(--text-sm); color: var(--fg-2); }
+
+/* ---------- character cards (about) ---------- */
+.char {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+}
+
+.char .glyph {
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--brand);
+  display: block;
+  margin-bottom: var(--space-5);
+}
+
+[data-theme="dark"] .char .glyph { color: var(--brand); }
+
+.char h3 { font-size: var(--text-md); margin-bottom: var(--space-4); }
+.char p { color: var(--fg-2); font-size: var(--text-sm); }
+.char p + p { margin-top: var(--space-4); }
+
+/* ---------- contact ---------- */
+.contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-6); }
+
+@media (max-width: 820px) { .contact-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.qr-card { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-8); }
+
+.qr-frame {
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  overflow: hidden;
+}
+
+.qr-frame img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.qr-card h3 { margin: var(--space-6) 0 var(--space-2); font-size: var(--text-md); }
+.qr-card p { font-size: var(--text-sm); color: var(--muted); max-width: 34em; }
+
+.contact-list { display: flex; flex-direction: column; }
+.contact-list li { display: flex; gap: var(--space-4); padding: var(--space-5) 0; border-bottom: 1px solid var(--border); }
+.contact-list li:last-child { border-bottom: 0; }
+.contact-list .k { flex: none; width: 96px; font-size: var(--text-sm); color: var(--muted); }
+.contact-list .v { font-size: var(--text-base); }
+.contact-list .v a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* ---------- contact form（contact.html 在线提交） ---------- */
+.contact-form { display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-8); }
+
+.contact-form .field label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="tel"] {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  /* 铣削凹槽：内阴影下沉（输入区低于台面），与卡片凸起互为反义 */
+  box-shadow: var(--slot-shadow);
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+
+.contact-form input::placeholder { color: var(--muted-2); }
+
+.contact-form input:focus-visible { border-color: var(--brand); }
+
+.field-hint { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--muted); }
+
+/* 校验失败：输入框描边变 danger 色 + 下方错误文案（由 site.js 增删 .has-error 与文案） */
+.field.has-error input { border-color: var(--danger); }
+.field-error { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--danger); }
+
+/* honeypot：移出视口而不是 display:none —— 部分爬虫会跳过不可见字段，off-screen 更能骗它填 */
+.hp { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.form-note { font-size: var(--text-xs); color: var(--muted); }
+
+/* 提交状态行：空时不占位；成功/失败用软底色 pill，不用琥珀（不占每屏琥珀预算） */
+.form-status { display: none; margin: 0; padding: var(--space-3) var(--space-4); border-radius: var(--radius); font-size: var(--text-sm); }
+.form-status[data-state="ok"] { display: block; background: var(--success-soft); color: var(--success); }
+.form-status[data-state="error"] { display: block; background: var(--danger-soft); color: var(--danger); }
+
+/* 提交中按钮禁用态 */
+.contact-form [data-submit]:disabled { opacity: 0.6; cursor: default; }
+
+/* ---------- cta band ---------- */
+.cta-band {
+  background: var(--brand);
+  color: #fff;
+  /* 金属板整圈缘光（--plate-rim 浅于 --edge-hi）+ 深板投影（比普通卡片更重的
+     --plate-shadow-deep：它是页面里最重的一块材料） */
+  border: 1px solid var(--plate-rim);
+  box-shadow: var(--plate-shadow-deep);
+  border-radius: var(--radius-xl);
+  padding: clamp(40px, 6vw, 72px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-10);
+  align-items: center;
+}
+
+.cta-band h2 { color: #fff; margin-bottom: var(--space-4); }
+.cta-band p { color: rgba(255, 255, 255, 0.82); max-width: 48ch; }
+.cta-band .btn-secondary { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.32); color: #fff; }
+.cta-band .btn-secondary:hover { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.5); }
+/* 白底按钮上的扫光改用墨色（白扫光在白底上不可见）。
+   白帽双层（2026-09-17）：白亮度曲线 + 墨扫光，帽光塌陷沿用 :active 全局态 */
+.cta-band .btn-primary {
+  background-color: #fff;
+  border-color: #fff;
+  color: var(--brand);
+  background-image:
+    linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 55%, #F2F6FB 100%),
+    linear-gradient(110deg, transparent 35%, rgba(14,42,71,0.10) 50%, transparent 65%);
+  background-size: 100% 100%, 220% 100%;
+  background-position: 0 0, 115% 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(10,26,47,0.10), 0 1px 2px rgba(10,26,47,0.16);
+}
+.cta-band .btn-primary:hover { background-color: var(--brand-soft); border-color: var(--brand-soft); background-position: 0 0, -25% 0; }
+
+/* 暗色主题：CTA 带为深 fjord 铬后，白钮文字若用 --brand（#6FA0E0）在白底上仅 ~2.9，
+   改用深 fjord 墨（#0E2A47，亮 theme 的 brand 值，色相锁定）；hover 浅底同族色保持可读 */
+[data-theme="dark"] .cta-band .btn-primary { color: #0E2A47; }
+[data-theme="dark"] .cta-band .btn-primary:hover { background-color: #D7E2F0; border-color: #D7E2F0; }
+.cta-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+
+@media (max-width: 820px) { .cta-band { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- footer ---------- */
+/* 底padding 加大到 space-16 + 安全区：32px 时末行贴屏幕下沿，
+   iPhone Safari 底栏 / 窗口越出屏幕都会把末行吃掉（2026-09-11 用户实测反馈） */
+/* 顶缘凹槽：暗线之下 1px 内亮线（页脚台面受光），与页眉底缘呼应 */
+.site-footer { border-top: 1px solid var(--border); box-shadow: inset 0 1px 0 var(--edge-hi); padding: var(--space-16) 0 calc(var(--space-16) + env(safe-area-inset-bottom, 0px)); margin-top: var(--space-24); }
+
+.footer-top { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+
+.footer-brand img { display: block; height: 36px; width: auto; margin-bottom: var(--space-5); }
+.footer-brand .logo-dark { display: none; }
+[data-theme="dark"] .footer-brand .logo-light { display: none; }
+[data-theme="dark"] .footer-brand .logo-dark { display: block; }
+.footer-brand p { font-size: var(--text-sm); color: var(--muted); max-width: 34ch; }
+.footer-brand .footer-claim {
+  color: var(--fg-2);
+  font-weight: 500;
+  max-width: 36ch;
+  margin-bottom: var(--space-2);
+  text-wrap: balance;
+}
+
+.footer-col h4 {
+  font-family: var(--font-en);
+  /* 栏目标题必须比下面的条目大一档：条目统一 --text-sm（13px），
+     标题取 --text-base（15px）。设计系统里页脚 h4 是 12px 的说明性小标签，
+     但此处标题字号小于正文，层级会被读成反的（原稿即如此）。 */
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: var(--space-4);
+}
+
+.footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+/* 字号与颜色都挂在 li 上而不是 a 上：没有链接的纯文本项（「辽宁 · 大连」）
+   与链接项完全一致 —— 否则它会继承正文的 --text-base/--fg，
+   比同栏链接大一号、深一号（2026-09-12 用户实测反馈）。 */
+.footer-col li { font-size: var(--text-sm); color: var(--fg-2); }
+.footer-col a { color: var(--fg-2); }
+.footer-col a:hover { color: var(--fg); }
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+@media (max-width: 820px) { .footer-top { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .footer-top { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- page header (inner pages) ---------- */
+.page-head { padding: clamp(40px, 6vw, 80px) 0 var(--space-16); border-bottom: 1px solid var(--border); }
+.page-head h1 { font-size: clamp(30px, 4.4vw, 48px); margin: var(--space-5) 0 var(--space-5); }
+.page-head .lede { max-width: 60ch; }
+
+/* ---------- reveal ---------- */
+.reveal { opacity: 0; transform: translateY(12px); }
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 480ms var(--ease), transform 480ms var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 平滑滚动也属动效：scroll-behavior 不是 transition，通配时长重置管不到，须显式还原 */
+  html { scroll-behavior: auto; }
+  .reveal, .reveal.is-visible { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  /* 呼吸灯降级为静止核心点；光晕若停在 100% 帧会变成一枚常亮光环，直接隐藏 */
+  .kaup-dot-glow { display: none; }
+}
+
+/* ---------- responsive container ---------- */
+@media (max-width: 640px) {
+  :root { --gutter: 20px; --section-y: 64px; }
+}

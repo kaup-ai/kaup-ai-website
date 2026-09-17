@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- 国内双核浏览器强制 WebKit 内核；禁止百度转码/落地页劫持；声明 PC/移动自适应 -->
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta name="applicable-device" content="pc,mobile">
+<title>智御无疆 Kaup — 赋能企业的 AI 全链路编排与智能调度平台</title>
+<meta name="description" content="以 AI 助力企业超越能力和效率的边界，重新定义无限可能。智御无疆 Kaup 面向中国 B2B 外贸企业提供 AI Agent 平台订阅、定制开发与本地部署：智能拓客、ICP 三维评分、开发信自动化、客户全生命周期管理等 12 项能力，数据不出企业。">
+<meta name="theme-color" content="#F7F9FC">
+<!-- Windows 开始菜单磁贴（Bing/Edge 生态）：品牌深蓝底 + 应用图标 -->
+<meta name="msapplication-TileColor" content="#0E2A47">
+<meta name="msapplication-TileImage" content="assets/logo/app-icon-512.png">
+<!-- ---------- SEO / 社交分享（绝对地址指向正式域名 kaup.ai） ---------- -->
+<link rel="canonical" href="https://kaup.ai/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="智御无疆 Kaup">
+<meta name="google-site-verification" content="01RiUMnis6pg-MivPFV0EDbT2KlpD4Yd47tbIIPHspk">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="智御无疆 Kaup">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:url" content="https://kaup.ai/">
+<meta property="og:title" content="智御无疆 Kaup — 以 AI 助力企业超越能力和效率的边界">
+<meta property="og:description" content="以 AI 助力企业超越能力和效率的边界，重新定义无限可能。把外贸获客的整条链路交给 AI Agent：识别 → 评估 → 触达 → 跟进 → 复盘。平台订阅 · 定制开发 · 本地部署 · 数据不出企业。">
+<meta property="og:image" content="https://kaup.ai/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="智御无疆 Kaup — 以 AI 助力企业超越能力和效率的边界">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="智御无疆 Kaup — 以 AI 助力企业超越能力和效率的边界">
+<meta name="twitter:description" content="以 AI 助力企业超越能力和效率的边界，重新定义无限可能。把外贸获客的整条链路交给 AI Agent：识别 → 评估 → 触达 → 跟进 → 复盘。平台订阅 · 定制开发 · 本地部署 · 数据不出企业。">
+<meta name="twitter:image" content="https://kaup.ai/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://kaup.ai/#organization",
+      "name": "智御无疆 Kaup",
+      "alternateName": "KAUP",
+      "url": "https://kaup.ai/",
+      "logo": "https://kaup.ai/assets/logo/logo-horizontal-1024w.png",
+      "image": "https://kaup.ai/og-image.png",
+      "description": "赋能企业的 AI 全链路编排与智能调度平台，面向中国 B2B 外贸企业提供 AI Agent 平台订阅、定制开发与本地/私有化部署。",
+      "slogan": "以 AI 助力企业超越能力和效率的边界，重新定义无限可能",
+      "email": "sales@kaup.ai",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "辽宁省",
+        "addressLocality": "大连市",
+        "addressCountry": "CN"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "中国"
+      },
+      "knowsAbout": [
+        "AI Agent",
+        "外贸获客",
+        "智能拓客",
+        "ICP 三维评分",
+        "开发信自动化",
+        "客户全生命周期管理",
+        "本地部署",
+        "私有化部署",
+        "HITL 人机协同",
+        "CRM/ERP 集成"
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "email": "sales@kaup.ai",
+          "availableLanguage": [
+            "zh-CN"
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://kaup.ai/#website",
+      "url": "https://kaup.ai/",
+      "name": "智御无疆 Kaup",
+      "publisher": {
+        "@id": "https://kaup.ai/#organization"
+      },
+      "inLanguage": "zh-CN"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://kaup.ai/#webpage",
+      "url": "https://kaup.ai/",
+      "name": "智御无疆 Kaup — 以 AI 助力企业超越能力和效率的边界",
+      "description": "以 AI 助力企业超越能力和效率的边界，重新定义无限可能。把外贸获客的整条链路交给 AI Agent：识别 → 评估 → 触达 → 跟进 → 复盘。平台订阅 · 定制开发 · 本地部署 · 数据不出企业。",
+      "isPartOf": {
+        "@id": "https://kaup.ai/#website"
+      },
+      "about": {
+        "@id": "https://kaup.ai/#organization"
+      },
+      "inLanguage": "zh-CN"
+    }
+  ]
+}
+</script>
+<!-- ---------- Google Analytics 4（沿用旧站属性 G-KY2F8QZBEN） ---------- -->
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KY2F8QZBEN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KY2F8QZBEN');
+</script>
+<!-- favicon 兜底链：ico 在前（Safari/老浏览器与爬虫默认请求 /favicon.ico），
+     支持 SVG 的现代浏览器按「最后一个可用」规则取后面的深浅色 SVG -->
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/logo/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("kaup-theme");
+      if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand-logo" href="index.html" aria-label="智御无疆 Kaup — 首页">
+      <img class="logo-light" src="assets/logo/logo-horizontal.svg" alt="智御无疆 Kaup" height="40">
+      <img class="logo-dark" src="assets/logo/logo-horizontal-dark.svg" alt="" aria-hidden="true" height="40">
+    </a>
+    <nav class="nav" id="site-nav" aria-label="主导航">
+      <a href="index.html" aria-current="page">首页</a>
+      <a href="capabilities.html">平台能力</a>
+      <a href="services.html">服务与合作</a>
+      <a href="about.html">关于我们</a>
+      <a href="contact.html">联系我们</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="切换到深色主题">
+        <svg class="icon-sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="3.4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M16.2 12.4A6.8 6.8 0 0 1 7.6 3.8a6.8 6.8 0 1 0 8.6 8.6Z"/></svg>
+      </button>
+      <a class="btn btn-primary" href="contact.html">预约方案沟通</a>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="打开导航菜单">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero metal">
+    <div class="wrap hero-inner">
+      <div class="hero-stage">
+        <h1 class="hero-logo">
+        <!-- hero 主视觉 · 横向 lockup，字形、字距、颜色 1:1 沿用 assets/logo/logo-horizontal-centered.svg。
+             构图（2026-09-11 改定）：
+               · 单元一 = mark + 「智御无疆」 —— 两个元素绑成一个整体，整体以页面中线居中；
+               · 单元二 = 「Kaup」 —— 从属于「智御无疆」，对 CN 词标的墨迹中轴居中，
+                 不再对页面中线居中（此前曾定稿为单独对页面中线居中，实际观感是
+                 「Kaup」相对「智御无疆」明显左偏、像是挂错了位置，遂改）。
+             在该资产基础上做四处「光学对齐」修正，然后收紧 viewBox：
+               1) mark 上移 10.63 —— 原资产里 mark 墨迹中心在 y=85.63，比文字块（CN+EN）墨迹中心 y=75 低 10.63，
+                  视觉上「左边图形往下坠」；上移后 mark 与文字块上下沿齐平，中心同高。
+               2) CN 的 x = 170.97 —— text-anchor:middle 把字符后的尾随字距也算进前进宽度，
+                  整体会左偏半个字距；改成 anchor:start + 显式 x 后，尾随字距对渲染不再有任何影响，
+                  Chromium / WebKit 两个内核的墨迹落点逐像素一致。
+               3) 词标整体左移 20.07 —— 居中变体（translate(68 30)）相对左对齐变体多塞了 20 的间距
+                  （左对齐变体 mark 右缘→词标 = 16.5，居中变体是 36.75），收回设计文档 §4.2 硬规则 2
+                  规定的 mark↔词标 ≈ 21，mark 与「智御无疆」重新咬合成一个整体（= 单元一）。
+               4) EN 居中于 CN：anchor:start + x = 258.09 —— 「Kaup」的墨迹中轴落在 284.25
+                  = 「智御无疆」的墨迹中轴（getBBox 实测，Chromium / WebKit 像素级一致），
+                  即「Kaup」左右居中于「智御无疆」；EN 墨迹仍完全落在 CN 墨迹跨度内。
+             5) viewBox 相对整块 lockup（mark + 智御无疆 + Kaup）墨迹的中轴居中。
+                初版取 27.28，相对「mark + 智御无疆」中轴 231.03 左右对称（各 48.2）；
+                但「Kaup」对 CN 词标居中后整体墨迹右偏，2026-09-12 实测整块墨迹
+                x 95.40 → 375.89（含 Kaup，viewBox 坐标系），中轴 235.64 ≠ 231.03，
+                桌面渲染墨迹偏右 5.7px。viewBox x 改为 31.89（+4.61），
+                让 viewBox 中轴 = 整块墨迹中轴 → 元素居中即整体墨迹居中。
+                （设计文档 §4.2 硬规则 1：横向 lockup 不加容器方块；规则 2：mark↔词标 ≈ 21 已在上一步锁死）
+             内联而非 <img>，是为了让琥珀点的呼吸灯在任何内核下都确定运行。 -->
+        <svg viewBox="31.89 38 407.5 73.75" role="img" aria-label="智御无疆 Kaup">
+          <!-- 6) 整块 lockup 等比缩到 87%（「智御无疆」等效 48 → 42，比原始小一档半）。
+                缩放中心取整块墨迹中心 (231.03, 74.77) —— 缩放后
+                「mark + 智御无疆」的中轴（231.03）保持不动，
+                「Kaup」对「智御无疆」的居中关系随等比缩放原样保留；
+                页面中线的最终对齐由 viewBox 负责（见上一条），缩放与此无关。
+                mark↔词标 ≈ 21、CN↔EN 的行距随比例一起收，构图不散。 -->
+          <g transform="translate(231.03 74.77) scale(0.87) translate(-231.03 -74.77)">
+            <g transform="translate(68 19.37)">
+              <g transform="rotate(-15 50 50)">
+                <path class="hero-logo-mark" d="M 15 15 C 25 20, 55 35, 80 50 C 55 65, 25 80, 15 85 L 40 85 C 50 78, 75 65, 85 50 C 75 35, 50 22, 40 15 Z"/>
+                <!-- 光晕在核心点下层：同一条 4.2s 呼吸曲线，峰值时晕开、波谷时归零，
+                     让「呼吸」在手机上（核心点渲染仅约 9px 宽）也读得出来 -->
+                <circle class="kaup-dot-glow" cx="76" cy="50" r="11" fill="#E89B3C"/>
+                <circle class="kaup-dot" cx="76" cy="50" r="5" fill="#E89B3C"/>
+              </g>
+            </g>
+            <!-- 两行都改用 text-anchor:start + 显式 x，而不是 text-anchor:middle：
+                Chromium 与 WebKit 对「middle + letter-spacing」的总前进宽度口径不同
+                （Chromium 把末字之后的尾随字距算进去、WebKit 不算），同一段标记在两内核里
+                会横向差半个字距。改成 anchor:start 后，尾随字距对渲染不再有任何影响，
+                两个内核的墨迹落点逐像素一致（x = 前进宽度起点）。 -->
+            <text class="hero-logo-cn" x="170.97" y="78">智御无疆</text>
+            <text class="hero-logo-en" x="258.09" y="110">Kaup</text>
+          </g>
+        </svg>
+        </h1>
+      </div>
+
+      <span class="hero-eyebrow">智以为御，无疆为境 · Kaup Your Trade</span>
+
+      <p class="hero-claim">以 AI 助力企业超越能力和效率的边界，<br class="claim-br">重新定义无限可能</p>
+
+      <!-- 产品实拍：浅色/深色两张，随主题切换（与顶栏 logo 同一套显隐机制）。
+           srcset 三档宽度（1280/1920/2560）——避免浏览器把 2560 原图一次性
+           缩到渲染宽度导致 UI 小字发虚；width/height 写死固有尺寸防 CLS。 -->
+      <div class="hero-shot">
+        <img class="shot-light" src="kaup-desktop-light.png"
+             srcset="kaup-desktop-light-1280.png 1280w, kaup-desktop-light-1920.png 1920w, kaup-desktop-light.png 2560w"
+             sizes="(max-width: 1160px) calc(100vw - 40px), 1080px"
+             alt="智御无疆桌面端：线索工作台界面" width="2560" height="1600" decoding="async" fetchpriority="high">
+        <img class="shot-dark" src="kaup-desktop-dark.png"
+             srcset="kaup-desktop-dark-1280.png 1280w, kaup-desktop-dark-1920.png 1920w, kaup-desktop-dark.png 2560w"
+             sizes="(max-width: 1160px) calc(100vw - 40px), 1080px"
+             alt="" aria-hidden="true" width="2560" height="1600" decoding="async" loading="lazy">
+      </div>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="contact.html">预约方案沟通</a>
+        <a class="btn btn-secondary btn-lg" href="capabilities.html">查看能力图谱</a>
+      </div>
+
+      <p class="hero-note">赋能企业的 AI 全链路编排与智能调度平台 · 定制开发 · 本地&nbsp;部署&nbsp;/&nbsp;私有化 · 数据不出企业</p>
+
+      <a class="hero-scroll" href="#chain">
+        <span>向下了解</span>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4"/></svg>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============ 获客链路 ============ -->
+  <section class="section chain-section" id="chain">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">获客链路</span>
+        <h2 class="h2">五个环节，Agent 自主推进</h2>
+        <p class="lede">智御无疆是赋能企业的 AI 全链路编排与智能调度平台。我们把外贸获客的整条链路——识别、评估、触达、跟进、复盘——交给 AI Agent 自主执行，业务员只在关键决策节点把关。</p>
+      </div>
+      <ol class="chain-track" aria-label="外贸获客链路的五个环节">
+        <li class="step-card">
+          <span class="step-top"><span class="idx">01</span><span class="tag tag-agent">Agent</span></span>
+          <span class="name"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="6.4"/><circle cx="10" cy="10" r="2.2"/><path d="M10 1.6v2M10 16.4v2M1.6 10h2M16.4 10h2"/></svg>识别</span>
+          <span class="desc">按品类与目标市场自主发现客户，去重并结构化</span>
+        </li>
+        <li class="step-card">
+          <span class="step-top"><span class="idx">02</span><span class="tag tag-agent">Agent</span></span>
+          <span class="name"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.8 14.8a7 7 0 1 1 12.4 0"/><path d="M10 14.8l3-4"/><circle cx="10" cy="14.8" r="1.1"/></svg>评估</span>
+          <span class="desc">匹配度 / 互动度 / 采购意向 三维动态评分</span>
+        </li>
+        <li class="step-card">
+          <span class="step-top"><span class="idx">03</span><span class="tag tag-hitl">人工确认</span></span>
+          <span class="name"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17.8 2.2L9.3 10.7M17.8 2.2l-5.4 15.6-3.2-7.1-7-3.1 15.6-5.4z"/></svg>触达</span>
+          <span class="desc">开发信序列自动发送，多渠道统一管理</span>
+        </li>
+        <li class="step-card">
+          <span class="step-top"><span class="idx">04</span><span class="tag tag-agent">Agent</span></span>
+          <span class="name"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M15 13.7v-4.2a5 5 0 1 0-10 0v4.2l-1.7 2.6h13.4L15 13.7z"/><path d="M8.5 16.3a1.7 1.7 0 0 0 3 0"/></svg>跟进</span>
+          <span class="desc">复购提醒、流失预警与智能跟进节奏</span>
+        </li>
+        <li class="step-card">
+          <span class="step-top"><span class="idx">05</span><span class="tag tag-agent">Agent</span></span>
+          <span class="name"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 5.6C8.6 4.2 6.8 3.7 3.6 3.7v11.6c3.2 0 5 .5 6.4 1.9 1.4-1.4 3.2-1.9 6.4-1.9V3.7c-3.2 0-5 .5-6.4 1.9z"/><path d="M10 5.6v11.6"/></svg>复盘</span>
+          <span class="desc">成交话术与最佳实践沉淀为组织能力</span>
+        </li>
+      </ol>
+      <p class="chain-note">邮件发送、批量操作、数据删除等敏感动作强制执行人机确认（HITL），全流程留痕可审计。</p>
+    </div>
+  </section>
+
+  <!-- ============ FACTS ============ -->
+  <section class="wrap">
+    <div class="facts">
+      <div class="fact">
+        <span class="fact-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><path d="M2.6 10h14.8"/><ellipse cx="10" cy="10" rx="3.6" ry="7.4"/></svg></span>
+        <span class="num mono">45.47<span>万亿元</span></span>
+        <span class="label">2025 年中国货物进出口总值，同比 +3.8%，连续 9 年增长</span>
+        <span class="src">数据来源：海关总署</span>
+      </div>
+      <div class="fact">
+        <span class="fact-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="3.5" width="10" height="14" rx="1"/><path d="M8 6.5h1.2M10.8 6.5H12M8 9.5h1.2M10.8 9.5H12M8 12.5h1.2M10.8 12.5H12"/><path d="M2.5 17.5h15"/></svg></span>
+        <span class="num mono">70<span>万家</span></span>
+        <span class="label">有进出口实绩的外贸企业（2025 年前三季度，已超 2024 年全年）</span>
+        <span class="src">数据来源：海关总署</span>
+      </div>
+      <div class="fact">
+        <span class="fact-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.8 15.2l4.8-4.8 3 3 6.6-6.6"/><path d="M12.8 6.8h4.4v4.4"/></svg></span>
+        <span class="num mono">5<span>人 ≈ 50 人</span></span>
+        <span class="label">配备全链路 AI Agent 矩阵后的团队触达、服务与吞吐能力</span>
+        <span class="src">智御无疆能力目标</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 痛点 ============ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">现实</span>
+        <h2 class="h2">外贸获客的三重约束</h2>
+        <p class="lede">获客高度依赖业务员的经验与人力，而工具只能覆盖单点。三者相互叠加，构成企业扩张的天花板。</p>
+      </div>
+      <div class="grid grid-3">
+        <article class="card reveal">
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 16h14"/><path d="M5 16V9M9.5 16V5M14 16v-4"/></svg></span>
+          <h3>获客成本高</h3>
+          <p>人力成本随团队规模线性增长——一个 5 人外贸团队，年度人力成本即达 30 万元量级；展会单次综合参展成本约 5 万元起，海关数据与平台会员费持续支出。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="2.6"/><path d="M3 16c0-2.6 2.2-4.2 5-4.2s5 1.6 5 4.2"/><path d="M14 8.4a2.4 2.4 0 0 0 0-4.6"/></svg></span>
+          <h3>人力依赖重</h3>
+          <p>一名业务员能同时跟进的客户数量存在天然上限，而成熟的外贸业务员长期稀缺。企业若寻求规模化，几乎只能依赖扩充团队。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3.5" width="14" height="13" rx="2"/><path d="M3 8.5h14M8.5 8.5v8"/></svg></span>
+          <h3>工具覆盖单点</h3>
+          <p>传统工具只能提升单一环节效率，环节之间的衔接、判断与节奏把控仍靠人工完成，数据在流转中断层，信息损耗与效率损失随之而来。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 形态对比 ============ -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">形态</span>
+        <h2 class="h2">为什么是 AI Agent，而不是又一种工具</h2>
+        <p class="lede">根本差异在于「流程由谁驱动」。外贸获客不是孤立的任务，而是一条需要判断、多步骤衔接的业务链路。</p>
+      </div>
+      <div class="compare reveal">
+        <div>
+          <div class="head"><span class="tag">传统工具 / SaaS</span>人驱动工具，完成单点任务</div>
+          <ul class="steps">
+            <li><span class="dot"></span>人负责找客户、写开发信、跟进客户</li>
+            <li><span class="dot"></span>工具仅提升单一环节的效率</li>
+            <li><span class="dot"></span>环节之间靠人工衔接，信息损耗</li>
+            <li><span class="dot"></span>数据留存于第三方，安全与合规受限</li>
+          </ul>
+        </div>
+        <div class="highlight">
+          <div class="head"><span class="tag tag-agent">AI Agent</span>Agent 自主执行，人在关键节点把关</div>
+          <ul class="steps">
+            <li><span class="dot"></span>端到端执行：识别 → 评估 → 触达 → 跟进 → 复盘</li>
+            <li><span class="dot"></span>重复、可标准化的环节由 Agent 承担</li>
+            <li><span class="dot"></span>人只在关键决策节点介入确认（HITL）</li>
+            <li><span class="dot"></span>支持本地部署，客户与业务数据不出企业</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 能力概览 ============ -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head sec-head-split reveal">
+        <div>
+          <span class="eyebrow">能力图谱</span>
+          <h2 class="h2">12 项能力，可独立定制、组合或扩展</h2>
+          <p class="lede">围绕外贸场景构建，从获客触达到知识沉淀，再到部署方式。</p>
+        </div>
+        <a class="link" href="capabilities.html">查看能力详解<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+      <div class="grid grid-3">
+        <article class="card group-card reveal">
+          <div class="group-head"><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="6.4"/><circle cx="10" cy="10" r="2.2"/><path d="M10 1.6v2M10 16.4v2M1.6 10h2M16.4 10h2"/></svg>获客与触达</h3><span class="group-count">04</span></div>
+          <p>从客户发现到多渠道触达的完整前端链路。</p>
+          <ul class="cap-list">
+            <li><span class="n">01</span><span><strong>智能拓客</strong> · 按品类与目标市场自主检索、去重、结构化</span></li>
+            <li><span class="n">02</span><span><strong>ICP 动态三维评分</strong> · 匹配度 / 互动度 / 采购意向</span></li>
+            <li><span class="n">03</span><span><strong>开发信自动化</strong> · 序列发送与送达率保障</span></li>
+            <li><span class="n">04</span><span><strong>多渠道触达</strong> · 即时通讯等渠道统一管理</span></li>
+          </ul>
+        </article>
+        <article class="card group-card reveal">
+          <div class="group-head"><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 2.4l6 2.2v4.7c0 3.7-2.5 6.5-6 8.1-3.5-1.6-6-4.4-6-8.1V4.6l6-2.2z"/><path d="M7.4 9.9l1.9 1.9 3.4-3.6"/></svg>Agent 智能与安全</h3><span class="group-count">02</span></div>
+          <p>让 Agent 自主推进，同时把边界交给企业。</p>
+          <ul class="cap-list">
+            <li><span class="n">05</span><span><strong>Agent 自主决策</strong> · 多层业务上下文、定时巡检、7×24 执行</span></li>
+            <li><span class="n">06</span><span><strong>HITL 安全</strong> · 敏感动作强制人工确认，全程审计</span></li>
+          </ul>
+        </article>
+        <article class="card group-card reveal">
+          <div class="group-head"><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="14" height="9.5" rx="1.5"/><path d="M7.5 7V5.6A1.6 1.6 0 0 1 9.1 4h1.8a1.6 1.6 0 0 1 1.6 1.6V7"/><path d="M3 11.2h14"/></svg>客户与业务管理</h3><span class="group-count">03</span></div>
+          <p>可与现有系统对接，让客户管理从被动响应转向主动经营。</p>
+          <ul class="cap-list">
+            <li><span class="n">07</span><span><strong>CRM / ERP 对接</strong> · 依据既有系统定制对接方案</span></li>
+            <li><span class="n">08</span><span><strong>客户全生命周期管理</strong> · 复购提醒与流失预警</span></li>
+            <li><span class="n">09</span><span><strong>跟单操作</strong> · 订单节点跟踪与异常预警</span></li>
+          </ul>
+        </article>
+        <article class="card group-card reveal">
+          <div class="group-head"><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><ellipse cx="10" cy="4.8" rx="6.5" ry="2.4"/><path d="M3.5 4.8v10.4c0 1.3 2.9 2.4 6.5 2.4s6.5-1.1 6.5-2.4V4.8"/><path d="M3.5 10c0 1.3 2.9 2.4 6.5 2.4s6.5-1.1 6.5-2.4"/></svg>知识与经验沉淀</h3><span class="group-count">02</span></div>
+          <p>把分散的文档与个人经验，转化为可复用的组织能力。</p>
+          <ul class="cap-list">
+            <li><span class="n">10</span><span><strong>知识库问答</strong> · 报价、标书、合同场景助手</span></li>
+            <li><span class="n">11</span><span><strong>成交话术沉淀</strong> · 最佳实践提炼与复用</span></li>
+          </ul>
+        </article>
+        <article class="card group-card reveal">
+          <div class="group-head"><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="4" width="13" height="5" rx="1"/><rect x="3.5" y="11" width="13" height="5" rx="1"/><path d="M6.3 6.5h1M6.3 13.5h1"/></svg>部署</h3><span class="group-count">01</span></div>
+          <p>数据主权由企业掌握。</p>
+          <ul class="cap-list">
+            <li><span class="n">12</span><span><strong>本地部署 / 私有化</strong> · 部署于企业自有环境，数据不出企业</span></li>
+          </ul>
+        </article>
+        <article class="card group-card reveal" style="justify-content:center">
+          <h3 style="font-size:var(--text-md)">不确定从哪一项开始？</h3>
+          <p style="margin-top:var(--space-3)">我们用一次需求沟通，判断哪些环节值得先交给 Agent。</p>
+          <p style="margin-top:var(--space-5)"><a class="link" href="contact.html">预约方案沟通<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 服务模式 ============ -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head sec-head-split reveal">
+        <div>
+          <span class="eyebrow">服务与合作</span>
+          <h2 class="h2">两种交付模式，按企业的自主程度选择</h2>
+          <p class="lede">轻量起步选平台订阅，开箱即用；深度自主选定制 + 私有化，系统部署于企业自有环境。各模式的具体范围依据企业需求一对一确定。</p>
+        </div>
+        <a class="link" href="services.html">查看服务详情<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+      <div class="grid grid-2">
+        <article class="card mode reveal">
+          <span class="mode-tag">模式一</span>
+          <h3>平台订阅制</h3>
+          <p>以订阅方式直接使用智御无疆平台的标准能力——智能拓客、三维评分、开发信自动化、多渠道触达等开箱即用。系统运行于平台，由平台持续迭代与运维，无需自建基础设施。</p>
+          <p class="fit">适合：希望快速上线、以轻量投入先验证 AI 获客效果的企业。</p>
+        </article>
+        <article class="card mode is-featured reveal">
+          <span class="mode-tag">模式二 · 完整组合</span>
+          <h3>定制化 + 私有化</h3>
+          <p>既依据企业需求定制 Agent 能力，又将定制后的系统完整部署于企业自有环境、与平台解耦——定制深度与完全自主可控同时达成。</p>
+          <p class="fit">适合：既需贴合自身业务、又要求完全私有化的企业，例如具备强合规要求或自有技术团队者。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 流程 ============ -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">合作流程</span>
+        <h2 class="h2">从需求沟通到运维支持</h2>
+        <p class="lede">项目周期因需求范围而异，不设统一周期；系统上线后提供持续的运维与迭代支持。</p>
+      </div>
+      <ol class="steps-track reveal">
+        <li class="step"><span class="n">01</span><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17.4 12.6a1.5 1.5 0 0 1-1.5 1.5H6L2.7 17.4V4.4a1.5 1.5 0 0 1 1.5-1.5h11.7a1.5 1.5 0 0 1 1.5 1.5v8.2z"/></svg>需求沟通</h3><p>了解行业属性与合规要求</p></li>
+        <li class="step"><span class="n">02</span><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14.2 2.6a2.3 2.3 0 1 1 3.2 3.2L6.3 16.9l-4.4 1.2 1.2-4.4 11.1-11.1z"/></svg>方案设计</h3><p>确定定制范围与交付边界</p></li>
+        <li class="step"><span class="n">03</span><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6.8 5.8L2.6 10l4.2 4.2M13.2 5.8L17.4 10l-4.2 4.2"/></svg>定制开发</h3><p>组合、裁剪 Agent 能力</p></li>
+        <li class="step"><span class="n">04</span><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 2.6l6.6 3.5v7.8L10 17.4l-6.6-3.5V6.1L10 2.6z"/><path d="M3.4 6.1L10 9.6l6.6-3.5M10 9.6v7.8"/></svg>部署交付</h3><p>私有化部署与环境交付</p></li>
+        <li class="step"><span class="n">05</span><h3><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3"/><path d="M5.7 5.7l2.1 2.1M14.3 5.7l-2.1 2.1M5.7 14.3l2.1-2.1M14.3 14.3l-2.1-2.1"/></svg>运维支持</h3><p>持续运维与迭代培训</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="wrap" style="padding-bottom:var(--space-16)">
+    <div class="cta-band metal reveal">
+      <div>
+        <h2 class="h2">先聊聊<br class="claim-br">你现在的获客链路</h2>
+        <p>一次需求沟通，足以判断哪些环节值得先交给 Agent，以及用哪种部署方式更合适。</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn-primary btn-lg" href="contact.html">预约方案沟通</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img class="logo-light" src="assets/logo/logo-horizontal.svg" alt="智御无疆 Kaup" height="36">
+        <img class="logo-dark" src="assets/logo/logo-horizontal-dark.svg" alt="" aria-hidden="true" height="36">
+        <p class="footer-claim">以 AI 助力企业超越能力和效率的边界，重新定义无限可能。</p>
+      </div>
+      <div class="footer-col">
+        <h4>导航</h4>
+        <ul>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="capabilities.html">平台能力</a></li>
+          <li><a href="services.html">服务与合作</a></li>
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="contact.html">联系我们</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>核心能力</h4>
+        <ul>
+          <li><a href="capabilities.html#acquisition">智能拓客与触达</a></li>
+          <li><a href="capabilities.html#agent">Agent 自主决策与 HITL 安全</a></li>
+          <li><a href="capabilities.html#crm">客户全生命周期管理</a></li>
+          <li><a href="capabilities.html#deploy">本地部署 / 私有化</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>联系</h4>
+        <ul>
+          <li><a href="mailto:sales@kaup.ai">sales@kaup.ai</a></li>
+          <li><a href="contact.html">公众号 / 微信二维码</a></li>
+          <li>辽宁 · 大连</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> 智御无疆 · Kaup. 保留所有权利。</span>
+      <span>智以为御，无疆为境 · Kaup Your Trade</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,2266 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>智御无疆 / Kaup — Design System v1.0</title>
+  <meta name="description" content="智御无疆 / Kaup 官方 Design System — 峡湾深蓝 + 维京琥珀双色品牌,Kaup Chevron mark,Tokens + 15+ 组件 + 状态 + 暗色模式。" />
+  <style>
+    /* ===========================================================
+       Kaup Design System v1.0 — 2026-06-14
+       Brand: 智御无疆 / Kaup  ·  Etymology: Old Norse kaup = trade
+       Tokens sourced from brand-spec.md §2-§5
+       =========================================================== */
+
+    /* ---------- 1. TOKENS · light (default) ---------- */
+    :root {
+      /* Surface */
+      --bg:         #F7F9FC;                       /* glacier · page bg */
+      --surface:    #FFFFFF;                       /* card / panel */
+      --surface-2:  #F1F4F9;                       /* sunken panel */
+      --fg:         #0A1A2F;                       /* deep ink */
+      --fg-2:       #34465E;                       /* secondary text */
+      --muted:      #5B6B7E;                       /* meta / hint */
+      --muted-2:    #8898AB;                       /* disabled label */
+      --border:     #DEE3EB;                       /* hairline */
+      --border-2:   #C8D2DF;                       /* stronger border */
+
+      /* Brand */
+      --brand:      #0E2A47;                       /* fjord deep blue · primary action */
+      --brand-2:    #0A2240;                       /* hover/active brand */
+      --brand-soft: #E5ECF5;                       /* brand tinted bg */
+      --on-brand:   #FFFFFF;                       /* text on brand */
+      --accent:     #E89B3C;                       /* viking amber · polaris dot · max 2/screen */
+      --accent-2:   #D8892A;                       /* hover/active amber */
+      --accent-soft:#FCEFD9;                       /* amber tinted bg */
+
+      /* Semantic */
+      --success:    #16A34A;
+      --success-soft:#DCF5E2;
+      --warn:       #D97706;
+      --warn-soft:  #FEF3D6;
+      --danger:     #DC2626;
+      --danger-soft:#FEE2E2;
+      --info:       #2563EB;
+      --info-soft:  #DBEAFE;
+
+      /* Type */
+      --font-cn:    "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      --font-en:    "Inter", -apple-system, "SF Pro Display", system-ui, sans-serif;
+      --font-mono:  "JetBrains Mono", "IBM Plex Mono", ui-monospace, Menlo, monospace;
+      --text-xs:    12px;
+      --text-sm:    13px;
+      --text-base:  15px;
+      --text-md:    17px;
+      --text-lg:    22px;
+      --text-xl:    32px;
+      --text-2xl:   48px;
+      --text-3xl:   66px;
+      --leading-tight:  1.1;
+      --leading-snug:   1.3;
+      --leading-body:   1.55;
+      --tracking-display: -0.02em;
+      --tracking-caps:    0.08em;
+
+      /* Spacing (8pt baseline) */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10:40px;
+      --space-12:48px;
+      --space-16:64px;
+      --space-20:80px;
+      --space-24:96px;
+
+      /* Radii */
+      --radius-sm:  6px;
+      --radius:     8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-xl:  20px;
+      --radius-pill:999px;
+
+      /* Shadow / elevation */
+      --elev-1: 0 1px 2px rgba(10,26,47,0.06), 0 1px 1px rgba(10,26,47,0.04);
+      --elev-2: 0 2px 6px rgba(10,26,47,0.06), 0 1px 2px rgba(10,26,47,0.04);
+      --elev-3: 0 8px 24px rgba(10,26,47,0.08), 0 2px 6px rgba(10,26,47,0.04);
+      --elev-4: 0 24px 64px rgba(10,26,47,0.12), 0 4px 12px rgba(10,26,47,0.06);
+      --ring:   0 0 0 3px rgba(14,42,71,0.18);                  /* focus ring on brand */
+      --ring-amber: 0 0 0 3px rgba(232,155,60,0.28);            /* focus ring on accent */
+
+      /* Motion */
+      --t-fast: 130ms;
+      --t-base: 200ms;
+      --t-slow: 320ms;
+      --ease:   cubic-bezier(0.2, 0, 0, 1);
+
+      /* Layout */
+      --container:    1200px;
+      --gutter:       32px;
+      --section-y:    96px;
+    }
+
+    /* ---------- 2. TOKENS · dark ---------- */
+    [data-theme="dark"] {
+      --bg:         #0A1A2F;
+      --surface:    #102742;
+      --surface-2:  #0C2038;
+      --fg:         #F0F4FA;
+      --fg-2:       #C6D2E2;
+      --muted:      #8EA0B8;
+      --muted-2:    #5B6B82;
+      --border:     #1E365A;
+      --border-2:   #2A4670;
+      --brand:      #6FA0E0;                       /* lighter brand for dark surfaces */
+      --brand-2:    #5188CF;
+      --brand-soft: #152D4D;
+      --on-brand:   #0A1A2F;
+      --accent:     #F2B260;                       /* slightly brighter amber for dark */
+      --accent-2:   #E89B3C;
+      --accent-soft:#3A2A14;
+      --success:    #4ADE80;
+      --success-soft:#0F2A1B;
+      --warn:       #FBBF24;
+      --warn-soft:  #2D2007;
+      --danger:     #F87171;
+      --danger-soft:#2D0F0F;
+      --info:       #60A5FA;
+      --info-soft:  #0E1F3A;
+      --elev-1: 0 1px 2px rgba(0,0,0,0.4);
+      --elev-2: 0 2px 6px rgba(0,0,0,0.4);
+      --elev-3: 0 8px 24px rgba(0,0,0,0.5);
+      --elev-4: 0 24px 64px rgba(0,0,0,0.6);
+      --ring:   0 0 0 3px rgba(111,160,224,0.32);
+      --ring-amber: 0 0 0 3px rgba(242,178,96,0.36);
+    }
+
+    /* ---------- 3. RESET + BASE ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-en);
+      font-size: var(--text-base);
+      line-height: var(--leading-body);
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color var(--t-slow) var(--ease), color var(--t-slow) var(--ease);
+    }
+    img, svg { display: block; max-width: 100%; }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4, h5 {
+      font-family: var(--font-cn);
+      font-weight: 600;
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+      color: var(--fg);
+    }
+    code, pre, kbd { font-family: var(--font-mono); font-size: 0.9em; }
+
+    /* ---------- 4. LAYOUT HELPERS ---------- */
+    .container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+    .section { padding: var(--section-y) 0; border-top: 1px solid var(--border); }
+    .section-head { margin-bottom: var(--space-12); max-width: 720px; }
+    .eyebrow {
+      display: inline-block;
+      font-family: var(--font-en);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: var(--tracking-caps);
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: var(--space-3);
+    }
+    .section-title { font-size: var(--text-xl); margin-bottom: var(--space-3); }
+    .section-sub { color: var(--muted); font-size: var(--text-md); }
+
+    /* ---------- 5. NAVIGATION ---------- */
+    .topnav {
+      position: sticky; top: 0; z-index: 100;
+      background: color-mix(in oklab, var(--bg) 88%, transparent);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topnav-inner {
+      display: flex; align-items: center; gap: var(--space-8);
+      height: 64px;
+    }
+    .navlinks { display: flex; gap: var(--space-6); margin-left: var(--space-8); }
+
+    /* Theme-aware brand logo (topnav / footer / hero): two <img> toggled by [data-theme], not <picture>+prefers-color-scheme. So it reacts to the JS theme toggle in #themeToggle, not just OS preference. */
+    .brand-logo { display: inline-flex; align-items: center; text-decoration: none; }
+    .brand-logo:hover { text-decoration: none; opacity: 0.78; }
+    .brand-logo-img { height: 40px; width: auto; display: block; }
+    .brand-logo-dark { display: none; }
+    [data-theme="dark"] .brand-logo-light { display: none; }
+    [data-theme="dark"] .brand-logo-dark { display: block; }
+    .navlinks a {
+      color: var(--fg-2);
+      font-size: var(--text-sm); font-weight: 500;
+      padding: 6px 0;
+      text-decoration: none;
+      position: relative;
+    }
+    .navlinks a:hover { color: var(--fg); }
+    .nav-spacer { flex: 1; }
+    .nav-cta { display: flex; align-items: center; gap: var(--space-3); }
+
+    .theme-toggle {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--fg-2);
+      transition: all var(--t-fast) var(--ease);
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--border-2); background: var(--surface); }
+    .theme-toggle svg { width: 16px; height: 16px; }
+    .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    /* ---------- 6. HERO ---------- */
+    .hero { padding: 120px 0 96px; }
+    .hero-inner { max-width: 880px; }
+    .hero-logo { display: block; margin-bottom: var(--space-6); }
+    .hero-logo img { height: 56px; width: auto; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-family: var(--font-en); font-size: var(--text-xs); font-weight: 600;
+      letter-spacing: var(--tracking-caps); text-transform: uppercase;
+      border-radius: var(--radius-pill);
+      margin-bottom: var(--space-6);
+    }
+    .hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, var(--text-3xl));
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-5);
+    }
+    .hero h1 .cn { font-family: var(--font-cn); }
+    .hero h1 .accent { color: var(--brand); }
+    .hero p {
+      font-size: var(--text-md);
+      color: var(--muted);
+      max-width: 60ch;
+      margin-bottom: var(--space-8);
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-8); }
+    .hero-meta {
+      display: flex; gap: var(--space-8); flex-wrap: wrap;
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--border);
+    }
+    .hero-meta-item .num {
+      font-family: var(--font-en); font-size: var(--text-lg); font-weight: 600; color: var(--fg);
+      letter-spacing: -0.01em;
+    }
+    .hero-meta-item .lbl { font-size: var(--text-xs); color: var(--muted); letter-spacing: var(--tracking-caps); text-transform: uppercase; }
+
+    /* ---------- 7. BUTTON ---------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: var(--font-en); font-weight: 500;
+      letter-spacing: 0.01em;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all var(--t-fast) var(--ease);
+      white-space: nowrap;
+      user-select: none;
+      text-decoration: none;
+    }
+    .btn:focus-visible { outline: none; box-shadow: var(--ring); }
+    .btn[disabled], .btn.is-disabled { cursor: not-allowed; opacity: 0.5; pointer-events: none; }
+
+    .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; }
+    .btn-md { height: 40px; padding: 0 16px; font-size: 14px; }
+    .btn-lg { height: 48px; padding: 0 22px; font-size: 15px; }
+
+    .btn-primary { background: var(--brand); color: var(--on-brand); }
+    .btn-primary:hover { background: var(--brand-2); }
+    .btn-primary:active { transform: translateY(1px); }
+
+    .btn-secondary { background: var(--surface); color: var(--fg); border-color: var(--border-2); }
+    .btn-secondary:hover { background: var(--surface-2); border-color: var(--fg-2); }
+
+    .btn-ghost { background: transparent; color: var(--fg-2); }
+    .btn-ghost:hover { background: var(--surface-2); color: var(--fg); }
+
+    .btn-accent { background: var(--accent); color: #2A1B05; }
+    .btn-accent:hover { background: var(--accent-2); }
+
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { filter: brightness(0.92); }
+
+    .btn-link { background: transparent; color: var(--brand); padding: 0 4px; height: auto; }
+    .btn-link:hover { text-decoration: underline; }
+
+    /* loading spinner */
+    .btn .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ---------- 8. INPUT ---------- */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: var(--text-sm); font-weight: 500; color: var(--fg-2); }
+    .field .help { font-size: var(--text-xs); color: var(--muted); }
+    .field .err { font-size: var(--text-xs); color: var(--danger); }
+
+    .input, .select, .textarea {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      font: inherit; font-size: var(--text-base);
+      color: var(--fg);
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius);
+      transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+    }
+    .textarea { height: auto; min-height: 96px; padding: 10px 12px; resize: vertical; line-height: 1.5; }
+    .input::placeholder, .textarea::placeholder { color: var(--muted-2); }
+    .input:hover, .select:hover, .textarea:hover { border-color: var(--fg-2); }
+    .input:focus, .select:focus, .textarea:focus {
+      outline: none; border-color: var(--brand);
+      box-shadow: var(--ring);
+    }
+    .input.is-error, .select.is-error, .textarea.is-error { border-color: var(--danger); }
+    .input.is-error:focus { box-shadow: 0 0 0 3px rgba(220,38,38,0.2); }
+    .input[disabled], .select[disabled], .textarea[disabled] { background: var(--surface-2); color: var(--muted-2); cursor: not-allowed; }
+
+    .input-with-icon { position: relative; }
+    .input-with-icon .input { padding-left: 36px; }
+    .input-with-icon .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    .input-with-icon .icon svg { width: 16px; height: 16px; }
+
+    /* ---------- 9. CARD ---------- */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6);
+      transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+    }
+    .card:hover { box-shadow: var(--elev-2); }
+    .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+    .card-title { font-family: var(--font-cn); font-size: var(--text-md); font-weight: 600; color: var(--fg); }
+    .card-sub { font-size: var(--text-sm); color: var(--muted); margin-bottom: var(--space-4); }
+    .card-body { color: var(--fg-2); font-size: var(--text-base); }
+    .card-foot { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--border); display: flex; gap: var(--space-3); justify-content: flex-end; }
+
+    /* ---------- 10. BADGE (alias for .chip — see §25c for canonical rules) ---------- */
+    /* Canonical rule block now lives at §25c. .badge is kept as a backward-compat
+       alias only. Use `.chip` in new code — matches DESIGN.md YAML chip_*. */
+
+    /* ---------- 11. AVATAR ---------- */
+    .avatar { position: relative; display: inline-flex; }
+    .avatar > div {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--brand-soft);
+      color: var(--brand);
+      display: grid; place-items: center;
+      font-family: var(--font-cn); font-weight: 600;
+      font-size: 14px;
+      overflow: hidden;
+    }
+    .avatar-sm > div { width: 24px; height: 24px; font-size: 10px; }
+    .avatar-md > div { width: 32px; height: 32px; font-size: 12px; }
+    .avatar-lg > div { width: 48px; height: 48px; font-size: 16px; }
+    .avatar-xl > div { width: 64px; height: 64px; font-size: 22px; }
+    .avatar .status {
+      position: absolute; bottom: 0; right: 0;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+    }
+    .avatar-sm .status { width: 7px; height: 7px; }
+    .avatar-xl .status { width: 14px; height: 14px; border-width: 3px; }
+    .avatar .status-online { background: var(--success); }
+    .avatar .status-away   { background: var(--warn); }
+    .avatar .status-busy   { background: var(--danger); }
+    .avatar .status-offline{ background: var(--muted-2); }
+
+    /* ---------- 12. STAT ---------- */
+    .stat {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .stat .num {
+      font-family: var(--font-en);
+      font-size: var(--text-xl);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      font-variant-numeric: tabular-nums;
+    }
+    .stat .lbl { font-size: var(--text-sm); color: var(--muted); }
+    .stat .delta { display: inline-flex; align-items: center; gap: 4px; font-size: var(--text-xs); font-weight: 500; }
+    .stat .delta-up   { color: var(--success); }
+    .stat .delta-down { color: var(--danger); }
+    .stat .delta svg { width: 12px; height: 12px; }
+
+    /* ---------- 13. TABS ---------- */
+    .tabs { display: inline-flex; background: var(--surface-2); border-radius: var(--radius); padding: 3px; border: 1px solid var(--border); }
+    .tabs button {
+      border: 0; background: transparent;
+      padding: 6px 14px; height: 32px;
+      font-size: var(--text-sm); font-weight: 500;
+      color: var(--muted);
+      border-radius: calc(var(--radius) - 3px);
+      transition: all var(--t-fast) var(--ease);
+    }
+    .tabs button:hover { color: var(--fg-2); }
+    .tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: var(--elev-1); }
+
+    .tabs-underline { display: flex; gap: var(--space-2); border-bottom: 1px solid var(--border); }
+    .tabs-underline button {
+      border: 0; background: transparent;
+      padding: 10px 12px;
+      font-size: var(--text-sm); font-weight: 500;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all var(--t-fast) var(--ease);
+    }
+    .tabs-underline button[aria-selected="true"] { color: var(--brand); border-bottom-color: var(--brand); }
+
+    /* ---------- 14. TOAST ---------- */
+    .toast-stack {
+      position: fixed; bottom: 24px; right: 24px;
+      display: flex; flex-direction: column; gap: 8px;
+      z-index: 1000;
+      max-width: 380px;
+    }
+    .toast {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius);
+      box-shadow: var(--elev-3);
+      animation: toast-in 240ms var(--ease);
+    }
+    .toast-info    { background: var(--info-soft); border-color: transparent; }
+    .toast-success { background: var(--success-soft); border-color: transparent; }
+    .toast-warn    { background: var(--warn-soft); border-color: transparent; }
+    .toast-danger  { background: var(--danger-soft); border-color: transparent; }
+    .toast .toast-title { color: var(--fg); }
+    .toast .toast-icon { flex-shrink: 0; margin-top: 2px; }
+    .toast .toast-icon svg { width: 16px; height: 16px; }
+    .toast .toast-body { flex: 1; min-width: 0; }
+    .toast .toast-title { font-size: var(--text-sm); font-weight: 600; color: var(--fg); }
+    .toast .toast-msg { font-size: var(--text-xs); color: var(--muted); margin-top: 2px; }
+    .toast .toast-close { background: transparent; border: 0; color: var(--muted-2); padding: 0; width: 18px; height: 18px; display: grid; place-items: center; }
+    .toast .toast-close:hover { color: var(--fg); }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* ---------- 15. MODAL ---------- */
+    .modal-shroud {
+      position: fixed; inset: 0;
+      background: rgba(10, 26, 47, 0.45);
+      display: none; align-items: center; justify-content: center;
+      z-index: 999; padding: var(--space-6);
+      animation: fade 200ms var(--ease);
+    }
+    .modal-shroud.is-open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--elev-4);
+      width: 100%; max-width: 480px;
+      animation: pop 240ms var(--ease);
+    }
+    .modal-head { padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-title { font-family: var(--font-cn); font-size: var(--text-md); font-weight: 600; }
+    .modal-body { padding: var(--space-6); color: var(--fg-2); font-size: var(--text-base); line-height: 1.6; }
+    .modal-foot { padding: var(--space-4) var(--space-6); border-top: 1px solid var(--border); display: flex; gap: var(--space-3); justify-content: flex-end; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes pop  { from { opacity: 0; transform: scale(0.96) translateY(4px); } to { opacity: 1; transform: none; } }
+
+    /* ---------- 16. PRICING ---------- */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      display: flex; flex-direction: column; gap: var(--space-4);
+    }
+    .price-card.is-featured { border-color: var(--brand); box-shadow: var(--elev-2); position: relative; }
+    .price-card .ribbon {
+      position: absolute; top: -10px; right: 16px;
+      background: var(--accent); color: #2A1B05;
+      font-size: var(--text-xs); font-weight: 600;
+      letter-spacing: var(--tracking-caps); text-transform: uppercase;
+      padding: 3px 10px; border-radius: var(--radius-pill);
+    }
+    .price-name { font-family: var(--font-cn); font-size: var(--text-md); font-weight: 600; }
+    .price-tagline { font-size: var(--text-sm); color: var(--muted); }
+    .price-amount { display: flex; align-items: baseline; gap: 4px; }
+    .price-amount .num { font-family: var(--font-en); font-size: var(--text-2xl); font-weight: 600; letter-spacing: -0.02em; }
+    .price-amount .unit { font-size: var(--text-sm); color: var(--muted); }
+    .price-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: var(--space-2); }
+    .price-features li { display: flex; align-items: flex-start; gap: 8px; font-size: var(--text-sm); color: var(--fg-2); }
+    .price-features svg { width: 14px; height: 14px; color: var(--success); flex-shrink: 0; margin-top: 4px; }
+    .price-card .btn { width: 100%; }
+
+    /* ---------- 17. QUOTE ---------- */
+    .quote {
+      padding: var(--space-8);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+    .quote-mark {
+      font-family: var(--font-en); font-size: 64px; line-height: 0.6;
+      color: var(--brand); opacity: 0.2;
+    }
+    .quote-body {
+      font-family: var(--font-cn);
+      font-size: var(--text-md);
+      line-height: 1.6;
+      color: var(--fg);
+      margin: var(--space-2) 0 var(--space-5);
+    }
+    .quote-author { display: flex; align-items: center; gap: 12px; }
+    .quote-author .name { font-weight: 600; font-size: var(--text-sm); color: var(--fg); }
+    .quote-author .role { font-size: var(--text-xs); color: var(--muted); }
+
+    /* ---------- 18. FEATURE ---------- */
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+    .feature .icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius);
+      background: var(--brand-soft); color: var(--brand);
+      display: grid; place-items: center;
+      margin-bottom: var(--space-3);
+    }
+    .feature .icon svg { width: 18px; height: 18px; }
+    .feature h3 { font-size: var(--text-md); margin-bottom: 6px; }
+    .feature p { font-size: var(--text-sm); color: var(--muted); line-height: 1.55; }
+
+    /* ---------- 19. TABLE ---------- */
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+    th {
+      font-weight: 500; color: var(--muted);
+      background: var(--surface-2);
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-caps); text-transform: uppercase;
+    }
+    tr:last-child td { border-bottom: 0; }
+    tr:hover td { background: var(--surface-2); }
+    td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+
+    /* ---------- 20. BANNER / ALERT ---------- */
+    .banner {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .banner .b-icon { flex-shrink: 0; }
+    .banner .b-icon svg { width: 18px; height: 18px; }
+    .banner .b-body { flex: 1; font-size: var(--text-sm); color: var(--fg-2); }
+    .banner .b-body strong { color: var(--fg); font-weight: 600; }
+    .banner-info    { background: var(--info-soft); border-color: transparent; color: var(--info); }
+    .banner-info .b-icon, .banner-info .b-body strong { color: var(--info); }
+    .banner-warn    { background: var(--warn-soft); border-color: transparent; color: var(--warn); }
+    .banner-warn .b-icon, .banner-warn .b-body strong { color: var(--warn); }
+    .banner-danger  { background: var(--danger-soft); border-color: transparent; color: var(--danger); }
+    .banner-danger .b-icon, .banner-danger .b-body strong { color: var(--danger); }
+    .banner-success { background: var(--success-soft); border-color: transparent; color: var(--success); }
+    .banner-success .b-icon, .banner-success .b-body strong { color: var(--success); }
+
+    /* ---------- 21. TOGGLE / SWITCH ---------- */
+    .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch .slider {
+      position: absolute; inset: 0;
+      background: var(--border-2); border-radius: 999px;
+      transition: background var(--t-fast) var(--ease);
+    }
+    .switch .slider::before {
+      content: ""; position: absolute; left: 2px; top: 2px;
+      width: 16px; height: 16px;
+      background: #fff; border-radius: 50%;
+      transition: transform var(--t-fast) var(--ease);
+      box-shadow: var(--elev-1);
+    }
+    .switch input:checked + .slider { background: var(--brand); }
+    .switch input:checked + .slider::before { transform: translateX(16px); }
+    .switch input:focus-visible + .slider { box-shadow: var(--ring); }
+
+    /* ---------- 22. CHECKBOX / RADIO ---------- */
+    .check, .radio {
+      display: inline-flex; align-items: center; gap: 8px;
+      cursor: pointer; user-select: none;
+      font-size: var(--text-sm); color: var(--fg-2);
+    }
+    .check input, .radio input { position: absolute; opacity: 0; pointer-events: none; }
+    .check .box, .radio .dot-mark {
+      width: 18px; height: 18px;
+      background: var(--surface);
+      border: 1.5px solid var(--border-2);
+      transition: all var(--t-fast) var(--ease);
+      display: grid; place-items: center;
+      flex-shrink: 0;
+    }
+    .check .box { border-radius: 4px; }
+    .radio .dot-mark { border-radius: 50%; }
+    .check .box svg, .radio .dot-mark::after { display: none; }
+    .check input:checked + .box { background: var(--brand); border-color: var(--brand); }
+    .check input:checked + .box::after {
+      content: ""; width: 10px; height: 6px;
+      border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+    .radio input:checked + .dot-mark { border-color: var(--brand); }
+    .radio input:checked + .dot-mark::after {
+      content: ""; width: 8px; height: 8px;
+      background: var(--brand); border-radius: 50%;
+    }
+    .check input:focus-visible + .box, .radio input:focus-visible + .dot-mark { box-shadow: var(--ring); }
+
+    /* ---------- 23. PROGRESS ---------- */
+    .progress {
+      width: 100%; height: 6px;
+      background: var(--surface-2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress > .bar {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 999px;
+      transition: width var(--t-slow) var(--ease);
+    }
+    .progress.is-amber > .bar { background: var(--accent); }
+    .progress.is-success > .bar { background: var(--success); }
+
+    /* ---------- 24. CODE BLOCK ---------- */
+    .code {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fg-2);
+      line-height: 1.55;
+      overflow-x: auto;
+    }
+    .code .tok-kw { color: var(--brand); }
+    .code .tok-str{ color: var(--success); }
+    .code .tok-num{ color: var(--accent-2); }
+    .code .tok-com{ color: var(--muted-2); font-style: italic; }
+    [data-theme="dark"] .code .tok-kw { color: #93B4F0; }
+    [data-theme="dark"] .code .tok-str{ color: #6DD89E; }
+    [data-theme="dark"] .code .tok-num{ color: #F2B260; }
+
+    /* ---------- 25. COLOR SWATCH ---------- */
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-3); }
+    .swatch {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .swatch .chip { height: 88px; }
+    .swatch .meta { padding: 10px 12px; font-size: var(--text-xs); }
+    .swatch .meta .name { font-weight: 600; color: var(--fg); }
+    .swatch .meta .val { font-family: var(--font-mono); color: var(--muted); margin-top: 2px; }
+    .swatch .meta .oklch { font-family: var(--font-mono); color: var(--muted-2); font-size: 10px; margin-top: 2px; }
+
+    /* ---------- 25b. BRAND ASSET CARD (logo variants showcase) ---------- */
+    .brand-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+    .brand-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .brand-card-stage {
+      height: 200px;
+      display: grid; place-items: center;
+      padding: var(--space-6);
+      background: var(--bg);
+      position: relative;
+    }
+    /* Brand asset stages are NOT theme-dependent — they show what the asset looks like ON each canonical background. Hardcode the actual brand colors so the asset preview doesn't change with the page theme. */
+    .brand-card-stage.is-dark { background: var(--brand); }
+    .brand-card-stage.is-glacier { background: #F7F9FC; border-bottom: 1px solid #DEE3EB; }
+    .brand-card-stage.is-fjord { background: #0E2A47; }
+    .brand-card-stage img { max-width: 100%; max-height: 100%; display: block; }
+    .brand-card-stage .inline-mark { width: 88px; height: 88px; }
+    .brand-card-stage .inline-mark-sm { width: 48px; height: 48px; }
+    .brand-card-meta { padding: 12px 14px; border-top: 1px solid var(--border); }
+    .brand-card-meta .name { font-family: var(--font-mono); font-size: 12px; color: var(--fg); font-weight: 500; }
+    .brand-card-meta .use { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ---------- 25c. CHIP (canonical alias for .badge) ---------- */
+    /* DESIGN.md YAML uses `chip_brand` / `chip_accent` / `chip_default` as the
+       canonical vocabulary (Stitch convention · matches Stripe/Linear).
+       .badge is kept as an alias for backward compat. */
+    .chip, .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 2px 8px;
+      font-size: var(--text-xs); font-weight: 500;
+      border-radius: var(--radius-pill);
+      background: var(--surface-2);
+      color: var(--fg-2);
+      border: 1px solid var(--border);
+      letter-spacing: 0.02em;
+    }
+    .chip .dot, .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .chip-brand,  .badge-brand  { background: var(--brand-soft); color: var(--brand); border-color: transparent; }
+    .chip-accent, .badge-accent { background: var(--accent-soft); color: var(--accent-2); border-color: transparent; }
+    .chip-success,.badge-success{ background: var(--success-soft); color: var(--success); border-color: transparent; }
+    .chip-warn,   .badge-warn   { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+    .chip-danger, .badge-danger { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
+    .chip-info,   .badge-info   { background: var(--info-soft); color: var(--info); border-color: transparent; }
+
+    /* ---------- 25d. CARD · subtle variant (DESIGN.md card_subtle) ---------- */
+    .card-subtle {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-5);
+      color: var(--fg-2);
+    }
+
+    /* ---------- 25e. LINK & DIVIDER utilities (DESIGN.md link_brand etc.) ---------- */
+    .link-brand { color: var(--brand-2); text-decoration: none; }
+    .link-brand:hover { text-decoration: underline; }
+    .link-accent { color: var(--accent-2); text-decoration: none; }
+    .link-accent:hover { text-decoration: underline; }
+    .divider { height: 1px; background: var(--border); border: 0; margin: var(--space-4) 0; }
+    .divider-strong { height: 1px; background: var(--border-2); border: 0; margin: var(--space-4) 0; }
+
+    /* ---------- 26. TYPE SPECIMEN ---------- */
+    .type-row {
+      display: grid; grid-template-columns: 80px 1fr 120px;
+      align-items: baseline; gap: var(--space-4);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .type-row:last-child { border-bottom: 0; }
+    .type-row .label { font-size: var(--text-xs); color: var(--muted); letter-spacing: var(--tracking-caps); text-transform: uppercase; }
+    .type-row .sample { color: var(--fg); }
+    .type-row .spec { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--muted-2); text-align: right; }
+
+    /* ---------- 27. KAUP MARK (inline svg) ---------- */
+    /* The chevron mark uses <symbol id="kaup-chevron"> defined in <defs>.
+       .kaup-mark { color } drives the chevron fill via currentColor —
+       set explicitly to --brand on light for brand fidelity, flips to
+       --fg on dark via the [data-theme="dark"] override below. */
+    .kaup-mark { display: inline-block; color: var(--brand); }
+    .kaup-mark svg { width: 100%; height: 100%; }
+    .kaup-mark path { fill: currentColor; }
+    [data-theme="dark"] .kaup-mark { color: var(--fg); }
+
+    /* ---------- 28. PRODUCT PREVIEW (Dashboard mock) ---------- */
+    .product-mock {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--elev-3);
+      overflow: hidden;
+    }
+    .mock-topbar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .mock-topbar .dots { display: flex; gap: 6px; }
+    .mock-topbar .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--border-2); }
+    .mock-topbar .dots span:first-child { background: #F87171; }
+    .mock-topbar .dots span:nth-child(2) { background: #FBBF24; }
+    .mock-topbar .dots span:nth-child(3) { background: #4ADE80; }
+    .mock-topbar .url {
+      flex: 1; padding: 4px 12px; background: var(--bg);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+      text-align: center; max-width: 320px; margin: 0 auto;
+    }
+    .mock-brand {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-cn); font-weight: 600; color: var(--fg);
+      font-size: 13px; letter-spacing: 0.12em;
+    }
+    .mock-brand-en { font-family: var(--font-en); font-size: 9px; color: var(--muted); letter-spacing: 0.4em; }
+    .kaup-mark-sm { width: 18px; height: 18px; }
+    .mock-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; font-family: var(--font-cn); font-size: 10px; font-weight: 600; }
+    .mock-body { display: grid; grid-template-columns: 200px 1fr; min-height: 380px; }
+    .mock-side { background: var(--surface-2); border-right: 1px solid var(--border); padding: 16px 12px; }
+    .mock-side .side-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: var(--radius-sm);
+      font-size: var(--text-sm); color: var(--fg-2);
+      margin-bottom: 2px;
+    }
+    .mock-side .side-item.is-active { background: var(--brand-soft); color: var(--brand); font-weight: 500; }
+    .mock-side .side-item svg { width: 14px; height: 14px; }
+    .mock-side .side-section { font-size: 10px; color: var(--muted-2); letter-spacing: var(--tracking-caps); text-transform: uppercase; padding: 12px 12px 6px; }
+    .mock-main { padding: 24px; }
+    .mock-main h3 { font-size: var(--text-md); margin-bottom: 4px; }
+    .mock-main .sub { color: var(--muted); font-size: var(--text-sm); margin-bottom: 20px; }
+    .mock-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .mock-mini-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+    .mock-mini-card .num { font-family: var(--font-en); font-size: var(--text-md); font-weight: 600; color: var(--fg); font-variant-numeric: tabular-nums; }
+    .mock-mini-card .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .mock-mini-card .delta { font-size: 10px; margin-top: 6px; }
+    .mock-deal-list { display: flex; flex-direction: column; gap: 8px; }
+    .mock-deal {
+      display: grid; grid-template-columns: 1fr 100px 100px 80px;
+      align-items: center; gap: 12px;
+      padding: 10px 12px; background: var(--surface-2);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      font-size: var(--text-sm);
+    }
+    .mock-deal .deal-id { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+    .mock-deal .deal-val { font-variant-numeric: tabular-nums; font-weight: 500; }
+    .mock-deal .deal-stage { font-size: 11px; }
+
+    /* ---------- 29. FOOTER ---------- */
+    .footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: var(--space-16) 0 var(--space-8);
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--space-12);
+      margin-bottom: var(--space-12);
+    }
+    .footer h4 {
+      font-family: var(--font-en); font-size: var(--text-xs);
+      font-weight: 600; letter-spacing: var(--tracking-caps);
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: var(--space-3);
+    }
+    .footer ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer ul a { color: var(--fg-2); font-size: var(--text-sm); }
+    .footer ul a:hover { color: var(--fg); text-decoration: none; }
+    .footer .brand-block { max-width: 280px; }
+    .footer .brand-logo-img { height: 32px; }
+    .footer .brand-block p { font-size: var(--text-sm); color: var(--muted); margin-top: var(--space-3); line-height: 1.55; }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: var(--space-6); border-top: 1px solid var(--border);
+      font-size: var(--text-xs); color: var(--muted);
+    }
+
+    /* ---------- 30. RESPONSIVE ---------- */
+    @media (max-width: 960px) {
+      .navlinks { display: none; }
+      .pricing-grid, .feature-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .mock-body { grid-template-columns: 1fr; }
+      .mock-side { display: none; }
+      .section { padding: var(--space-16) 0; }
+      .hero { padding: 80px 0 60px; }
+    }
+    @media (max-width: 600px) {
+      .footer-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+      .footer-bottom { flex-direction: column; gap: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       Kaup Chevron mark — single source of truth
+       Sourced from favicon.svg (Kaup Curve v5.2) · brand-spec §4
+       <path> uses currentColor → flips with --fg on theme toggle
+       <circle> uses var(--accent) → amber dot is brand promise, always amber
+       Used by: topnav, footer, dashboard mock topbar, §01 brand assets
+       ============================================================ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="kaup-chevron" viewBox="0 0 100 100">
+        <g transform="rotate(-15 50 50)">
+          <path d="M 15 15 C 25 20, 55 35, 80 50 C 55 65, 25 80, 15 85 L 40 85 C 50 78, 75 65, 85 50 C 75 35, 50 22, 40 15 Z" fill="currentColor"/>
+          <!-- Amber north-star dot — brand promise: always #E89B3C, no halo/stroke/animation. r=5 (~50% of chevron stroke at tip). At 40px header height: ~4px diameter (visible). At 72px brand card: ~7px diameter (clearly visible). cx=76,cy=50 (was 73,52) — dot sits 4 units right of chevron spine, edge tangent to inner V wall, in the chevron's V-shape opening interior. Distance from V cusp (local 85,50): ~9 units — sharp point fully exposed ("披荆斩棘" 锐利之气 preserved). Distance from chevron spine (local 80,50): 4 units, dot 1 unit inside chevron body (cleanly cradled). 10 SVG source files + index.html + kaup-svg-deliverables.html + 4 comparison HTML all use the same (76, 50) — keep this in sync. -->
+          <circle cx="76" cy="50" r="5" fill="#E89B3C"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ========== TOP NAV ========== -->
+  <header class="topnav">
+    <div class="container topnav-inner">
+      <a href="#" class="brand-logo" aria-label="智御无疆 Kaup — Home">
+        <img src="logo-horizontal.svg" alt="智御无疆 Kaup" class="brand-logo-img brand-logo-light" height="36">
+        <img src="logo-horizontal-dark.svg" alt="" aria-hidden="true" class="brand-logo-img brand-logo-dark" height="36">
+      </a>
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#tokens">Tokens</a>
+        <a href="#components">Components</a>
+        <a href="#product">Product</a>
+        <a href="#states">States</a>
+      </nav>
+      <div class="nav-spacer"></div>
+      <div class="nav-cta">
+        <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+          <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 9.5A5.5 5.5 0 016.5 3a5.5 5.5 0 109 5.5 4.5 4.5 0 01-2.5 1z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.4 1.4M11.1 11.1l1.4 1.4M3.5 12.5l1.4-1.4M11.1 4.9l1.4-1.4"/></svg>
+        </button>
+        <a href="#product" class="btn btn-primary btn-sm">查看 Demo</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <!-- Theme-aware logo: two <img> toggled by [data-theme] (not <picture>+prefers-color-scheme, which doesn't react to the JS theme toggle in #themeToggle) -->
+      <a href="#" class="brand-logo hero-logo" aria-label="智御无疆 Kaup">
+        <img src="logo-horizontal.svg" alt="智御无疆 Kaup" class="brand-logo-img brand-logo-light" height="56">
+        <img src="logo-horizontal-dark.svg" alt="" aria-hidden="true" class="brand-logo-img brand-logo-dark" height="56">
+      </a>
+      <span class="hero-eyebrow"><span class="dot"></span>Design System v1.1</span>
+      <h1>
+        <span class="cn">为产品而生的</span><br>
+        <span class="cn">设计语言</span><span class="accent">.</span>
+      </h1>
+      <p>智御无疆 / Kaup 官方设计系统 — 峡湾深蓝与维京琥珀的双色承诺,Tokens、组件、状态、暗色模式,一套规则覆盖 Marketing 与 Dashboard 全部产品表面。</p>
+      <div class="hero-actions">
+        <a href="#tokens" class="btn btn-primary btn-lg">浏览 Tokens</a>
+        <a href="#product" class="btn btn-secondary btn-lg">看 Dashboard</a>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="num">15+</div>
+          <div class="lbl">Components</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="num">6</div>
+          <div class="lbl">States</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="num">2</div>
+          <div class="lbl">Themes · Light & Dark</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="num">100%</div>
+          <div class="lbl">数据主权</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== § 0. BRAND & LOGO ========== -->
+  <section class="section" id="brand">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">§ 00 · Brand &amp; Logo</span>
+        <h2 class="section-title">设计系统从一个 mark 开始</h2>
+        <p class="section-sub">5 个 SVG 变体 × 2 套配色(亮/暗)= 10 个生产文件。所有颜色、间距、字号都从这里开始。Mark 的路径数据来自 <code>brand-spec.md §4.1</code> · Kaup Curve v5.2(curve chevron + 琥珀点)。</p>
+      </div>
+
+      <!-- Mark anatomy -->
+      <div class="card" style="padding: 32px; margin-bottom: 48px;">
+        <div style="display: grid; grid-template-columns: 200px 1fr; gap: 32px; align-items: center;">
+          <div style="display: grid; place-items: center; padding: 24px; background: var(--bg); border-radius: var(--radius-md);">
+            <span class="kaup-mark" style="width: 120px; height: 120px; color: var(--brand);"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#kaup-chevron"/></svg></span>
+          </div>
+          <div>
+            <h3 style="font-size: 17px; margin-bottom: 12px;">Mark anatomy · Kaup Chevron v5.2</h3>
+            <p style="font-size: 14px; color: var(--fg-2); line-height: 1.65; margin-bottom: 14px;">
+              <strong>2 元素 · 极简单一图形</strong>(像 Apple / Nike / Twitter 的路子):
+            </p>
+            <ol style="font-size: 13px; color: var(--fg-2); line-height: 1.7; padding-left: 20px; margin-bottom: 14px;">
+              <li><strong>Chevron "&gt;"</strong> — 粗体 cubic-Bezier 曲线,峡湾深蓝 <code style="color: var(--brand);">var(--brand)</code>,整体绕 (50,50) 旋转 -15°(SVG 负值 = 逆时针 = 向上)。语义:上升前进 / 增长 / AI 进步。</li>
+              <li><strong>琥珀点</strong> — 嵌在 chevron 偏左下 <code>(cx=76, cy=50)</code>(原 cx=80, cy=50 → v1.5.0 中间值 cx=73, cy=52 → v1.5.1 最终 cx=76, cy=50),<code style="color: var(--accent);">fill="#E89B3C"</code>(<code style="color: var(--accent);">var(--accent)</code>),<strong>永不改色</strong>。<strong>尺寸: r=5</strong>(chevron stroke 50%)。<strong>位置契约</strong>:r=5 撑大后 dot 会盖住尖端段 (80,50)→(85,50),旋转 -15° 后看起来"贴片压刀锋"。(76, 50) 距 V 字顶点 (85, 50) 旋转后约 <strong>9 单位</strong>,距 chevron spine (80, 50) 旋转后约 <strong>4 单位</strong>——dot 嵌在 chevron body 内 1 单位位置(cradle 在 V 字切口的内壁),V 字顶点 cusp 与 chevron spine 两条边都清晰,<strong>"披荆斩棘"锐利之气 + V 字切口里居中 双约束同时满足</strong>。AI 信号在方向心脏。**10 个 SVG 源 + 内嵌 symbol 全部用 (76, 50)**——保持同步。</li>
+            </ol>
+            <p style="font-size: 12px; color: var(--muted);">
+              ⚠️ 不要给 chevron 装冰川白方块(早期版本有,header 里看着像"贴了个 badge",已移除)。不要给琥珀点加描边/动画/光晕/任何 overlay 元素 — 琥珀点是单点品牌承诺,halo 会改变视觉身份。琥珀点<strong>尺寸固定 r=5</strong>(改 r=3.5 / r=2 都验证过,40-72px app header / brand card 不可见)。Mark 在 <code>&lt;symbol id="kaup-chevron"&gt;</code> 复用,改一处全站更新。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 logo variants showcase -->
+      <div class="brand-grid">
+        <!-- 1. logo-primary · vertical lockup · light -->
+        <div class="brand-card">
+          <div class="brand-card-stage is-glacier">
+            <img src="logo-primary.svg" alt="智御无疆 Kaup vertical lockup" style="height: 180px;">
+          </div>
+          <div class="brand-card-meta">
+            <div class="name">logo-primary.svg</div>
+            <div class="use">主 logo · 垂直 lockup · 8:9 · 营销 / 印刷 / 方形 avatar</div>
+          </div>
+        </div>
+
+        <!-- 2. logo-primary · vertical lockup · dark bg -->
+        <div class="brand-card">
+          <div class="brand-card-stage is-fjord">
+            <img src="logo-primary-dark.svg" alt="智御无疆 Kaup vertical lockup (dark)" style="height: 180px;">
+          </div>
+          <div class="brand-card-meta">
+            <div class="name">logo-primary-dark.svg</div>
+            <div class="use">主 logo · 深色背景 · 冰川白前景 + 峡湾深蓝底</div>
+          </div>
+        </div>
+
+        <!-- 3. logo-horizontal · left-aligned · light -->
+        <div class="brand-card">
+          <div class="brand-card-stage is-glacier">
+            <img src="logo-horizontal.svg" alt="智御无疆 Kaup horizontal lockup left-aligned" style="height: 72px;">
+          </div>
+          <div class="brand-card-meta">
+            <div class="name">logo-horizontal.svg</div>
+            <div class="use">横向 lockup · 靠左对齐 · 3:1 · <strong>app header / nav bar 默认</strong></div>
+          </div>
+        </div>
+
+        <!-- 4. logo-horizontal · left-aligned · dark bg -->
+        <div class="brand-card">
+          <div class="brand-card-stage is-fjord">
+            <img src="logo-horizontal-dark.svg" alt="智御无疆 Kaup horizontal lockup left-aligned (dark)" style="height: 72px;">
+          </div>
+          <div class="brand-card-meta">
+            <div class="name">logo-horizontal-dark.svg</div>
+            <div class="use">横向 lockup · 暗色背景 · 冰川白前景</div>
+          </div>
+        </div>
+
+        <!-- 5. logo-horizontal-centered · light -->
+        <div class="brand-card">
+          <div class="brand-card-stage is-glacier">
+            <img src="logo-horizontal-centered.svg" alt="智御无疆 Kaup horizontal lockup center-aligned" style="height: 72px;">
+          </div>
+          <div class="brand-card-meta">
+            <div class="name">logo-horizontal-centered.svg</div>
+            <div class="use">横向 lockup · 居中对齐 · 3:1 · hero / 邮件签名 / 卡片</div>
+          </div>
+        </div>
+
+        <!-- 6. logo-horizontal-centered · dark bg -->
+        <div class="brand-card">
+          <div class="brand-card-stage is-fjord">
+            <img src="logo-horizontal-centered-dark.svg" alt="智御无疆 Kaup horizontal lockup center-aligned (dark)" style="height: 72px;">
+          </div>
+          <div class="brand-card-meta">
+            <div class="name">logo-horizontal-centered-dark.svg</div>
+            <div class="use">横向 lockup · 居中 · 暗色背景</div>
+          </div>
+        </div>
+
+        <!-- 7. favicon · mark only -->
+        <div class="brand-card">
+          <div class="brand-card-stage is-glacier">
+            <span class="kaup-mark" style="width: 88px; height: 88px; color: var(--brand);"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#kaup-chevron"/></svg></span>
+          </div>
+          <div class="brand-card-meta">
+            <div class="name">favicon.svg</div>
+            <div class="use">仅 mark · 浏览器 tab · 1:1</div>
+          </div>
+        </div>
+
+        <!-- 8. app-icon · mark on fjord tile -->
+        <div class="brand-card">
+          <div class="brand-card-stage is-glacier">
+            <img src="app-icon.svg" alt="智御无疆 Kaup app icon" style="width: 88px; height: 88px; border-radius: 18px;">
+          </div>
+          <div class="brand-card-meta">
+            <div class="name">app-icon.svg</div>
+            <div class="use">App icon · mark on 峡湾蓝 tile · iOS / Android / PWA · 1:1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- usage rule -->
+      <div class="card card-subtle" style="margin-top: 32px;">
+        <h4 style="font-size: 13px; color: var(--fg); margin-bottom: 10px; font-weight: 600;">双 lockup 选用规则(brand-spec §4.2)</h4>
+        <table style="width: 100%; font-size: 13px; color: var(--fg-2); border-collapse: collapse;">
+          <thead>
+            <tr style="text-align: left; border-bottom: 1px solid var(--border);">
+              <th style="padding: 8px 0; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;">场景</th>
+              <th style="padding: 8px 0; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;">用哪个</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px 0;">App header / nav bar / 顶栏</td><td style="padding: 8px 0;"><code>logo-horizontal.svg</code> · 靠左对齐</td></tr>
+            <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px 0;">营销 hero / 独立品牌块</td><td style="padding: 8px 0;"><code>logo-horizontal-centered.svg</code> · 居中</td></tr>
+            <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px 0;">邮件签名 / 名片 / 卡片</td><td style="padding: 8px 0;"><code>logo-horizontal-centered.svg</code> · 居中</td></tr>
+            <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px 0;">营销主视觉 / 印刷品 / 方形 avatar</td><td style="padding: 8px 0;"><code>logo-primary.svg</code> · 垂直 lockup</td></tr>
+            <tr><td style="padding: 8px 0;">iOS / Android 桌面图标</td><td style="padding: 8px 0;"><code>app-icon.svg</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== § 1. TOKENS ========== -->
+  <section class="section" id="tokens">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">§ 01 · Tokens</span>
+        <h2 class="section-title">设计的原子单位</h2>
+        <p class="section-sub">所有组件引用 tokens,不写裸 hex。改一处,全站更新。</p>
+      </div>
+
+      <!-- 1.1 Color -->
+      <div style="margin-bottom: 64px;">
+        <h3 style="font-size: 17px; margin-bottom: 16px;">Color</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="chip" style="background: var(--bg); border-bottom: 1px solid var(--border);"></div>
+            <div class="meta"><div class="name">--bg · Glacier</div><div class="val">#F7F9FC</div><div class="oklch">oklch(98% 0.005 240)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--surface);"></div>
+            <div class="meta"><div class="name">--surface</div><div class="val">#FFFFFF</div><div class="oklch">oklch(100% 0 0)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--fg);"></div>
+            <div class="meta"><div class="name">--fg · Deep Ink</div><div class="val">#0A1A2F</div><div class="oklch">oklch(18% 0.02 250)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--muted);"></div>
+            <div class="meta"><div class="name">--muted</div><div class="val">#5B6B7E</div><div class="oklch">oklch(50% 0.02 245)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--brand);"></div>
+            <div class="meta"><div class="name">--brand · Fjord</div><div class="val">#0E2A47</div><div class="oklch">oklch(28% 0.06 245)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--accent);"></div>
+            <div class="meta"><div class="name">--accent · Amber</div><div class="val">#E89B3C</div><div class="oklch">oklch(72% 0.14 55)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--success);"></div>
+            <div class="meta"><div class="name">--success</div><div class="val">#16A34A</div><div class="oklch">oklch(64% 0.16 145)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--warn);"></div>
+            <div class="meta"><div class="name">--warn</div><div class="val">#D97706</div><div class="oklch">oklch(70% 0.15 65)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--danger);"></div>
+            <div class="meta"><div class="name">--danger</div><div class="val">#DC2626</div><div class="oklch">oklch(60% 0.21 25)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--info);"></div>
+            <div class="meta"><div class="name">--info</div><div class="val">#2563EB</div><div class="oklch">oklch(56% 0.20 255)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--border);"></div>
+            <div class="meta"><div class="name">--border</div><div class="val">#DEE3EB</div><div class="oklch">oklch(90% 0.008 240)</div></div></div>
+          <div class="swatch"><div class="chip" style="background: var(--brand-soft);"></div>
+            <div class="meta"><div class="name">--brand-soft</div><div class="val">#E5ECF5</div><div class="oklch">oklch(94% 0.02 240)</div></div></div>
+        </div>
+      </div>
+
+      <!-- 1.2 Typography -->
+      <div style="margin-bottom: 64px;">
+        <h3 style="font-size: 17px; margin-bottom: 16px;">Typography</h3>
+        <div class="card" style="padding: 24px;">
+          <div class="type-row">
+            <div class="label">3XL</div>
+            <div class="sample" style="font-size: 66px; line-height: 1.05; letter-spacing: -0.03em; font-weight: 600;">智御无疆</div>
+            <div class="spec">66 / 1.05 / -0.03em</div>
+          </div>
+          <div class="type-row">
+            <div class="label">2XL</div>
+            <div class="sample" style="font-size: 48px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 600;">Build with intent</div>
+            <div class="spec">48 / 1.10 / -0.02em</div>
+          </div>
+          <div class="type-row">
+            <div class="label">XL</div>
+            <div class="sample" style="font-size: 32px; line-height: 1.15; letter-spacing: -0.01em; font-weight: 600;">Section heading</div>
+            <div class="spec">32 / 1.15 / -0.01em</div>
+          </div>
+          <div class="type-row">
+            <div class="label">LG</div>
+            <div class="sample" style="font-size: 22px; line-height: 1.3; font-weight: 600;">Subsection heading</div>
+            <div class="spec">22 / 1.30</div>
+          </div>
+          <div class="type-row">
+            <div class="label">MD</div>
+            <div class="sample" style="font-size: 17px; line-height: 1.5; font-weight: 500;">Body emphasized — used in product cards and modals.</div>
+            <div class="spec">17 / 1.50</div>
+          </div>
+          <div class="type-row">
+            <div class="label">BASE</div>
+            <div class="sample" style="font-size: 15px; line-height: 1.55;">Body copy — most of the page lives here. Legible at 1.55 line-height.</div>
+            <div class="spec">15 / 1.55</div>
+          </div>
+          <div class="type-row">
+            <div class="label">SM</div>
+            <div class="sample" style="font-size: 13px; line-height: 1.5;">Secondary / meta — timestamps, captions.</div>
+            <div class="spec">13 / 1.50</div>
+          </div>
+          <div class="type-row">
+            <div class="label">XS · CAPS</div>
+            <div class="sample" style="font-size: 12px; line-height: 1.5; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600;">Eyebrow · Section label</div>
+            <div class="spec">12 / 1.50 / 0.08em</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.3 Spacing / Radius / Motion -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+        <div>
+          <h3 style="font-size: 17px; margin-bottom: 16px;">Spacing · 8pt baseline</h3>
+          <div class="card" style="padding: 20px;">
+            <div style="display: flex; flex-direction: column; gap: 10px; font-family: var(--font-mono); font-size: 12px;">
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 4px; height: 12px; background: var(--brand);"></div>--space-1 · 4px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 8px; height: 12px; background: var(--brand);"></div>--space-2 · 8px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 12px; height: 12px; background: var(--brand);"></div>--space-3 · 12px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 16px; height: 12px; background: var(--brand);"></div>--space-4 · 16px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 20px; height: 12px; background: var(--brand);"></div>--space-5 · 20px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 24px; height: 12px; background: var(--brand);"></div>--space-6 · 24px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 32px; height: 12px; background: var(--brand);"></div>--space-8 · 32px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 48px; height: 12px; background: var(--brand);"></div>--space-12 · 48px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 64px; height: 12px; background: var(--brand);"></div>--space-16 · 64px</div>
+              <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 96px; height: 12px; background: var(--brand);"></div>--space-24 · 96px</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size: 17px; margin-bottom: 16px;">Radius</h3>
+          <div class="card" style="padding: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div style="background: var(--brand-soft); height: 64px; border-radius: 6px; display: grid; place-items: center; font-size: 11px; color: var(--brand); font-family: var(--font-mono);">6 · sm</div>
+              <div style="background: var(--brand-soft); height: 64px; border-radius: 8px; display: grid; place-items: center; font-size: 11px; color: var(--brand); font-family: var(--font-mono);">8</div>
+              <div style="background: var(--brand-soft); height: 64px; border-radius: 12px; display: grid; place-items: center; font-size: 11px; color: var(--brand); font-family: var(--font-mono);">12 · md</div>
+              <div style="background: var(--brand-soft); height: 64px; border-radius: 16px; display: grid; place-items: center; font-size: 11px; color: var(--brand); font-family: var(--font-mono);">16 · lg</div>
+              <div style="background: var(--brand-soft); height: 64px; border-radius: 20px; display: grid; place-items: center; font-size: 11px; color: var(--brand); font-family: var(--font-mono);">20 · xl</div>
+              <div style="background: var(--brand-soft); height: 64px; border-radius: 999px; display: grid; place-items: center; font-size: 11px; color: var(--brand); font-family: var(--font-mono);">pill</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size: 17px; margin-bottom: 16px;">Motion</h3>
+          <div class="card" style="padding: 20px;">
+            <div style="display: flex; flex-direction: column; gap: 16px; font-size: 12px; font-family: var(--font-mono);">
+              <div><div style="margin-bottom: 6px; color: var(--muted);">--t-fast · 130ms</div>
+                <div style="height: 4px; background: var(--brand-soft); border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 0; background: var(--brand); border-radius: 2px;" class="motion-bar" data-duration="130"></div></div>
+              </div>
+              <div><div style="margin-bottom: 6px; color: var(--muted);">--t-base · 200ms</div>
+                <div style="height: 4px; background: var(--brand-soft); border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 0; background: var(--brand); border-radius: 2px;" class="motion-bar" data-duration="200"></div></div>
+              </div>
+              <div><div style="margin-bottom: 6px; color: var(--muted);">--t-slow · 320ms</div>
+                <div style="height: 4px; background: var(--brand-soft); border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 0; background: var(--brand); border-radius: 2px;" class="motion-bar" data-duration="320"></div></div>
+              </div>
+            </div>
+            <div style="margin-top: 20px; font-size: 11px; color: var(--muted);">Easing: <code style="color: var(--fg-2);">cubic-bezier(0.2, 0, 0, 1)</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== § 2. COMPONENTS ========== -->
+  <section class="section" id="components">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">§ 02 · Components</span>
+        <h2 class="section-title">从按钮到 Dashboard</h2>
+        <p class="section-sub">15 个核心组件,每件都有明确意图、状态、响应行为。组合它们,就能搭出整个产品。</p>
+      </div>
+
+      <!-- Button -->
+      <div style="margin-bottom: 64px;">
+        <h3 style="font-size: 17px; margin-bottom: 8px;">Button</h3>
+        <p class="section-sub" style="margin-bottom: 24px;">6 个变体 × 3 个尺寸 × 6 个状态。一个动作,多种语气。</p>
+
+        <div class="card" style="padding: 28px;">
+          <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; font-weight: 600;">Variants · MD</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px;">
+            <button class="btn btn-primary btn-md">Primary</button>
+            <button class="btn btn-secondary btn-md">Secondary</button>
+            <button class="btn btn-ghost btn-md">Ghost</button>
+            <button class="btn btn-accent btn-md">Accent</button>
+            <button class="btn btn-danger btn-md">Danger</button>
+            <button class="btn btn-link btn-md">Link →</button>
+          </div>
+
+          <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; font-weight: 600;">Sizes · Primary</div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 28px;">
+            <button class="btn btn-primary btn-sm">Small</button>
+            <button class="btn btn-primary btn-md">Medium</button>
+            <button class="btn btn-primary btn-lg">Large</button>
+          </div>
+
+          <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; font-weight: 600;">States · Primary</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+            <button class="btn btn-primary btn-md">Default</button>
+            <button class="btn btn-primary btn-md" style="background: var(--brand-2);">Hover</button>
+            <button class="btn btn-primary btn-md" style="box-shadow: var(--ring);">Focus</button>
+            <button class="btn btn-primary btn-md is-disabled">Disabled</button>
+            <button class="btn btn-primary btn-md" disabled><span class="spinner"></span>Loading</button>
+            <button class="btn btn-primary btn-md" style="background: var(--success);">Success</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div style="margin-bottom: 64px;">
+        <h3 style="font-size: 17px; margin-bottom: 8px;">Input</h3>
+        <p class="section-sub" style="margin-bottom: 24px;">文本、邮箱、密码、带图标、错误、禁用 — 一个 form 的全部输入场景。</p>
+
+        <div class="card" style="padding: 28px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="field">
+              <label>邮箱</label>
+              <input class="input" type="email" placeholder="you@company.com" />
+              <span class="help">我们不会用这个发送营销邮件。</span>
+            </div>
+            <div class="field">
+              <label>公司名</label>
+              <input class="input" value="智御无疆科技" />
+            </div>
+            <div class="field">
+              <label>搜索 (带图标)</label>
+              <div class="input-with-icon">
+                <span class="icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4.5"/><path d="M11 11l3 3"/></svg></span>
+                <input class="input" type="search" placeholder="搜索交易、客户、合同…" />
+              </div>
+            </div>
+            <div class="field">
+              <label>错误态</label>
+              <input class="input is-error" value="invalid@email" />
+              <span class="err">邮箱格式不正确,请检查后重试。</span>
+            </div>
+            <div class="field">
+              <label>备注</label>
+              <textarea class="textarea" placeholder="多行文本…"></textarea>
+            </div>
+            <div class="field">
+              <label>禁用</label>
+              <input class="input" disabled value="kaup.ai" />
+              <span class="help">域名为系统锁定,不可修改。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card + Stat + Avatar + Badge -->
+      <div style="margin-bottom: 64px;">
+        <h3 style="font-size: 17px; margin-bottom: 24px;">Card · Stat · Avatar · Badge</h3>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Q3 海外订单报告</div>
+                <div class="card-sub">由 Agents 自动生成 · 2 分钟前</div>
+              </div>
+              <span class="badge badge-success"><span class="dot"></span>已完成</span>
+            </div>
+            <div class="card-body">
+              共分析 <strong>347</strong> 笔订单,识别 <strong>12</strong> 个高意向客户,合同总额 <strong>$2.4M</strong>。Agent 已在后台排队翻译、信用核查、合规预审三个 follow-up 任务。
+            </div>
+            <div class="card-foot">
+              <button class="btn btn-ghost btn-sm">查看详情</button>
+              <button class="btn btn-primary btn-sm">批准</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="stat">
+              <div class="num">$2.4M</div>
+              <div class="lbl">合同总额</div>
+              <span class="delta delta-up">
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l3-3 3 3"/></svg>
+                +18.2% vs Q2
+              </span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="stat">
+              <div class="num">347</div>
+              <div class="lbl">本季订单</div>
+              <span class="delta delta-up">
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l3-3 3 3"/></svg>
+                +42 较上季
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+          <div class="card" style="padding: 20px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; font-weight: 600;">Avatar · sizes + status</div>
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+              <span class="avatar avatar-sm"><div>林</div><span class="status status-online"></span></span>
+              <span class="avatar avatar-md"><div>川</div><span class="status status-online"></span></span>
+              <span class="avatar avatar-lg"><div>洋</div><span class="status status-away"></span></span>
+              <span class="avatar avatar-xl"><div>凯</div><span class="status status-busy"></span></span>
+              <span class="avatar avatar-md"><div>WH</div><span class="status status-offline"></span></span>
+            </div>
+          </div>
+          <div class="card" style="padding: 20px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; font-weight: 600;">Badge · semantic</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <span class="badge">Default</span>
+              <span class="badge badge-brand"><span class="dot"></span>Brand</span>
+              <span class="badge badge-accent"><span class="dot"></span>Accent</span>
+              <span class="badge badge-success"><span class="dot"></span>Success</span>
+              <span class="badge badge-warn"><span class="dot"></span>Warn</span>
+              <span class="badge badge-danger"><span class="dot"></span>Danger</span>
+              <span class="badge badge-info"><span class="dot"></span>Info</span>
+            </div>
+          </div>
+          <div class="card" style="padding: 20px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; font-weight: 600;">Progress</div>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="progress"><div class="bar" style="width: 78%;"></div></div>
+              <div class="progress is-amber"><div class="bar" style="width: 45%;"></div></div>
+              <div class="progress is-success"><div class="bar" style="width: 100%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs + Toggle + Checkbox/Radio + Form Switches -->
+      <div style="margin-bottom: 64px;">
+        <h3 style="font-size: 17px; margin-bottom: 24px;">Tabs · Toggle · Choice</h3>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="card" style="padding: 24px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; font-weight: 600;">Segmented Tabs</div>
+            <div class="tabs" role="tablist">
+              <button role="tab" aria-selected="true">概览</button>
+              <button role="tab" aria-selected="false">交易</button>
+              <button role="tab" aria-selected="false">客户</button>
+              <button role="tab" aria-selected="false">报表</button>
+            </div>
+            <div style="margin-top: 24px;">
+              <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; font-weight: 600;">Underline Tabs</div>
+              <div class="tabs-underline" role="tablist">
+                <button role="tab" aria-selected="true">活跃</button>
+                <button role="tab" aria-selected="false">草稿</button>
+                <button role="tab" aria-selected="false">已归档</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 24px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; font-weight: 600;">Toggle · Checkbox · Radio</div>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </label>
+              <label class="check">
+                <input type="checkbox" checked /><span class="box"></span>
+                <span>已阅读并同意 <a href="#">服务条款</a></span>
+              </label>
+              <label class="check">
+                <input type="checkbox" /><span class="box"></span>
+                <span>订阅产品更新邮件</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="r" checked /><span class="dot-mark"></span>
+                <span>按月结算</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="r" /><span class="dot-mark"></span>
+                <span>按年结算 (省 20%)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner / Alert + Toast trigger -->
+      <div style="margin-bottom: 64px;">
+        <h3 style="font-size: 17px; margin-bottom: 24px;">Banner & Toast</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="banner banner-info">
+              <span class="b-icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 6v5M9 13.5v.01"/></svg></span>
+              <div class="b-body"><strong>系统升级中</strong> · 2026-06-20 02:00–04:00 (UTC+8) 期间 Dashboard 不可用。</div>
+            </div>
+            <div class="banner banner-warn">
+              <span class="b-icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2l8 14H1z"/><path d="M9 7v4M9 13.5v.01"/></svg></span>
+              <div class="b-body"><strong>信用额度 80%</strong> · 当前已用 $48K / $60K,建议及时续费或调整限额。</div>
+            </div>
+            <div class="banner banner-danger">
+              <span class="b-icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M6 6l6 6M12 6L6 12"/></svg></span>
+              <div class="b-body"><strong>支付失败</strong> · 您的默认卡最近一次扣款被拒,请更新支付方式。</div>
+            </div>
+            <div class="banner banner-success">
+              <span class="b-icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M6 9l2 2 4-4"/></svg></span>
+              <div class="b-body"><strong>数据同步完成</strong> · 247 条新订单已从海关接口同步到本地。</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 24px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; font-weight: 600;">Trigger Toasts</div>
+            <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">点击下方按钮,在右下角生成对应类型的 toast,5 秒后自动消失。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <button class="btn btn-secondary btn-sm" data-toast="info">Info Toast</button>
+              <button class="btn btn-secondary btn-sm" data-toast="success">Success</button>
+              <button class="btn btn-secondary btn-sm" data-toast="warn">Warning</button>
+              <button class="btn btn-secondary btn-sm" data-toast="danger">Error</button>
+              <button class="btn btn-primary btn-sm" data-toast="modal">Open Modal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing -->
+      <div style="margin-bottom: 64px;">
+        <h3 style="font-size: 17px; margin-bottom: 24px;">Pricing</h3>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <div class="price-name">Starter</div>
+            <div class="price-tagline">适合个人 SOHO 与试水外贸</div>
+            <div class="price-amount">
+              <span class="num">$0</span>
+              <span class="unit">/ 月 · 永久免费</span>
+            </div>
+            <ul class="price-features">
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>1 个 Agent 工作流</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>每月 50 次查询</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>本地优先存储</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>社区支持</li>
+            </ul>
+            <button class="btn btn-secondary btn-md">免费开始</button>
+          </div>
+
+          <div class="price-card is-featured">
+            <span class="ribbon">推荐</span>
+            <div class="price-name">Pro</div>
+            <div class="price-tagline">适合 5–50 人的外贸团队</div>
+            <div class="price-amount">
+              <span class="num">$49</span>
+              <span class="unit">/ 用户 / 月</span>
+            </div>
+            <ul class="price-features">
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>无限 Agent 工作流</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>BYOM · 自带模型</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>全链路审计日志</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>7×24 优先支持</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>数据完全本地化</li>
+            </ul>
+            <button class="btn btn-primary btn-md">14 天试用</button>
+          </div>
+
+          <div class="price-card">
+            <div class="price-name">Enterprise</div>
+            <div class="price-tagline">适合跨境集团与上市公司</div>
+            <div class="price-amount">
+              <span class="num">定制</span>
+            </div>
+            <ul class="price-features">
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>私有部署 / VPC</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>SSO + SCIM</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>专属客户成功经理</li>
+              <li><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>SLA 99.95%</li>
+            </ul>
+            <button class="btn btn-secondary btn-md">联系销售</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quote + Table + Feature -->
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size: 17px; margin-bottom: 24px;">Quote · Table · Feature</h3>
+
+        <div class="quote" style="margin-bottom: 24px;">
+          <div class="quote-mark">"</div>
+          <p class="quote-body">智以为御,无疆为境 — 让 AI Agent 接管外贸链路里每一个可被结构化的环节,把判断与沟通留给真正的人。</p>
+          <div class="quote-author">
+            <span class="avatar avatar-md"><div>智</div><span class="status status-online"></span></span>
+            <div>
+              <div class="name">智御无疆 / Kaup</div>
+              <div class="role">品牌主张 · brand-spec § 1</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-bottom: 24px;">
+          <table>
+            <thead>
+              <tr>
+                <th>订单号</th>
+                <th>客户</th>
+                <th>金额 (USD)</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>#KAU-2026-0847</code></td>
+                <td>Northland Trading ApS</td>
+                <td class="num">$48,200.00</td>
+                <td><span class="badge badge-success"><span class="dot"></span>已签约</span></td>
+              </tr>
+              <tr>
+                <td><code>#KAU-2026-0846</code></td>
+                <td>Meridian Imports Ltd</td>
+                <td class="num">$112,800.00</td>
+                <td><span class="badge badge-warn"><span class="dot"></span>信用核查中</span></td>
+              </tr>
+              <tr>
+                <td><code>#KAU-2026-0845</code></td>
+                <td>Hanwha Pacific Corp</td>
+                <td class="num">$67,500.00</td>
+                <td><span class="badge badge-info"><span class="dot"></span>翻译中</span></td>
+              </tr>
+              <tr>
+                <td><code>#KAU-2026-0844</code></td>
+                <td>Aalborg Marine Supply</td>
+                <td class="num">$22,100.00</td>
+                <td><span class="badge"><span class="dot"></span>草稿</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9h12M3 4h12M3 14h8"/></svg></div>
+            <h3>Agent 工作流编排</h3>
+            <p>把"询盘→翻译→信用核查→报价→合同"串成一条可观测的工作流,每一步都可暂停、回滚、人工接管。</p>
+          </div>
+          <div class="feature">
+            <div class="icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="12" height="12" rx="2"/><path d="M6 9h6M9 6v6"/></svg></div>
+            <h3>本地优先存储</h3>
+            <p>所有客户数据、合同、对话记录默认留在你的 VPC,Kaup 只是元数据编排层,数据主权 100% 在你手里。</p>
+          </div>
+          <div class="feature">
+            <div class="icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="6"/><path d="M9 5v4l2.5 1.5"/></svg></div>
+            <h3>实时合规预审</h3>
+            <p>每一笔订单自动跑一遍目的地国法规、出口管制清单、制裁名单,异常立刻弹窗,不让你事后踩雷。</p>
+          </div>
+          <div class="feature">
+            <div class="icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14l4-4 3 3 7-7"/></svg></div>
+            <h3>全链路审计日志</h3>
+            <p>Agent 做的每一个决定都有完整轨迹,合规审查时一键导出 PDF,满足上市公司监管要求。</p>
+          </div>
+          <div class="feature">
+            <div class="icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 15V6l6-3 6 3v9M3 15h12M7 11h4"/></svg></div>
+            <h3>BYOM · 自带模型</h3>
+            <p>GPT-4、Claude、DeepSeek、自研模型都可以接入,不锁定单一供应商,模型成本由你掌控。</p>
+          </div>
+          <div class="feature">
+            <div class="icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="6"/><path d="M6 9l2 2 4-4"/></svg></div>
+            <h3>7×24 优先支持</h3>
+            <p>Pro 与 Enterprise 客户享受专属客户成功经理 + 30 分钟 SLA 响应,关键业务不卡壳。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Link · Divider · Subtle Card · Chip (canonical alias) -->
+      <div style="margin-top: 24px;">
+        <h3 style="font-size: 17px; margin-bottom: 24px;">Link · Divider · Subtle Card · Chip</h3>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+          <div class="card" style="padding: 24px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; font-weight: 600;">Link · link-brand / link-accent</div>
+            <p style="font-size: 14px; color: var(--fg-2); line-height: 1.6; margin-bottom: 12px;">
+              默认链接是 <a href="#" class="link-brand">品牌色 link-brand</a>(用于跳转内部 / 主操作),<a href="#" class="link-accent">强调色 link-accent</a>用于营销文案 / 重点提示。
+            </p>
+            <p style="font-size: 13px; color: var(--muted); line-height: 1.6;">
+              Hover 下划线。颜色 token:<code>var(--brand-2)</code> / <code>var(--accent-2)</code>(hover/active 加深 1 档)。
+            </p>
+          </div>
+
+          <div class="card" style="padding: 24px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; font-weight: 600;">Divider · hairline / strong</div>
+            <p style="font-size: 13px; color: var(--muted); margin-bottom: 10px;">普通分段用 hairline(<code>var(--border)</code>)</p>
+            <hr class="divider">
+            <p style="font-size: 13px; color: var(--muted); margin: 12px 0 10px;">强分段用 stronger(<code>var(--border-2)</code>)</p>
+            <hr class="divider-strong">
+            <p style="font-size: 13px; color: var(--muted); margin: 12px 0 0;">不要在 divider 上加阴影或渐变 — 边界就是边界,不需要装饰。</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="card-subtle">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; font-weight: 600;">card-subtle · 弱化容器</div>
+            <p style="font-size: 14px; color: var(--fg-2); line-height: 1.6; margin-bottom: 10px;">
+              比 <code>.card</code>(white bg + hairline border)更"沉"的容器 — 用于表格头、tabs track、嵌套面板、二级分组。
+            </p>
+            <p style="font-size: 12px; color: var(--muted);">背景:<code>var(--surface-2)</code> · 边框:<code>var(--border)</code> · 圆角:<code>var(--radius-md)</code></p>
+          </div>
+
+          <div class="card" style="padding: 24px;">
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; font-weight: 600;">Chip · canonical alias for .badge</div>
+            <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">
+              <code>.chip</code> 是 canonical 命名(对齐 <code>DESIGN.md</code> YAML 的 <code>chip_brand</code> / <code>chip_accent</code>)。<code>.badge</code> 保留为向后兼容别名。
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <span class="chip">Default</span>
+              <span class="chip chip-brand"><span class="dot"></span>Brand</span>
+              <span class="chip chip-accent"><span class="dot"></span>Accent</span>
+              <span class="chip chip-success"><span class="dot"></span>Success</span>
+              <span class="chip chip-warn"><span class="dot"></span>Warn</span>
+              <span class="chip chip-danger"><span class="dot"></span>Danger</span>
+              <span class="chip chip-info"><span class="dot"></span>Info</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== § 3. PRODUCT PREVIEW ========== -->
+  <section class="section" id="product">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">§ 03 · Product Preview</span>
+        <h2 class="section-title">Tokens 落地到真实产品</h2>
+        <p class="section-sub">下面是一段真实的 Dashboard 截图 — 全部用本页的 Tokens 渲染,没有写裸 hex。</p>
+      </div>
+
+      <div class="product-mock">
+        <div class="mock-topbar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="mock-brand">
+            <span class="kaup-mark kaup-mark-sm"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#kaup-chevron"/></svg></span>
+            <span>智御无疆</span>
+            <span class="mock-brand-en">Kaup</span>
+          </div>
+          <div class="url">app.kaup.ai/dashboard/orders</div>
+          <div class="mock-avatar"><div>林</div></div>
+        </div>
+        <div class="mock-body">
+          <aside class="mock-side">
+            <div class="side-section">工作区</div>
+            <div class="side-item is-active">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="10" height="10" rx="1"/><path d="M5 6h4M5 8h4"/></svg>
+              订单
+            </div>
+            <div class="side-item">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="5" r="2.5"/><path d="M2 12c0-2.5 2.5-4 5-4s5 1.5 5 4"/></svg>
+              客户
+            </div>
+            <div class="side-item">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h10v8H2zM2 6h10"/></svg>
+              合同
+            </div>
+            <div class="side-item">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1l6 4-6 4-6-4z"/></svg>
+              Agent
+            </div>
+            <div class="side-section">设置</div>
+            <div class="side-item">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2"/></svg>
+              集成
+            </div>
+            <div class="side-item">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="6"/></svg>
+              团队
+            </div>
+          </aside>
+          <main class="mock-main">
+            <h3>订单概览 · 本月</h3>
+            <div class="sub">由 Agent 在后台每 5 分钟同步一次,数据完全本地化。</div>
+            <div class="mock-grid">
+              <div class="mock-mini-card">
+                <div class="lbl">合同总额</div>
+                <div class="num">$2.4M</div>
+                <div class="delta delta-up">↑ 18.2%</div>
+              </div>
+              <div class="mock-mini-card">
+                <div class="lbl">活跃订单</div>
+                <div class="num">347</div>
+                <div class="delta delta-up">↑ 42</div>
+              </div>
+              <div class="mock-mini-card">
+                <div class="lbl">转化率</div>
+                <div class="num">27%</div>
+                <div class="delta delta-up">↑ 4.1pp</div>
+              </div>
+            </div>
+            <div class="mock-deal-list">
+              <div class="mock-deal">
+                <div><div style="font-weight: 500;">Northland Trading ApS</div><div class="deal-id">#KAU-2026-0847</div></div>
+                <div class="deal-val">$48,200</div>
+                <div><span class="badge badge-success"><span class="dot"></span>已签约</span></div>
+                <div style="text-align: right;"><button class="btn btn-ghost btn-sm">→</button></div>
+              </div>
+              <div class="mock-deal">
+                <div><div style="font-weight: 500;">Meridian Imports Ltd</div><div class="deal-id">#KAU-2026-0846</div></div>
+                <div class="deal-val">$112,800</div>
+                <div><span class="badge badge-warn"><span class="dot"></span>信用核查中</span></div>
+                <div style="text-align: right;"><button class="btn btn-ghost btn-sm">→</button></div>
+              </div>
+              <div class="mock-deal">
+                <div><div style="font-weight: 500;">Hanwha Pacific Corp</div><div class="deal-id">#KAU-2026-0845</div></div>
+                <div class="deal-val">$67,500</div>
+                <div><span class="badge badge-info"><span class="dot"></span>翻译中</span></div>
+                <div style="text-align: right;"><button class="btn btn-ghost btn-sm">→</button></div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== § 4. STATES ========== -->
+  <section class="section" id="states">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">§ 04 · States</span>
+        <h2 class="section-title">6 个状态,每个组件都有</h2>
+        <p class="section-sub">default · hover · focus · active · disabled · loading · error。每一个都明确,从不靠"猜"判断交互是否成功。</p>
+      </div>
+
+      <div class="card" style="padding: 28px;">
+        <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; font-weight: 600;">Button · Primary · 7 状态</div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px;">
+          <div>
+            <div class="code" style="margin-bottom: 8px; font-size: 11px;">.btn-primary · default</div>
+            <button class="btn btn-primary btn-md" style="width: 100%;">保存订单</button>
+          </div>
+          <div>
+            <div class="code" style="margin-bottom: 8px; font-size: 11px;">.btn-primary:hover</div>
+            <button class="btn btn-primary btn-md" style="width: 100%; background: var(--brand-2);">保存订单</button>
+          </div>
+          <div>
+            <div class="code" style="margin-bottom: 8px; font-size: 11px;">.btn-primary:focus</div>
+            <button class="btn btn-primary btn-md" style="width: 100%; box-shadow: var(--ring);">保存订单</button>
+          </div>
+          <div>
+            <div class="code" style="margin-bottom: 8px; font-size: 11px;">.btn-primary:active</div>
+            <button class="btn btn-primary btn-md" style="width: 100%; transform: translateY(1px);">保存订单</button>
+          </div>
+          <div>
+            <div class="code" style="margin-bottom: 8px; font-size: 11px;">.btn-primary[disabled]</div>
+            <button class="btn btn-primary btn-md" disabled style="width: 100%;">保存订单</button>
+          </div>
+          <div>
+            <div class="code" style="margin-bottom: 8px; font-size: 11px;">.btn-primary.is-loading</div>
+            <button class="btn btn-primary btn-md" style="width: 100%;"><span class="spinner"></span>处理中</button>
+          </div>
+          <div>
+            <div class="code" style="margin-bottom: 8px; font-size: 11px;">.btn.is-success</div>
+            <button class="btn btn-primary btn-md" style="width: 100%; background: var(--success);">已保存</button>
+          </div>
+          <div>
+            <div class="code" style="margin-bottom: 8px; font-size: 11px;">.btn-danger</div>
+            <button class="btn btn-danger btn-md" style="width: 100%;">删除订单</button>
+          </div>
+        </div>
+
+        <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; font-weight: 600;">Input · 5 状态</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+          <div class="field">
+            <label>Default</label>
+            <input class="input" placeholder="请输入..." />
+            <span class="help">提示文字</span>
+          </div>
+          <div class="field">
+            <label>Focused</label>
+            <input class="input" style="border-color: var(--brand); box-shadow: var(--ring);" value="kaup.ai" />
+          </div>
+          <div class="field">
+            <label>Error</label>
+            <input class="input is-error" value="invalid@" />
+            <span class="err">邮箱格式不正确</span>
+          </div>
+          <div class="field">
+            <label>Disabled</label>
+            <input class="input" disabled value="locked" />
+          </div>
+          <div class="field">
+            <label>Read only</label>
+            <input class="input" readonly value="只读" />
+            <span class="help">用户可复制但不可编辑</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== § 5. TOKEN ↔ COMPONENT MAP (DESIGN.md alignment) ========== -->
+  <section class="section" id="alignment">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">§ 05 · Token ↔ Component Map</span>
+        <h2 class="section-title">本文件 ↔ DESIGN.md 一一对应</h2>
+        <p class="section-sub">下面这张表是 <code>DESIGN.md §2 YAML</code> 描述的 30 个 color token + 56 个 design token 在本页 CSS 里的实际落点。改任何一处,另一处必须同步 — 这是 design system v1.1 之后新加的 contract。</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom: 32px;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 30%;">DESIGN.md YAML key</th>
+              <th style="width: 20%;">CSS token</th>
+              <th>Where used in this file</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>colors.brand</code></td>
+              <td><code>--brand: #0E2A47</code></td>
+              <td>.btn-primary, .nav-active, .tabs-underline[aria-selected], .check input:checked, .switch input:checked, .link-brand (via --brand-2), .mock-side .side-item.is-active</td>
+            </tr>
+            <tr>
+              <td><code>colors.accent</code></td>
+              <td><code>--accent: #E89B3C</code></td>
+              <td>Kaup Chevron amber dot (<code>fill="#E89B3C"</code> in <code>&lt;symbol&gt;</code>), .ribbon, .chip-accent (via --accent-2)</td>
+            </tr>
+            <tr>
+              <td><code>colors.brand_soft</code> / <code>colors.accent_soft</code></td>
+              <td><code>--brand-soft</code> / <code>--accent-soft</code></td>
+              <td>.hero-eyebrow, .chip-brand, .chip-accent, .price-card.is-featured, .mock-side .side-item.is-active, .mock-mini-card</td>
+            </tr>
+            <tr>
+              <td><code>colors.success_strong</code> / <code>colors.warn_strong</code> / <code>colors.danger_strong</code> / <code>colors.info_strong</code></td>
+              <td><code>--success-2</code> 等 (planned)</td>
+              <td>当前页面 <code>success-soft</code> 上的 status text 仍用 <code>--success</code>(对比 4.5:1+);若调暗至 -2 档,DESIGN.md v2.1+ 同步</td>
+            </tr>
+            <tr>
+              <td><code>spacing.unit</code> + <code>spacing.{1..24}</code></td>
+              <td><code>--space-{1..24}</code></td>
+              <td>所有组件的内边距、间距 — section / card / modal / input / hero / footer / mock 等</td>
+            </tr>
+            <tr>
+              <td><code>rounded.{sm,DEFAULT,md,lg,xl,pill}</code></td>
+              <td><code>--radius-{sm,*,md,lg,xl,pill}</code></td>
+              <td>.input (sm), .btn/.toast (DEFAULT), .card/.modal (md), .quote/.price-card (lg), .hero-eyebrow (xl), .chip/.switch/.progress (pill)</td>
+            </tr>
+            <tr>
+              <td><code>typography.display_cn</code> / <code>display_en</code> / <code>body</code> / <code>label</code> / <code>mono</code></td>
+              <td><code>--font-cn</code> / <code>--font-en</code> / <code>--font-mono</code> + <code>--text-{xs..3xl}</code></td>
+              <td>h1-h5 (font-cn), body (font-en), code/pre (font-mono), .eyebrow / th (label token · 12px / 0.08em)</td>
+            </tr>
+            <tr>
+              <td><code>components.btn_primary</code></td>
+              <td><code>.btn .btn-primary</code></td>
+              <td>Buttons section · 6 变体 × 3 尺寸 × 7 状态</td>
+            </tr>
+            <tr>
+              <td><code>components.btn_secondary</code></td>
+              <td><code>.btn .btn-secondary</code></td>
+              <td>Buttons section</td>
+            </tr>
+            <tr>
+              <td><code>components.card</code></td>
+              <td><code>.card</code></td>
+              <td>Card · Stat · Avatar · Badge section</td>
+            </tr>
+            <tr>
+              <td><code>components.card_subtle</code> <span style="color: var(--accent-2); font-size: 10px; font-weight: 600;">NEW</span></td>
+              <td><code>.card-subtle</code></td>
+              <td>Link · Divider · Subtle Card · Chip section (本页 v1.1 新增)</td>
+            </tr>
+            <tr>
+              <td><code>components.input</code></td>
+              <td><code>.input</code> / <code>.select</code> / <code>.textarea</code></td>
+              <td>Input section</td>
+            </tr>
+            <tr>
+              <td><code>components.modal</code></td>
+              <td><code>.modal</code> + <code>.modal-shroud</code></td>
+              <td>"Open Modal" button triggers 弹出框</td>
+            </tr>
+            <tr>
+              <td><code>components.chip_brand</code> / <code>chip_accent</code> / <code>chip_default</code></td>
+              <td><code>.chip-brand</code> / <code>.chip-accent</code> / <code>.chip</code> (default)</td>
+              <td>Link · Divider · Subtle Card · Chip section (<code>.chip</code> 为 canonical,<code>.badge</code> 为 alias)</td>
+            </tr>
+            <tr>
+              <td><code>components.divider</code> / <code>divider_strong</code> <span style="color: var(--accent-2); font-size: 10px; font-weight: 600;">NEW</span></td>
+              <td><code>&lt;hr class="divider"&gt;</code> / <code>&lt;hr class="divider-strong"&gt;</code></td>
+              <td>Link · Divider · Subtle Card · Chip section (本页 v1.1 新增)</td>
+            </tr>
+            <tr>
+              <td><code>components.link_brand</code> / <code>link_accent</code> <span style="color: var(--accent-2); font-size: 10px; font-weight: 600;">NEW</span></td>
+              <td><code>.link-brand</code> / <code>.link-accent</code></td>
+              <td>Link · Divider · Subtle Card · Chip section (本页 v1.1 新增)</td>
+            </tr>
+            <tr>
+              <td><code>components.banner_success</code> / <code>banner_warn</code> / <code>banner_danger</code> / <code>banner_info</code></td>
+              <td><code>.banner.banner-{success,warn,danger,info}</code></td>
+              <td>Banner &amp; Toast section</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card card-subtle">
+        <h4 style="font-size: 13px; color: var(--fg); margin-bottom: 10px; font-weight: 600;">同步规则</h4>
+        <ol style="font-size: 13px; color: var(--fg-2); line-height: 1.7; padding-left: 20px;">
+          <li><strong>改 token 值</strong> → 先改 <code>tokens.css</code>(canonical),再改本页 CSS(同步镜像),再改 <code>DESIGN.md</code> YAML 注释里引用 token 的字段。</li>
+          <li><strong>改 component API</strong> → 先改 <code>DESIGN.md</code> YAML 的 <code>components.*</code>(spec),再改本页 CSS + showcase(实现)。</li>
+          <li><strong>加新 token</strong> → <code>tokens.css</code> 9 组中选一个最相关的组,加 token + 注释 + dark theme override(若需),然后在 <code>DESIGN.md</code> §2 colors/spacing/rounded 加 YAML 字段(若 schema 涵盖)。</li>
+          <li><strong>加新 component</strong> → 在 <code>DESIGN.md</code> §2 components 加 YAML 块(给出 backgroundColor / textColor / rounded / padding / typography),然后在本页加 CSS + showcase。</li>
+          <li><strong>改 logo</strong> → 改 <code>brand-spec.md §4</code>(canonical 描述) → 改 5 个 SVG 源文件 → 本页 <code>&lt;defs&gt;</code> 里的 <code>&lt;symbol&gt;</code> path 同步更新(改一处全站更新) → <code>scripts/export-png.sh</code> 跑一遍重生成 PNG。</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== § 6. METAL（拉丝铝 + 整页机加工语言 · 2026-09-17 定稿） ========== -->
+  <section class="section" id="metal">
+    <div class="container">
+      <span class="eyebrow">§ 06 · Metal</span>
+      <h2 class="section-title">金属质感：色相锁定，只动明度</h2>
+      <p class="section-sub">两层体系：拉丝纹理层（feTurbulence 各向异性 + 4px 机加工细丝线）只用于 hero/CTA 两处金属表面；整页机加工语言（凸起板材 / 铣削凹槽 / 机加工按键帽 / 拉丝芯片 / 金属墨渐变）用亮度曲线 + 内高光 + 分层投影做材质暗示。一个顶光源推导全页明暗：页面=台面，卡片=凸起板，输入框=凹槽，按钮=按键帽。所有色值锁定 fjord 蓝家族（--fg/--brand 同族），验证：9 组最不利停靠点对比度 ≥8.19:1。</p>
+
+      <h4 style="font-size:13px;color:var(--fg);margin:28px 0 10px;font-weight:600;">背景工艺 token（--metal-* · 亮/暗两套）</h4>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="text-align:left;color:var(--muted);">
+          <th style="padding:8px 12px;border-bottom:1px solid var(--border);">Token</th>
+          <th style="padding:8px 12px;border-bottom:1px solid var(--border);">工艺</th>
+          <th style="padding:8px 12px;border-bottom:1px solid var(--border);">用法</th>
+        </tr></thead>
+        <tbody style="color:var(--fg-2);">
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--metal-hero / --metal-cta</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">多段漫反射亮度曲线（180°/160°）</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">hero 与 CTA 金属板底渐变</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--metal-grain</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">feTurbulence fractalNoise，baseFrequency 0.012 0.9（X 低频 Y 高频=水平拉丝），numOctaves 2，SVG data-URI 内嵌零请求</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">拉丝纹理（仅 .metal 容器）</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--metal-lines</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">4px 周期 repeating-linear-gradient 机加工细丝线</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">与 grain 叠加出车削纹；表头导轨复用</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--metal-veil / --metal-veil-cta</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">radial 薄纱，color-mix(in srgb, var(--bg) N%, transparent)</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">压平文字背后亮度起伏（对比度保障）</td></tr>
+        </tbody>
+      </table>
+
+      <h4 style="font-size:13px;color:var(--fg);margin:28px 0 10px;font-weight:600;">整页机加工 token（亮：白高光/墨暗缘 · 暗：月光蓝高光/黑暗缘）</h4>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="text-align:left;color:var(--muted);">
+          <th style="padding:8px 12px;border-bottom:1px solid var(--border);">Token</th>
+          <th style="padding:8px 12px;border-bottom:1px solid var(--border);">效果</th>
+          <th style="padding:8px 12px;border-bottom:1px solid var(--border);">承载组件</th>
+        </tr></thead>
+        <tbody style="color:var(--fg-2);">
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--edge-hi</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">顶缘受光高光基色</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">板内高光 / 凹槽线槽底反光</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--plate-shadow(-hover)</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">顶缘内高光+接触影+悬浮影</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">.card / .step-card / .table-wrap</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--plate-shadow-deep / --plate-rim</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">深板投影 / 整圈缘光</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">.cta-band（全页最重的一块材料）</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--metal-card / --chip-bg</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">卡面亮度曲线 / 芯片座渐变</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">卡片板材 / 图标芯片</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--btn-metal / --btn-cap-shadow(-press)</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">按键帽亮度曲线 / 帽光（:active 塌陷=按下）</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">.btn-primary 双层背景+帽光</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--metal-text</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">金属墨渐变（background-clip:text）</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">H2 / .fact .num（span 须显式恢复 text-fill-color）</td></tr>
+          <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-family:monospace;">--slot-shadow</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">内阴影下沉</td><td style="padding:8px 12px;border-bottom:1px solid var(--border);">输入框凹槽（与卡片凸起互为反义）</td></tr>
+        </tbody>
+      </table>
+
+      <h4 style="font-size:13px;color:var(--fg);margin:28px 0 10px;font-weight:600;">配额与硬约束</h4>
+      <ul style="font-size:13px;color:var(--fg-2);line-height:1.7;padding-left:20px;">
+        <li>拉丝纹理仅 hero + CTA 两处金属表面/屏（与琥珀 ≤2/屏 同一底层逻辑）</li>
+        <li>亮色背景承载纹理约为暗色的 1/3 —— 亮色 alpha 需加强（grain 0.16 / lines 0.034）</li>
+        <li>倒角四边分色方案已废弃：亮色底上白色亮边不可见，只剩右下暗线读作「脏边」</li>
+        <li>.metal 机制：容器加类，::before 纹理三层 / ::after 薄纱，z-index:-1 + isolation:isolate</li>
+      </ul>
+    </div>
+  </section>
+
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="brand-block">
+          <a href="#" class="brand-logo" aria-label="智御无疆 Kaup — Home">
+            <img src="logo-horizontal.svg" alt="智御无疆 Kaup" class="brand-logo-img brand-logo-light" height="32">
+            <img src="logo-horizontal-dark.svg" alt="" aria-hidden="true" class="brand-logo-img brand-logo-dark" height="32">
+          </a>
+          <p>Kaup · AI Agent 外贸协作平台。Local-First · BYOM · 数据主权 100% 在你手里。</p>
+        </div>
+        <div>
+          <h4>产品</h4>
+          <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Agent Studio</a></li>
+            <li><a href="#">合同管理</a></li>
+            <li><a href="#">合规预审</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>资源</h4>
+          <ul>
+            <li><a href="#">品牌资产</a></li>
+            <li><a href="#">Design System</a></li>
+            <li><a href="#">API 文档</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>公司</h4>
+          <ul>
+            <li><a href="#">关于我们</a></li>
+            <li><a href="#">招聘</a></li>
+            <li><a href="#">隐私政策</a></li>
+            <li><a href="#">服务条款</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 智御无疆 / Kaup · 保留所有权利</span>
+        <span>Design System v1.0 · 2026-06-14</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast stack + Modal -->
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+  <div class="modal-shroud" id="modalShroud" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title" id="modalTitle">确认删除这条订单?</div>
+        <button class="theme-toggle" id="modalClose" aria-label="关闭" style="width: 28px; height: 28px;">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><path d="M3 3l8 8M11 3l-8 8"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 12px;">订单 <code>#KAU-2026-0847</code> 将被永久删除,所有关联的合同、信用报告、对话记录也会一并清除。此操作<strong>不可撤销</strong>。</p>
+        <p style="color: var(--muted); font-size: 13px;">建议先导出 PDF 留档。如需恢复,请在 30 天内联系客户成功经理。</p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost btn-md" id="modalCancel">取消</button>
+        <button class="btn btn-danger btn-md" id="modalConfirm">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       Kaup Design System — runtime
+       - Theme toggle: system preference + localStorage persistence
+       - Toast queue
+       - Modal open/close
+       - Motion bars animation
+       ============================================================ */
+
+    (function () {
+      var root = document.documentElement;
+      var STORE = 'kaup:theme';
+      var themeToggle = document.getElementById('themeToggle');
+      var toastStack = document.getElementById('toastStack');
+      var modalShroud = document.getElementById('modalShroud');
+      var modalClose = document.getElementById('modalClose');
+      var modalCancel = document.getElementById('modalCancel');
+      var modalConfirm = document.getElementById('modalConfirm');
+
+      /* ---------- THEME ---------- */
+      function applyTheme(t) {
+        root.setAttribute('data-theme', t);
+        try { localStorage.setItem(STORE, t); } catch (e) {}
+      }
+      function detectInitial() {
+        try {
+          // ?theme=light|dark URL param wins (useful for visual review & QA)
+          var urlParam = new URLSearchParams(location.search).get('theme');
+          if (urlParam === 'light' || urlParam === 'dark') return urlParam;
+          var saved = localStorage.getItem(STORE);
+          if (saved === 'light' || saved === 'dark') return saved;
+        } catch (e) {}
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      applyTheme(detectInitial());
+
+      themeToggle.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+      });
+
+      // React to system preference changes ONLY if user has not explicitly chosen
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        try {
+          if (!localStorage.getItem(STORE)) {
+            applyTheme(e.matches ? 'dark' : 'light');
+          }
+        } catch (err) {}
+      });
+
+      /* ---------- TOAST ---------- */
+      function showToast(type, title, msg) {
+        var el = document.createElement('div');
+        el.className = 'toast toast-' + type;
+        var iconMap = {
+          info:    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v4M8 11.5v.01"/></svg>',
+          success: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M5 8l2 2 4-4"/></svg>',
+          warn:    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1l7 12H1z"/><path d="M8 6v4M8 12.5v.01"/></svg>',
+          danger:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M5 5l6 6M11 5l-6 6"/></svg>'
+        };
+        el.innerHTML =
+          '<span class="toast-icon" style="color: var(--' + (type === 'info' ? 'info' : type) + ');">' + iconMap[type] + '</span>' +
+          '<div class="toast-body">' +
+            '<div class="toast-title">' + title + '</div>' +
+            '<div class="toast-msg">' + msg + '</div>' +
+          '</div>' +
+          '<button class="toast-close" aria-label="关闭"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>';
+        toastStack.appendChild(el);
+        var close = el.querySelector('.toast-close');
+        close.addEventListener('click', function () { el.remove(); });
+        setTimeout(function () { if (el.parentNode) el.remove(); }, 5000);
+      }
+
+      document.querySelectorAll('[data-toast]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var t = btn.getAttribute('data-toast');
+          if (t === 'modal') { openModal(); return; }
+          var map = {
+            info:    ['系统通知',  '维护窗口将在 30 分钟后开始,持续约 2 小时。'],
+            success: ['订单已保存', 'KAU-2026-0847 已提交至下游审批队列。'],
+            warn:    ['信用额度预警', '已用额度达到 80%,建议及时充值。'],
+            danger:  ['同步失败',   '海关接口返回 503,Agent 将在 60 秒后重试。']
+          };
+          showToast(t, map[t][0], map[t][1]);
+        });
+      });
+
+      /* ---------- MODAL ---------- */
+      function openModal() { modalShroud.classList.add('is-open'); }
+      function closeModal() { modalShroud.classList.remove('is-open'); }
+      modalClose.addEventListener('click', closeModal);
+      modalCancel.addEventListener('click', closeModal);
+      modalShroud.addEventListener('click', function (e) { if (e.target === modalShroud) closeModal(); });
+      modalConfirm.addEventListener('click', function () {
+        closeModal();
+        showToast('danger', '订单已删除', 'KAU-2026-0847 · 此操作不可撤销');
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modalShroud.classList.contains('is-open')) closeModal();
+      });
+
+      /* ---------- MOTION BARS (animate on scroll into view) ---------- */
+      var bars = document.querySelectorAll('.motion-bar');
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) {
+              var bar = en.target;
+              var dur = parseInt(bar.getAttribute('data-duration'), 10);
+              bar.style.transition = 'width ' + dur + 'ms cubic-bezier(0.2, 0, 0, 1)';
+              requestAnimationFrame(function () { bar.style.width = '100%'; });
+              io.unobserve(bar);
+            }
+          });
+        }, { threshold: 0.5 });
+        bars.forEach(function (b) { io.observe(b); });
+      } else {
+        bars.forEach(function (b) { b.style.width = '100%'; });
+      }
+
+      /* ---------- TABS (visual demo only — switch active state) ---------- */
+      document.querySelectorAll('.tabs, .tabs-underline').forEach(function (group) {
+        group.querySelectorAll('button').forEach(function (tab) {
+          tab.addEventListener('click', function () {
+            group.querySelectorAll('button').forEach(function (t) { t.setAttribute('aria-selected', 'false'); });
+            tab.setAttribute('aria-selected', 'true');
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

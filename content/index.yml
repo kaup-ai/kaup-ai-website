@@ -1,0 +1,193 @@
+# 首页文案（结构见 content.config.ts · index 集合）
+seo:
+  title: 智御无疆 Kaup — 赋能企业的 AI 全链路编排与智能调度平台
+  ogTitle: 智御无疆 Kaup — 以 AI 助力企业超越能力和效率的边界
+  description: 以 AI 助力企业超越能力和效率的边界，重新定义无限可能。智御无疆 Kaup 面向中国 B2B 外贸企业提供 AI Agent 平台订阅、定制开发与本地部署：智能拓客、ICP 三维评分、开发信自动化、客户全生命周期管理等 12 项能力，数据不出企业。
+  ogDescription: 以 AI 助力企业超越能力和效率的边界，重新定义无限可能。把外贸获客的整条链路交给 AI Agent：识别 → 评估 → 触达 → 跟进 → 复盘。平台订阅 · 定制开发 · 本地部署 · 数据不出企业。
+hero:
+  note: 赋能企业的 AI 全链路编排与智能调度平台 · 定制开发 · 本地部署 / 私有化 · 数据不出企业
+chain:
+  eyebrow: 获客链路
+  title: 五个环节，Agent 自主推进
+  lede: 智御无疆是赋能企业的 AI 全链路编排与智能调度平台。我们把外贸获客的整条链路——识别、评估、触达、跟进、复盘——交给 AI Agent 自主执行，业务员只在关键决策节点把关。
+  steps:
+    - n: '01'
+      name: 识别
+      desc: 按品类与目标市场自主发现客户，去重并结构化
+      icon: i-lucide-locate-fixed
+    - n: '02'
+      name: 评估
+      desc: 匹配度 / 互动度 / 采购意向 三维动态评分
+      icon: i-lucide-gauge
+    - n: '03'
+      name: 触达
+      desc: 开发信序列自动发送，多渠道统一管理
+      icon: i-lucide-send
+      hitl: true
+    - n: '04'
+      name: 跟进
+      desc: 复购提醒、流失预警与智能跟进节奏
+      icon: i-lucide-bell-ring
+    - n: '05'
+      name: 复盘
+      desc: 成交话术与最佳实践沉淀为组织能力
+      icon: i-lucide-book-open
+  note: 邮件发送、批量操作、数据删除等敏感动作强制执行人机确认（HITL），全流程留痕可审计。
+pain:
+  eyebrow: 现实
+  title: 外贸获客的三重约束
+  lede: 获客高度依赖业务员的经验与人力，而工具只能覆盖单点。三者相互叠加，构成企业扩张的天花板。
+  cards:
+    - icon: i-lucide-circle-dollar-sign
+      title: 获客成本高
+      body: 人力成本随团队规模线性增长——一个 5 人外贸团队，年度人力成本即达 30 万元量级；展会单次综合参展成本约 5 万元起，海关数据与平台会员费持续支出。
+    - icon: i-lucide-users
+      title: 人力依赖重
+      body: 一名业务员能同时跟进的客户数量存在天然上限，而成熟的外贸业务员长期稀缺。企业若寻求规模化，几乎只能依赖扩充团队。
+    - icon: i-lucide-puzzle
+      title: 工具覆盖单点
+      body: 传统工具只能提升单一环节效率，环节之间的衔接、判断与节奏把控仍靠人工完成，数据在流转中断层，信息损耗与效率损失随之而来。
+compare:
+  eyebrow: 形态
+  title: 为什么是 AI Agent，而不是又一种工具
+  lede: 根本差异在于「流程由谁驱动」。外贸获客不是孤立的任务，而是一条需要判断、多步骤衔接的业务链路。
+  panels:
+    - tag: 传统工具 / SaaS
+      agent: false
+      head: 人驱动工具，完成单点任务
+      items:
+        - 人负责找客户、写开发信、跟进客户
+        - 工具仅提升单一环节的效率
+        - 环节之间靠人工衔接，信息损耗
+        - 数据留存于第三方，安全与合规受限
+    - tag: AI Agent
+      agent: true
+      head: Agent 自主执行，人在关键节点把关
+      items:
+        - 端到端执行：识别 → 评估 → 触达 → 跟进 → 复盘
+        - 重复、可标准化的环节由 Agent 承担
+        - 人只在关键决策节点介入确认（HITL）
+        - 支持本地部署，客户与业务数据不出企业
+capabilities:
+  eyebrow: 能力图谱
+  title: 12 项能力，可独立定制、组合或扩展
+  lede: 围绕外贸场景构建，从获客触达到知识沉淀，再到部署方式。
+  more:
+    label: 查看能力详解
+    to: /capabilities
+  groups:
+    - icon: i-lucide-locate-fixed
+      title: 获客与触达
+      count: '04'
+      lede: 从客户发现到多渠道触达的完整前端链路。
+      items:
+        - n: '01'
+          strong: 智能拓客
+          desc: 按品类与目标市场自主检索、去重、结构化
+        - n: '02'
+          strong: ICP 动态三维评分
+          desc: 匹配度 / 互动度 / 采购意向
+        - n: '03'
+          strong: 开发信自动化
+          desc: 序列发送与送达率保障
+        - n: '04'
+          strong: 多渠道触达
+          desc: 即时通讯等渠道统一管理
+    - icon: i-lucide-shield-check
+      title: Agent 智能与安全
+      count: '02'
+      lede: 让 Agent 自主推进，同时把边界交给企业。
+      items:
+        - n: '05'
+          strong: Agent 自主决策
+          desc: 多层业务上下文、定时巡检、7×24 执行
+        - n: '06'
+          strong: HITL 安全
+          desc: 敏感动作强制人工确认，全程审计
+    - icon: i-lucide-briefcase
+      title: 客户与业务管理
+      count: '03'
+      lede: 可与现有系统对接，让客户管理从被动响应转向主动经营。
+      items:
+        - n: '07'
+          strong: CRM / ERP 对接
+          desc: 依据既有系统定制对接方案
+        - n: '08'
+          strong: 客户全生命周期管理
+          desc: 复购提醒与流失预警
+        - n: '09'
+          strong: 跟单操作
+          desc: 订单节点跟踪与异常预警
+    - icon: i-lucide-book-open
+      title: 知识与经验沉淀
+      count: '02'
+      lede: 把分散的文档与个人经验，转化为可复用的组织能力。
+      items:
+        - n: '10'
+          strong: 知识库问答
+          desc: 报价、标书、合同场景助手
+        - n: '11'
+          strong: 成交话术沉淀
+          desc: 最佳实践提炼与复用
+    - icon: i-lucide-server
+      title: 部署
+      count: '01'
+      lede: 数据主权由企业掌握。
+      items:
+        - n: '12'
+          strong: 本地部署 / 私有化
+          desc: 部署于企业自有环境，数据不出企业
+  help:
+    title: 不确定从哪一项开始？
+    body: 我们用一次需求沟通，判断哪些环节值得先交给 Agent。
+    link:
+      label: 预约方案沟通
+      to: /contact
+modes:
+  eyebrow: 服务与合作
+  title: 两种交付模式，按企业的自主程度选择
+  lede: 轻量起步选平台订阅，开箱即用；深度自主选定制 + 私有化，系统部署于企业自有环境。各模式的具体范围依据企业需求一对一确定。
+  more:
+    label: 查看服务详情
+    to: /services
+  cards:
+    - tag: 模式一
+      title: 平台订阅制
+      body: 以订阅方式直接使用智御无疆平台的标准能力——智能拓客、三维评分、开发信自动化、多渠道触达等开箱即用。系统运行于平台，由平台持续迭代与运维，无需自建基础设施。
+      fit: 适合：希望快速上线、以轻量投入先验证 AI 获客效果的企业。
+    - tag: 模式二 · 完整组合
+      title: 定制化 + 私有化
+      body: 既依据企业需求定制 Agent 能力，又将定制后的系统完整部署于企业自有环境、与平台解耦——定制深度与完全自主可控同时达成。
+      fit: 适合：既需贴合自身业务、又要求完全私有化的企业，例如具备强合规要求或自有技术团队者。
+      featured: true
+process:
+  eyebrow: 合作流程
+  title: 从需求沟通到运维支持
+  lede: 项目周期因需求范围而异，不设统一周期；系统上线后提供持续的运维与迭代支持。
+  steps:
+    - n: '01'
+      title: 需求沟通
+      desc: 了解行业属性与合规要求
+      icon: i-lucide-message-square-text
+    - n: '02'
+      title: 方案设计
+      desc: 确定定制范围与交付边界
+      icon: i-lucide-pencil-ruler
+    - n: '03'
+      title: 定制开发
+      desc: 组合、裁剪 Agent 能力
+      icon: i-lucide-code-xml
+    - n: '04'
+      title: 部署交付
+      desc: 私有化部署与环境交付
+      icon: i-lucide-package
+    - n: '05'
+      title: 运维支持
+      desc: 持续运维与迭代培训
+      icon: i-lucide-wrench
+cta:
+  title: "先聊聊\n你现在的获客链路"
+  description: 一次需求沟通，足以判断哪些环节值得先交给 Agent，以及用哪种部署方式更合适。
+  primary:
+    label: 预约方案沟通
+    to: /contact

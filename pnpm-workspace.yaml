@@ -1,0 +1,37 @@
+allowBuilds:
+  sharp: true
+  '@parcel/watcher': false
+  '@tailwindcss/oxide': false
+  esbuild: false
+  unrs-resolver: false
+  vue-demi: false
+minimumReleaseAgeExclude:
+  - '@devframes/agentic@1.0.0'
+  - '@eslint/config-inspector@3.5.0'
+  - '@iconify-json/lucide@1.2.133'
+  - '@iconify/collections@1.0.737'
+  - is-core-module@2.17.0
+  - '@rolldown/binding-android-arm-eabi@1.2.9'
+  - '@rolldown/binding-android-arm64@1.2.9'
+  - '@rolldown/binding-darwin-arm64@1.2.9'
+  - '@rolldown/binding-darwin-x64@1.2.9'
+  - '@rolldown/binding-freebsd-x64@1.2.9'
+  - '@rolldown/binding-linux-arm-gnueabihf@1.2.9'
+  - '@rolldown/binding-linux-arm64-gnu@1.2.9'
+  - '@rolldown/binding-linux-arm64-musl@1.2.9'
+  - '@rolldown/binding-linux-ppc64-gnu@1.2.9'
+  - '@rolldown/binding-linux-s390x-gnu@1.2.9'
+  - '@rolldown/binding-linux-x64-gnu@1.2.9'
+  - '@rolldown/binding-linux-x64-musl@1.2.9'
+  - '@rolldown/binding-openharmony-arm64@1.2.9'
+  - '@rolldown/binding-win32-arm64-msvc@1.2.9'
+  - '@rolldown/binding-win32-x64-msvc@1.2.9'
+  - devframe@1.0.0
+  - framer-motion@13.4.0
+  - jsdoc-type-pratt-parser@9.2.2
+  - motion-v@2.4.4
+  - prettier@3.9.7
+  - rolldown@1.2.9
+  - spdx-license-ids@3.0.24
+  - unplugin@3.4.0
+  - which-typed-array@1.1.23
