@@ -1,12 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/content',
-    '@nuxt/ui',
-    '@vueuse/nuxt',
-    'motion-v/nuxt'
-  ],
+  modules: ['@nuxt/eslint', '@nuxt/content', '@nuxt/ui', '@vueuse/nuxt'],
 
   devtools: {
     enabled: true
@@ -30,18 +24,7 @@ export default defineNuxtConfig({
 
   nitro: {
     prerender: {
-      routes: [
-        '/'
-      ]
-    }
-  },
-
-  eslint: {
-    config: {
-      stylistic: {
-        commaDangle: 'never',
-        braceStyle: '1tbs'
-      }
+      routes: ['/', '/capabilities', '/services', '/about', '/contact']
     }
   }
 })
