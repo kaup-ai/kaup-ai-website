@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160" role="img" aria-label="智御无疆 Kaup Horizontal Lockup — center-aligned (hero / email signature / card variant)">
+  <title>智御无疆 / Kaup — Horizontal Lockup (居中对齐) — Kaup Chevron (15° tilt) + amber dot, block centered on viewBox</title>
+
+  <!-- Mark: 整体块居中, mark translate(68, 30) (mark 视觉宽 ~100px, 整体块 344px, viewBox 480, 居中起点 68) -->
+  <g transform="translate(68 30)">
+    <g transform="rotate(-15 50 50)">
+      <path d="M 15 15 C 25 20, 55 35, 80 50 C 55 65, 25 80, 15 85 L 40 85 C 50 78, 75 65, 85 50 C 75 35, 50 22, 40 15 Z" fill="#0E2A47"/>
+      <circle cx="76" cy="50" r="5" fill="#E89B3C"/>
+    </g>
+  </g>
+
+  <!-- 中文 wordmark, 共享中轴 (text-anchor: middle, x=300), CN 字宽 ~224px, 跨度 188–412 居中于 viewBox 480 -->
+  <text x="300" y="78"
+        style="font-family: 'PingFang SC', 'HarmonyOS Sans SC', 'Source Han Sans SC', 'Noto Sans SC', '微软雅黑', sans-serif; font-size: 48px; font-weight: 600; fill: #0E2A47; text-anchor: middle; letter-spacing: 0.18em;">智御无疆</text>
+
+  <!-- 英文 wordmark, 共享中轴 (x=300) — 中英文字宽差 4× 被中线吸收, Kaup 从"挂件"升级为"图章副标" -->
+  <text x="300" y="110"
+        style="font-family: Inter, -apple-system, 'SF Pro Display', system-ui, sans-serif; font-size: 13px; font-weight: 500; fill: #5B6B7E; text-anchor: middle; letter-spacing: 0.4em;">Kaup</text>
+</svg>

@@ -25,3 +25,7 @@ logs
 
 #VSC
 .history
+
+.omc/
+.playwright-mcp/
+.serena/
