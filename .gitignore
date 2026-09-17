@@ -1,28 +1,27 @@
-# Dependencies
-node_modules/
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
 
-# Build output
-dist/
-build/
+# Node dependencies
+node_modules
 
-# OS files
+# Logs
+logs
+*.log
+
+# Misc
 .DS_Store
-Thumbs.db
+.fleet
+.idea
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Serena
-.serena/
-
-# Env（Vercel serverless function 本地联调用；密钥绝不入库）
+# Local env files
 .env
 .env.*
 !.env.example
 
-
-.omc/
-.playwright-mcp/
+#VSC
+.history
