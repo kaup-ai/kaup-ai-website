@@ -28,7 +28,7 @@ const contact = [
     <UContainer class="py-16">
       <div class="grid gap-10 md:grid-cols-[1.5fr_1fr_1.4fr_1fr]">
         <div>
-          <AppLogo class="h-9 w-auto" />
+          <AppLogo class="h-12 w-auto" />
           <p class="mt-4 max-w-60 text-sm leading-relaxed text-muted">
             以 AI 助力企业超越能力和效率的边界，重新定义无限可能。
           </p>
