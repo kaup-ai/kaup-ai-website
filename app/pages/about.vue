@@ -10,12 +10,7 @@ if (!page.value) {
   })
 }
 
-useSeoMeta({
-  title: page.value.seo.title,
-  ogTitle: page.value.seo.title,
-  description: page.value.seo.description,
-  ogDescription: page.value.seo.description
-})
+useKaupSeo(page.value.seo, '/about')
 </script>
 
 <template>
@@ -25,9 +20,9 @@ useSeoMeta({
     <!-- 品牌四字 -->
     <section class="py-24">
       <UContainer>
-        <KSecHead :eyebrow="page.chars.eyebrow" :title="page.chars.title" />
+        <KSecHead v-reveal :eyebrow="page.chars.eyebrow" :title="page.chars.title" />
         <div class="grid gap-6 md:grid-cols-2">
-          <KCard v-for="c in page.chars.cards" :key="c.glyph" as="article" class="p-8">
+          <KCard v-for="c in page.chars.cards" :key="c.glyph" v-reveal as="article" class="p-8">
             <span class="mb-5 block text-[44px] leading-none font-semibold text-primary">{{
               c.glyph
             }}</span>
@@ -71,6 +66,7 @@ useSeoMeta({
             </div>
           </div>
           <KTable
+            v-reveal
             :caption="page.position.table.caption"
             :head="page.position.table.head"
             :rows="page.position.table.rows"
@@ -100,6 +96,6 @@ useSeoMeta({
       </UContainer>
     </section>
 
-    <KCtaBand v-bind="page.cta" />
+    <KCtaBand v-reveal v-bind="page.cta" />
   </div>
 </template>

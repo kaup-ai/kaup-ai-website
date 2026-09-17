@@ -5,7 +5,9 @@ import { defineCollection, z } from '@nuxt/content'
 
 const seo = z.object({
   title: z.string().nonempty(),
-  description: z.string().nonempty()
+  description: z.string().nonempty(),
+  /** og / twitter 专用文案（基线里与 meta description 是两套），缺省回退 description */
+  ogDescription: z.string().optional()
 })
 
 const secHead = z.object({

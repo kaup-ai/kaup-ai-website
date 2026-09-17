@@ -7,7 +7,7 @@
     viewBox="31.89 38 407.5 73.75"
     role="img"
     aria-label="智御无疆 Kaup"
-    class="block w-full text-primary dark:text-highlighted"
+    class="block w-full text-[#0E2A47] dark:text-[#F0F4FA]"
   >
     <g transform="translate(231.03 74.77) scale(0.87) translate(-231.03 -74.77)">
       <g transform="translate(68 19.37)">
@@ -40,7 +40,7 @@
       <text
         x="258.09"
         y="110"
-        class="fill-[var(--ui-text-muted)]"
+        class="fill-[#5B6B7E] dark:fill-[#8EA0B8]"
         style="
           font-family:
             'Inter',

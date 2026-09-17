@@ -10,12 +10,7 @@ if (!page.value) {
   })
 }
 
-useSeoMeta({
-  title: page.value.seo.title,
-  ogTitle: page.value.seo.title,
-  description: page.value.seo.description,
-  ogDescription: page.value.seo.description
-})
+useKaupSeo(page.value.seo, '/services')
 </script>
 
 <template>
@@ -25,11 +20,17 @@ useSeoMeta({
     <!-- 两种模式 -->
     <section class="py-24">
       <UContainer>
-        <KSecHead :eyebrow="page.modes.eyebrow" :title="page.modes.title" :lede="page.modes.lede" />
+        <KSecHead
+          v-reveal
+          :eyebrow="page.modes.eyebrow"
+          :title="page.modes.title"
+          :lede="page.modes.lede"
+        />
         <div class="mb-12 grid gap-6 md:grid-cols-2">
-          <KModeCard v-for="m in page.modes.cards" :key="m.tag" v-bind="m" />
+          <KModeCard v-for="m in page.modes.cards" :key="m.tag" v-reveal v-bind="m" />
         </div>
         <KTable
+          v-reveal
           :caption="page.modeTable.caption"
           :head="page.modeTable.head"
           :rows="page.modeTable.rows"
@@ -45,7 +46,7 @@ useSeoMeta({
     <section class="pb-24">
       <UContainer>
         <KSecHead :eyebrow="page.customization.eyebrow" :title="page.customization.title" />
-        <KCheckList :items="page.customization.checks" columns />
+        <KCheckList v-reveal :items="page.customization.checks" columns />
       </UContainer>
     </section>
 
@@ -53,13 +54,14 @@ useSeoMeta({
     <section class="pb-24">
       <UContainer>
         <KSecHead
+          v-reveal
           :eyebrow="page.delivery.eyebrow"
           :title="page.delivery.title"
           :lede="page.delivery.lede"
         />
-        <KStepsTrack :steps="page.delivery.steps" class="mb-12" />
+        <KStepsTrack v-reveal :steps="page.delivery.steps" class="mb-12" />
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <KCard v-for="c in page.delivery.cards" :key="c.title" as="article" class="p-6">
+          <KCard v-for="c in page.delivery.cards" :key="c.title" v-reveal as="article" class="p-6">
             <h3 class="mb-3 text-[15px] font-semibold">
               {{ c.title }}
             </h3>
@@ -71,6 +73,6 @@ useSeoMeta({
       </UContainer>
     </section>
 
-    <KCtaBand v-bind="page.cta" />
+    <KCtaBand v-reveal v-bind="page.cta" />
   </div>
 </template>

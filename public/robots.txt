@@ -1,0 +1,18 @@
+# KAUP Website - https://kaup.ai
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://kaup.ai/sitemap.xml
+
+# LLM 站点索引（供 AI 助手读取的站点摘要）
+# LLMs: https://kaup.ai/llms.txt
+
+# Crawl-delay (polite crawling)
+Crawl-delay: 1
+
+# Block internal paths
+Disallow: /.git/
+Disallow: /.nuxt/
+Disallow: /api/

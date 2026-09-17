@@ -11,12 +11,7 @@ if (!page.value) {
   })
 }
 
-useSeoMeta({
-  title: page.value.seo.title,
-  ogTitle: page.value.seo.title,
-  description: page.value.seo.description,
-  ogDescription: page.value.seo.description
-})
+useKaupSeo(page.value.seo, '/')
 </script>
 
 <template>
@@ -33,19 +28,20 @@ useSeoMeta({
           </h1>
         </div>
 
-        <span class="mt-[clamp(20px,3vh,32px)] text-xs font-medium tracking-[0.08em] text-muted"
+        <span
+          class="mt-[clamp(20px,3vh,32px)] text-xs font-medium tracking-[0.08em] text-(--ink-muted)"
           >智以为御，无疆为境 · Kaup Your Trade</span
         >
 
         <p
-          class="mt-[clamp(32px,5vh,64px)] max-w-[32em] text-[clamp(17px,1.55vw,22px)] leading-relaxed font-medium text-default"
+          class="mt-[clamp(32px,5vh,64px)] max-w-[32em] text-[clamp(17px,1.55vw,22px)] leading-relaxed font-medium text-(--ink)"
         >
           以 AI 助力企业超越能力和效率的边界，<br class="claim-br" />重新定义无限可能
         </p>
 
         <!-- 产品实拍：浅/深随主题切换；srcset 三档宽度防 UI 小字发虚，固有尺寸防 CLS -->
         <div
-          class="mt-[clamp(28px,4vh,44px)] w-[min(100%,1080px)] overflow-hidden rounded-2xl border border-default shadow-[var(--elev-4),inset_0_0_0_1px_var(--edge-hi)]"
+          class="mt-[clamp(28px,4vh,44px)] w-[min(100%,1080px)] overflow-hidden rounded-[16px] border border-default shadow-[var(--elev-4),inset_0_0_0_1px_var(--edge-hi)]"
         >
           <img
             src="/hero/kaup-desktop-light.png"
@@ -92,13 +88,13 @@ useSeoMeta({
           </UButton>
         </div>
 
-        <p class="mt-5 max-w-[48em] text-sm text-muted">
+        <p class="mt-5 max-w-[48em] text-sm text-(--ink-muted)">
           {{ page.hero.note }}
         </p>
 
         <a
           href="#chain"
-          class="mt-[clamp(24px,4vh,48px)] inline-flex items-center gap-2 text-xs tracking-[0.08em] text-muted hover:text-default"
+          class="mt-[clamp(24px,4vh,48px)] inline-flex items-center gap-2 text-xs tracking-[0.08em] text-(--ink-muted) hover:text-(--ink)"
         >
           <span>向下了解</span>
           <UIcon name="i-lucide-arrow-down" class="size-3.5" />
@@ -109,8 +105,14 @@ useSeoMeta({
     <!-- ============ 获客链路 ============ -->
     <section id="chain" class="pt-10 pb-24">
       <UContainer>
-        <KSecHead :eyebrow="page.chain.eyebrow" :title="page.chain.title" :lede="page.chain.lede" />
+        <KSecHead
+          v-reveal
+          :eyebrow="page.chain.eyebrow"
+          :title="page.chain.title"
+          :lede="page.chain.lede"
+        />
         <ol
+          v-reveal
           aria-label="外贸获客链路的五个环节"
           class="grid grid-cols-5 gap-6 max-[900px]:grid-cols-1 max-[900px]:pl-10"
         >
@@ -155,7 +157,7 @@ useSeoMeta({
     <!-- ============ FACTS ============ -->
     <section>
       <UContainer>
-        <div class="grid border-y border-default md:grid-cols-3">
+        <div v-reveal class="grid border-y border-default md:grid-cols-3">
           <div
             v-for="(f, i) in page.facts"
             :key="f.num"
@@ -186,7 +188,7 @@ useSeoMeta({
       <UContainer>
         <KSecHead :eyebrow="page.pain.eyebrow" :title="page.pain.title" :lede="page.pain.lede" />
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <KCard v-for="c in page.pain.cards" :key="c.title" as="article" class="p-6">
+          <KCard v-for="c in page.pain.cards" :key="c.title" v-reveal as="article" class="p-6">
             <span
               class="mb-5 inline-flex size-[34px] items-center justify-center rounded-lg bg-[image:var(--chip-bg)] text-primary shadow-[inset_0_1px_0_var(--edge-hi),var(--elev-1)]"
             >
@@ -207,11 +209,13 @@ useSeoMeta({
     <section class="pb-24">
       <UContainer>
         <KSecHead
+          v-reveal
           :eyebrow="page.compare.eyebrow"
           :title="page.compare.title"
           :lede="page.compare.lede"
         />
         <div
+          v-reveal
           class="grid overflow-hidden rounded-xl border border-default bg-default shadow-[var(--plate-shadow)] md:grid-cols-2"
         >
           <div
@@ -249,6 +253,7 @@ useSeoMeta({
     <section class="pb-24">
       <UContainer>
         <KSecHead
+          v-reveal
           :eyebrow="page.capabilities.eyebrow"
           :title="page.capabilities.title"
           :lede="page.capabilities.lede"
@@ -260,6 +265,7 @@ useSeoMeta({
           <KCard
             v-for="g in page.capabilities.groups"
             :key="g.title"
+            v-reveal
             as="article"
             class="flex flex-col p-6"
           >
@@ -305,6 +311,7 @@ useSeoMeta({
     <section class="pb-24">
       <UContainer>
         <KSecHead
+          v-reveal
           :eyebrow="page.modes.eyebrow"
           :title="page.modes.title"
           :lede="page.modes.lede"
@@ -313,7 +320,7 @@ useSeoMeta({
           <KLinkMore :label="page.modes.more.label" :to="page.modes.more.to" />
         </KSecHead>
         <div class="grid gap-6 md:grid-cols-2">
-          <KModeCard v-for="m in page.modes.cards" :key="m.tag" v-bind="m" />
+          <KModeCard v-for="m in page.modes.cards" :key="m.tag" v-reveal v-bind="m" />
         </div>
       </UContainer>
     </section>
@@ -322,15 +329,16 @@ useSeoMeta({
     <section class="pb-24">
       <UContainer>
         <KSecHead
+          v-reveal
           :eyebrow="page.process.eyebrow"
           :title="page.process.title"
           :lede="page.process.lede"
         />
-        <KStepsTrack :steps="page.process.steps" />
+        <KStepsTrack v-reveal :steps="page.process.steps" />
       </UContainer>
     </section>
 
     <!-- ============ CTA（金属 · 全站两处拉丝之二） ============ -->
-    <KCtaBand v-bind="page.cta" />
+    <KCtaBand v-reveal v-bind="page.cta" />
   </div>
 </template>

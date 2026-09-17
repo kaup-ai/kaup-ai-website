@@ -13,9 +13,9 @@ defineProps<{
 
 <template>
   <KCard as="article" class="flex flex-col p-6">
-    <span class="font-mono text-xs" :class="featured ? 'text-primary' : 'text-dimmed'">{{
-      tag
-    }}</span>
+    <!-- tag 统一样式（用户 2026-09-17 定稿：两卡一致，不做 featured 变色强调）；
+         色 = legacy --muted-2（#8898AB / #5B6B82） -->
+    <span class="font-mono text-xs text-[#8898AB] dark:text-[#5B6B82]">{{ tag }}</span>
     <h3 class="mt-4 mb-3 text-[15px] font-semibold">
       {{ title }}
     </h3>

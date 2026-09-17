@@ -149,6 +149,25 @@
     inset 0 2px 4px rgba(4, 12, 24, 0.22);
   --metal-text: linear-gradient(165deg, #0a1a2f 15%, #2e4a6e 55%, #17324f 100%);
   --slot-shadow: inset 0 2px 4px rgba(10, 26, 47, 0.07);
+
+  /* 动效曲线（源 tokens.css Motion 档：fast 130ms · base 200ms · slow 320ms） */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* 品牌主色的亮色语义：源 tokens.css --brand 浅色 #0E2A47 = fjord-600。
+     Nuxt UI 默认 --ui-primary 取 primary-500（#6FA0E0）是暗色面的品牌色，
+     浅色底上过淡（2026-09-17 用户实测 hero logo/文字发灰）；暗色保持默认。 */
+  --ui-primary: var(--color-fjord-600);
+
+  /* Ink 角色（源 tokens.css --fg / --muted，hero 等处 1:1 引用） */
+  --ink: #0a1a2f;
+  --ink-muted: #5b6b7e;
+}
+
+/* Ink 角色 · 深色值（源 tokens.css [data-theme=dark] --fg / --muted）。
+   必须放在上方 :root 之后：同特异性后来者赢，否则 light 值压住 dark 值 */
+.dark {
+  --ink: #f0f4fa;
+  --ink-muted: #8ea0b8;
 }
 
 .dark {
@@ -297,6 +316,30 @@ h4 {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
+  /* 滚动入场静态直通：opacity/transform 是静态样式，通配冻结管不到（源 site.css） */
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- 滚动入场（源 site.js IntersectionObserver + .reveal） ----------
+   .reveal 由 v-reveal 指令在客户端注入（SSR 直出 HTML 不含此类——无 JS /
+   爬虫直接可见，优于 legacy 的 SSR 即隐身）；命中视口加 .is-visible。 */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 480ms var(--ease),
+    transform 480ms var(--ease);
 }
 
 /* 品牌主张 / CTA 标题的受控换行：仅窄屏（≤820px）在逗号后断行（源 .claim-br） */

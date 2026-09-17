@@ -1,12 +1,13 @@
 <script setup lang="ts">
-useSeoMeta({
-  title: '联系我们 — 智御无疆 Kaup',
-  description:
-    '以 AI 助力企业超越能力和效率的边界，重新定义无限可能。在线表单提交定制开发与本地部署需求，商务联系人一个工作日内回电；也可邮件 sales@kaup.ai 或扫码添加微信。',
-  ogTitle: '联系我们 — 智御无疆 Kaup',
-  ogDescription: '在线表单提交定制开发与本地部署需求，商务联系人一个工作日内回电。',
-  ogUrl: 'https://kaup.ai/contact'
-})
+useKaupSeo(
+  {
+    title: '联系我们 — 智御无疆 Kaup',
+    description:
+      '以 AI 助力企业超越能力和效率的边界，重新定义无限可能。在线表单提交定制开发与本地部署需求，商务联系人一个工作日内回电；也可邮件 sales@kaup.ai 或扫码添加微信。',
+    ogDescription: '在线表单提交定制开发与本地部署需求，商务联系人一个工作日内回电。'
+  },
+  '/contact'
+)
 
 const steps = [
   { n: '01', h: '需求沟通', p: '了解行业属性与合规要求' },
@@ -61,7 +62,7 @@ const qrs = [
           <div>
             <KEyebrow text="在线提交" class="mb-4" />
             <!-- 表单提交到 server/api/contact.ts（契约见 contact.contract.md） -->
-            <KCard class="p-6 md:p-8">
+            <KCard v-reveal class="p-6 md:p-8">
               <ContactForm />
             </KCard>
           </div>
@@ -86,7 +87,7 @@ const qrs = [
               </li>
             </ul>
 
-            <KCard class="mt-8 p-6">
+            <KCard v-reveal class="mt-8 p-6">
               <h3 class="font-semibold">提交后会发生什么</h3>
               <ol class="mt-4 space-y-3 text-sm text-toned">
                 <li class="flex gap-3">
@@ -108,7 +109,14 @@ const qrs = [
 
         <!-- 二维码 -->
         <div class="mt-12 grid gap-6 sm:grid-cols-2">
-          <KCard v-for="qr in qrs" :key="qr.src" as="article" hover class="p-6 text-center">
+          <KCard
+            v-for="qr in qrs"
+            :key="qr.src"
+            v-reveal
+            as="article"
+            hover
+            class="p-6 text-center"
+          >
             <div
               class="mx-auto size-[260px] max-w-full overflow-hidden rounded-lg border border-default bg-default p-2"
             >

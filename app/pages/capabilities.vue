@@ -13,12 +13,7 @@ if (!page.value) {
   })
 }
 
-useSeoMeta({
-  title: page.value.seo.title,
-  ogTitle: page.value.seo.title,
-  description: page.value.seo.description,
-  ogDescription: page.value.seo.description
-})
+useKaupSeo(page.value.seo, '/capabilities')
 </script>
 
 <template>
@@ -43,7 +38,7 @@ useSeoMeta({
               {{ page.arch.body }}
             </p>
           </div>
-          <KTable caption="关键技术选型" :rows="page.arch.rows" />
+          <KTable v-reveal caption="关键技术选型" :rows="page.arch.rows" />
         </div>
       </UContainer>
     </section>
@@ -51,12 +46,12 @@ useSeoMeta({
     <!-- 能力组（deploy 组附带架构五原则清单，split 布局） -->
     <section v-for="g in page.groups" :id="g.id" :key="g.id" class="pb-24">
       <UContainer>
-        <KSecHead :eyebrow="g.eyebrow" :title="g.title" :lede="g.lede" />
+        <KSecHead v-reveal :eyebrow="g.eyebrow" :title="g.title" :lede="g.lede" />
         <div
           v-if="g.checks"
           class="grid items-start gap-8 md:grid-cols-2 md:gap-[clamp(32px,5vw,72px)]"
         >
-          <KCard v-for="c in g.cards" :key="c.idx" as="article" class="p-6">
+          <KCard v-for="c in g.cards" :key="c.idx" v-reveal as="article" class="p-6">
             <span class="mb-4 block font-mono text-xs text-dimmed">{{ c.idx }}</span>
             <h3 class="mb-3 text-[15px] font-semibold">
               {{ c.title }}
@@ -65,14 +60,14 @@ useSeoMeta({
               {{ c.body }}
             </p>
           </KCard>
-          <KCheckList :items="g.checks" />
+          <KCheckList v-reveal :items="g.checks" />
         </div>
         <div
           v-else
           class="grid gap-6"
           :class="g.grid === 3 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2'"
         >
-          <KCard v-for="c in g.cards" :key="c.idx" as="article" class="p-6">
+          <KCard v-for="c in g.cards" :key="c.idx" v-reveal as="article" class="p-6">
             <span class="mb-4 block font-mono text-xs text-dimmed">{{ c.idx }}</span>
             <h3 class="mb-3 text-[15px] font-semibold">
               {{ c.title }}
@@ -85,6 +80,6 @@ useSeoMeta({
       </UContainer>
     </section>
 
-    <KCtaBand v-bind="page.cta" />
+    <KCtaBand v-reveal v-bind="page.cta" />
   </div>
 </template>
