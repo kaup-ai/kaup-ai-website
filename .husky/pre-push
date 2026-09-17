@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# husky v9 pre-push hook（移植自 kaup-frontend，决策 B 慢检查全量兜底）
+# 分层：pre-push = 慢检查（全量，保险）
+#   1. pnpm typecheck = nuxt typecheck → vue-tsc（完整类型 + Vue template 检查）
+#   2. pnpm lint = ESLint（全量，非 staged 文件 + rule 更新后兜底）
+#
+# 与 kaup-frontend pre-push 的差异（裁剪说明）：
+#   - 无 pnpm test：本项目暂无测试框架，接入 Vitest 后在此追加
+#   - 无 pnpm lint:css：仅一个 Tailwind v4 入口 CSS，无 stylelint 配置
+#   - 无 cargo clippy / tokens-consistency：无 src-tauri / tokens.css 单源约束
+#
+# B2-fix: 显式 || exit 1 链，避免 if 块掩盖退出码
+
+pnpm typecheck && pnpm lint || exit 1

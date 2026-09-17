@@ -29,3 +29,6 @@ logs
 .omc/
 .playwright-mcp/
 .serena/
+
+# husky 运行时 shim（prepare 时重建）
+.husky/_/

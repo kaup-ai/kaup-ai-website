@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.nuxt/
+.output/
+.data/
+.omc/
+.playwright-mcp/
+.serena/
+.idea/
+pnpm-lock.yaml
+*.min.js
+
+# 旧静态站归档（内容移植对照源，切换时删除）——格式化会破坏对照意义
+legacy/
+
+# open-design 清单（工具生成物，重排破坏与设计源对照）
+design-system/DESIGN-MANIFEST.json
+
+# Trellis 项目配置：由 Trellis 生成/维护，不 prettier
+.trellis/
+
+# TypeScript config（重排无收益）
+tsconfig.json
