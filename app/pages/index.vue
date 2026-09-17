@@ -41,7 +41,7 @@ useKaupSeo(page.value.seo, '/')
 
         <!-- 产品实拍：浅/深随主题切换；srcset 三档宽度防 UI 小字发虚，固有尺寸防 CLS -->
         <div
-          class="mt-[clamp(28px,4vh,44px)] w-[min(100%,1080px)] overflow-hidden rounded-[16px] border border-default shadow-[var(--elev-4),inset_0_0_0_1px_var(--edge-hi)]"
+          class="mt-[clamp(28px,4vh,44px)] w-[min(100%,1080px)] overflow-hidden rounded-[24px] border border-default shadow-[var(--elev-4),inset_0_0_0_1px_var(--edge-hi)]"
         >
           <img
             src="/hero/kaup-desktop-light.png"
@@ -151,35 +151,6 @@ useKaupSeo(page.value.seo, '/')
         <p class="mt-6 text-xs text-muted">
           {{ page.chain.note }}
         </p>
-      </UContainer>
-    </section>
-
-    <!-- ============ FACTS ============ -->
-    <section>
-      <UContainer>
-        <div v-reveal class="grid border-y border-default md:grid-cols-3">
-          <div
-            v-for="(f, i) in page.facts"
-            :key="f.num"
-            class="border-default py-8 max-md:border-b last:max-md:border-b-0 md:border-r last:md:border-r-0"
-            :class="i === 0 ? 'md:pr-8' : 'md:px-8'"
-          >
-            <UIcon :name="f.icon" class="mb-3 block size-[22px] text-primary" />
-            <span
-              class="metal-ink block font-mono text-[clamp(28px,3.4vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em]"
-              >{{ f.num
-              }}<span
-                v-if="f.unit"
-                class="ml-1.5 text-[0.5em] font-medium tracking-normal text-muted [-webkit-text-fill-color:var(--ui-text-muted)]"
-                >{{ f.unit }}</span
-              ></span
-            >
-            <p class="mt-3 text-sm text-toned">
-              {{ f.label }}
-            </p>
-            <span class="mt-2 block text-xs text-dimmed">{{ f.src }}</span>
-          </div>
-        </div>
       </UContainer>
     </section>
 

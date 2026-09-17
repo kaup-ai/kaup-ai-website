@@ -82,15 +82,6 @@ export const collections = {
         ),
         note: z.string()
       }),
-      facts: z.array(
-        z.object({
-          icon: z.string(),
-          num: z.string(),
-          unit: z.string().optional(),
-          label: z.string(),
-          src: z.string()
-        })
-      ),
       pain: secHead.extend({
         cards: z.array(
           z.object({

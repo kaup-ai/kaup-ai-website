@@ -33,22 +33,6 @@ chain:
       desc: 成交话术与最佳实践沉淀为组织能力
       icon: i-lucide-book-open
   note: 邮件发送、批量操作、数据删除等敏感动作强制执行人机确认（HITL），全流程留痕可审计。
-facts:
-  - icon: i-lucide-globe
-    num: '45.47'
-    unit: 万亿元
-    label: 2025 年中国货物进出口总值，同比 +3.8%，连续 9 年增长
-    src: 数据来源：海关总署
-  - icon: i-lucide-building-2
-    num: '70'
-    unit: 万家
-    label: 有进出口实绩的外贸企业（2025 年前三季度，已超 2024 年全年）
-    src: 数据来源：海关总署
-  - icon: i-lucide-trending-up
-    num: '5'
-    unit: 人 ≈ 50 人
-    label: 配备全链路 AI Agent 矩阵后的团队触达、服务与吞吐能力
-    src: 智御无疆能力目标
 pain:
   eyebrow: 现实
   title: 外贸获客的三重约束
