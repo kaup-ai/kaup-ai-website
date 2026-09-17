@@ -90,7 +90,15 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 
 .section-tight { padding: var(--space-16) 0; }
 
-.rule { border-top: 1px solid var(--border); }
+/* 凹槽线：1px --border 灰线 + 底部 1px 内亮线（光从槽底反上来），
+   替代上下双色倒角 —— 倒角的暗线在亮色主题下读作「脏边」。
+   原 border-top 改为 background，视觉仍是一条细分隔线 */
+.rule {
+  border-top: 0;
+  height: 1px;
+  background: var(--border);
+  box-shadow: 0 1px 0 var(--edge-hi);
+}
 
 /* ---------- typography helpers ---------- */
 /* 全站统一的栏目标签：琥珀小圆点 + 大写小字。
@@ -203,17 +211,41 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .btn:active { transform: translateY(1px); }
 
 .btn-primary {
-  background: var(--brand);
+  background-color: var(--brand);
   border-color: var(--brand);
   color: var(--on-brand);
+  /* 机加工按键帽（2026-09-17）：双层背景 —— 底层 --btn-metal 亮度曲线
+     （顶亮受光 → 深基座），上层扫光（2026-09-16 的抛光微交互保留）。
+     用 background-position 动画（合成器友好），常态停在视区外（115%）。
+     注意：这里和 :hover 都必须用 background-color 简写属性，
+     否则 background 简写会清掉这层 background-image。
+     帽光 --btn-cap-shadow：顶缘内亮 + 底缘内暗 + 接触影 + 悬浮影；
+     :active 换 --btn-cap-shadow-press（帽光塌陷 = 按下）。
+     prefers-reduced-motion 已在文件末尾统一冻结 transition。 */
+  background-image: var(--btn-metal),
+    linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%);
+  background-size: 100% 100%, 220% 100%;
+  background-position: 0 0, 115% 0;
+  box-shadow: var(--btn-cap-shadow);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease),
+    background-position var(--t-slow) var(--ease);
 }
 
-.btn-primary:hover { background: var(--brand-2); border-color: var(--brand-2); }
+.btn-primary:hover {
+  background-color: var(--brand-2);
+  border-color: var(--brand-2);
+  background-position: 0 0, -25% 0;
+}
+
+.btn-primary:active { box-shadow: var(--btn-cap-shadow-press); }
 
 .btn-secondary {
   background: var(--surface);
   border-color: var(--border-2);
   color: var(--fg);
+  box-shadow: inset 0 1px 0 var(--edge-hi);
 }
 
 .btn-secondary:hover { border-color: var(--muted-2); background: var(--surface-2); }
@@ -262,7 +294,8 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   -webkit-backdrop-filter: saturate(1.4) blur(12px);
   backdrop-filter: saturate(1.4) blur(12px);
   border-bottom-color: var(--border);
-  box-shadow: var(--elev-2);
+  /* 凹槽底缘：发丝暗线 + 下缘 1px 亮线（槽底反光），与 .rule 同一语言 */
+  box-shadow: var(--elev-2), 0 1px 0 var(--edge-hi);
 }
 
 .header-inner {
@@ -371,7 +404,9 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
      改为内容驱动 + 固定舒适 padding —— 间距与视口高度无关，
      顶栏→内容 ≈ 32–56px，内容→下一节 ≈ 40–64px + 下一节自身 padding。 */
   padding: calc(var(--header-h) + clamp(32px, 5vh, 56px)) 0 clamp(40px, 6vh, 64px);
-  /* 设计文档 §Hero：浅色 hero 用 --bg（冰川白）铺底 —— 不加渐变、不加暖色。
+  /* 设计文档 §Hero（2026-09-16 修订）：默认仍用 --bg 平铺；
+     金属变体经评审许可 —— 容器加 .metal 类（当前工艺：钛金属磨砂，
+     参数全部在 tokens.css --metal-*，分层见下方 .metal 块），金属表面 ≤2 处/屏。
      mark 的墨色见下方 .hero-logo svg。 */
   background: var(--bg);
   text-align: center;
@@ -486,7 +521,8 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--elev-3);
+  /* 仪表边框：深悬浮影 + 内圈 1px 亮环（屏幕玻璃缘受光） */
+  box-shadow: var(--elev-4), inset 0 0 0 1px var(--edge-hi);
 }
 
 .hero-shot img { display: block; width: 100%; height: auto; }
@@ -532,6 +568,39 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 
 .hero-scroll:hover { color: var(--fg); }
 
+/* ---------- 金属效果 · .metal 变体（2026-09-17 定稿：拉丝铝底 + 机加工板边框） ----------
+ * 背景分层（自下而上）：容器自身 background（兜底/底色）→ ::before 漫反射底渐变 +
+ * 各向异性拉丝纹 + 机加工细丝线 → ::after 内容区薄纱（压平文字背后的亮度起伏，
+ * 对比度保障）→ 内容。两层伪元素 z-index:-1 + isolation:isolate，不打扰内容层叠。
+ * 边框：不在这里写死 —— 各边框元素引用 tokens.css --plate-* / --edge-hi（机加工板）。
+ * 色值零硬编码（token 纪律）；换材质只改 tokens.css 里的值。
+ * 用法：hero 加 .metal 用 --metal-hero；.cta-band.metal 换 --metal-cta。 */
+.metal { position: relative; isolation: isolate; }
+
+.metal::before,
+.metal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+/* 背景层序：不规则拉丝纹在最上，机加工细丝线居中，漫反射底兜底 */
+.metal::before {
+  background-image: var(--metal-grain), var(--metal-lines), var(--metal-hero);
+  background-size: 240px 240px, auto, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+.metal::after { background: var(--metal-veil); }
+
+/* CTA 带：底色仍是 --brand，漫反射底换品牌蓝铝 */
+.cta-band.metal::before {
+  background-image: var(--metal-grain), var(--metal-lines), var(--metal-cta);
+}
+.cta-band.metal::after { background: var(--metal-veil-cta); }
+
 
 
 /* ---------- 获客链路 section ---------- */
@@ -556,9 +625,10 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-4) var(--space-5);
-  background: var(--surface);
+  background: var(--metal-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  box-shadow: var(--plate-shadow);
 }
 
 /* 卡片间隙中的串联箭头：绝对定位铺满 24px gap，水平/垂直居中 */
@@ -693,9 +763,18 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.05;
+  /* 金属墨：--metal-text 亮度曲线剪进字形（fjord 墨色族，色相锁定） */
+  background: var(--metal-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.fact .num span { font-size: 0.5em; font-weight: 500; color: var(--muted); margin-left: 6px; letter-spacing: 0; }
+/* 单位 span 恢复实色：text-fill-color 会被继承成透明，必须显式盖回 */
+.fact .num span {
+  font-size: 0.5em; font-weight: 500; color: var(--muted); margin-left: 6px; letter-spacing: 0;
+  -webkit-text-fill-color: var(--muted);
+}
 
 .fact .label { margin-top: var(--space-3); font-size: var(--text-sm); color: var(--fg-2); }
 .fact .src { display: block; margin-top: var(--space-2); }
@@ -713,7 +792,14 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 
 /* ---------- section head ---------- */
 .sec-head { max-width: 62ch; margin-bottom: var(--space-12); }
-.sec-head h2 { margin-bottom: var(--space-4); }
+/* 栏目标题金属墨（与 .fact .num 同一 --metal-text；CTA 带 h2 在深板上保持纯白） */
+.sec-head h2 {
+  margin-bottom: var(--space-4);
+  background: var(--metal-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .sec-head p { color: var(--fg-2); }
 
 .sec-head-split {
@@ -767,17 +853,22 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .contact-list .v { text-wrap: balance; }
 
 .card {
-  background: var(--surface);
+  /* 凸起金属板：--metal-card 亮度曲线（白 → 微蓝灰，板材微曲率）+
+     机加工板投影（顶缘内高光 + 接触影 + 悬浮影） */
+  background: var(--metal-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  box-shadow: var(--plate-shadow);
   padding: var(--space-6);
-  transition: border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease),
+  transition: box-shadow var(--t-base) var(--ease),
     transform var(--t-base) var(--ease);
 }
 
-.card-flat { background: transparent; }
+.card-flat { background: transparent; box-shadow: none; }
 
-.card:hover { border-color: var(--border-2); box-shadow: var(--elev-2); }
+/* 悬停板子物理抬升 2px：光从板下透出（影子加深拉开），
+   顶缘内高光保留在 hover 栈里；reduced-motion 下过渡即时，无位移动画 */
+.card:hover { box-shadow: var(--plate-shadow-hover); transform: translateY(-2px); }
 
 .card h3 { font-size: var(--text-md); margin-bottom: var(--space-3); }
 .card p { color: var(--fg-2); font-size: var(--text-sm); }
@@ -798,8 +889,10 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   height: 34px;
   margin-bottom: var(--space-5);
   border-radius: var(--radius);
-  background: var(--brand-soft);
+  /* 拉丝芯片座：--chip-bg 亮度曲线 + 顶缘内高光 + 接触影（--elev-1） */
+  background: var(--chip-bg);
   color: var(--brand);
+  box-shadow: inset 0 1px 0 var(--edge-hi), var(--elev-1);
 }
 
 .card-icon svg { width: 17px; height: 17px; }
@@ -842,6 +935,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--surface);
+  box-shadow: var(--plate-shadow);
 }
 
 .compare > div { padding: var(--space-8); }
@@ -925,7 +1019,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 }
 
 /* ---------- table ---------- */
-.table-wrap { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--surface); }
+.table-wrap { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--surface); box-shadow: var(--plate-shadow); }
 
 table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
 
@@ -937,7 +1031,10 @@ th {
   font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--muted);
-  background: var(--surface-2);
+  /* 拉丝导轨：机加工细丝线铺在 surface-2 上 + 顶缘内高光（与 .metal 同源纹理） */
+  background-color: var(--surface-2);
+  background-image: var(--metal-lines);
+  box-shadow: inset 0 1px 0 var(--edge-hi);
 }
 
 /* 列宽只约束行头列（tbody th）。
@@ -1083,6 +1180,8 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
   background: var(--surface);
   color: var(--fg);
   font: inherit;
+  /* 铣削凹槽：内阴影下沉（输入区低于台面），与卡片凸起互为反义 */
+  box-shadow: var(--slot-shadow);
   transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
 
@@ -1113,6 +1212,10 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
 .cta-band {
   background: var(--brand);
   color: #fff;
+  /* 金属板整圈缘光（--plate-rim 浅于 --edge-hi）+ 深板投影（比普通卡片更重的
+     --plate-shadow-deep：它是页面里最重的一块材料） */
+  border: 1px solid var(--plate-rim);
+  box-shadow: var(--plate-shadow-deep);
   border-radius: var(--radius-xl);
   padding: clamp(40px, 6vw, 72px);
   display: grid;
@@ -1125,8 +1228,25 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
 .cta-band p { color: rgba(255, 255, 255, 0.82); max-width: 48ch; }
 .cta-band .btn-secondary { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.32); color: #fff; }
 .cta-band .btn-secondary:hover { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.5); }
-.cta-band .btn-primary { background: #fff; border-color: #fff; color: var(--brand); }
-.cta-band .btn-primary:hover { background: var(--brand-soft); border-color: var(--brand-soft); }
+/* 白底按钮上的扫光改用墨色（白扫光在白底上不可见）。
+   白帽双层（2026-09-17）：白亮度曲线 + 墨扫光，帽光塌陷沿用 :active 全局态 */
+.cta-band .btn-primary {
+  background-color: #fff;
+  border-color: #fff;
+  color: var(--brand);
+  background-image:
+    linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 55%, #F2F6FB 100%),
+    linear-gradient(110deg, transparent 35%, rgba(14,42,71,0.10) 50%, transparent 65%);
+  background-size: 100% 100%, 220% 100%;
+  background-position: 0 0, 115% 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(10,26,47,0.10), 0 1px 2px rgba(10,26,47,0.16);
+}
+.cta-band .btn-primary:hover { background-color: var(--brand-soft); border-color: var(--brand-soft); background-position: 0 0, -25% 0; }
+
+/* 暗色主题：CTA 带为深 fjord 铬后，白钮文字若用 --brand（#6FA0E0）在白底上仅 ~2.9，
+   改用深 fjord 墨（#0E2A47，亮 theme 的 brand 值，色相锁定）；hover 浅底同族色保持可读 */
+[data-theme="dark"] .cta-band .btn-primary { color: #0E2A47; }
+[data-theme="dark"] .cta-band .btn-primary:hover { background-color: #D7E2F0; border-color: #D7E2F0; }
 .cta-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
 
 @media (max-width: 820px) { .cta-band { grid-template-columns: minmax(0, 1fr); } }
@@ -1134,7 +1254,8 @@ tr:last-child th, tr:last-child td { border-bottom: 0; }
 /* ---------- footer ---------- */
 /* 底padding 加大到 space-16 + 安全区：32px 时末行贴屏幕下沿，
    iPhone Safari 底栏 / 窗口越出屏幕都会把末行吃掉（2026-09-11 用户实测反馈） */
-.site-footer { border-top: 1px solid var(--border); padding: var(--space-16) 0 calc(var(--space-16) + env(safe-area-inset-bottom, 0px)); margin-top: var(--space-24); }
+/* 顶缘凹槽：暗线之下 1px 内亮线（页脚台面受光），与页眉底缘呼应 */
+.site-footer { border-top: 1px solid var(--border); box-shadow: inset 0 1px 0 var(--edge-hi); padding: var(--space-16) 0 calc(var(--space-16) + env(safe-area-inset-bottom, 0px)); margin-top: var(--space-24); }
 
 .footer-top { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
 
