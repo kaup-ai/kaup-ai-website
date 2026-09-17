@@ -17,8 +17,9 @@ const capabilities = [
 ]
 
 const contact = [
-  { label: 'sales@kaup.ai', to: 'mailto:sales@kaup.ai' },
-  { label: '公众号 / 微信二维码', to: '/contact' }
+  { label: '(0411)8830-9999', to: 'tel:+8641188309999', mono: true },
+  { label: 'sales@kaup.ai', to: 'mailto:sales@kaup.ai', mono: true },
+  { label: '公众号 / 微信二维码', to: '/contact', mono: false }
 ]
 </script>
 
@@ -52,13 +53,13 @@ const contact = [
         <div>
           <h4 class="text-sm font-semibold">联系</h4>
           <ul class="mt-4 space-y-2.5 text-sm text-muted">
-            <li>
-              <ULink :to="contact[0]!.to" class="font-mono hover:text-default">{{
-                contact[0]!.label
-              }}</ULink>
-            </li>
-            <li>
-              <ULink :to="contact[1]!.to" class="hover:text-default">{{ contact[1]!.label }}</ULink>
+            <li v-for="c in contact" :key="c.to">
+              <ULink
+                :to="c.to"
+                :class="c.mono ? 'font-mono' : undefined"
+                class="hover:text-default"
+                >{{ c.label }}</ULink
+              >
             </li>
             <li>辽宁 · 大连</li>
           </ul>

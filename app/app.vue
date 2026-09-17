@@ -48,6 +48,7 @@ const orgWebsiteLd = {
         {
           '@type': 'ContactPoint',
           contactType: 'sales',
+          telephone: '+8641188309999',
           email: 'sales@kaup.ai',
           availableLanguage: ['zh-CN']
         }

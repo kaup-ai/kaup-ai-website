@@ -72,6 +72,12 @@ const qrs = [
             <KEyebrow text="其他联系方式" class="mb-4" />
             <ul class="space-y-3 text-sm">
               <li class="flex gap-4">
+                <span class="w-20 shrink-0 text-muted">电话</span>
+                <a href="tel:+8641188309999" class="font-mono text-primary hover:underline"
+                  >(0411)8830-9999</a
+                >
+              </li>
+              <li class="flex gap-4">
                 <span class="w-20 shrink-0 text-muted">邮箱</span>
                 <a href="mailto:sales@kaup.ai" class="font-mono text-primary hover:underline"
                   >sales@kaup.ai</a
