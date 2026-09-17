@@ -181,12 +181,13 @@
   --slot-shadow: inset 0 2px 4px rgba(0,0,0,0.32);
 }
 
-/* ---------- .metal 机制（拉丝容器，仅 hero/CTA） ---------- */
-@layer components {
-  .metal { position: relative; isolation: isolate; }
+/* ---------- 金属工具类（Tailwind v4 @utility，拉丝容器仅 hero/CTA） ---------- */
+@utility metal {
+  position: relative;
+  isolation: isolate;
 
-  .metal::before,
-  .metal::after {
+  &::before,
+  &::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -195,32 +196,35 @@
   }
 
   /* 背景层序：拉丝纹 → 机加工细丝线 → 漫反射底 */
-  .metal::before {
+  &::before {
     background-image: var(--metal-grain), var(--metal-lines), var(--metal-hero);
     background-size: 240px 240px, auto, 100% 100%;
     background-repeat: repeat, repeat, no-repeat;
   }
 
-  .metal::after { background: var(--metal-veil); }
+  &::after { background: var(--metal-veil); }
+}
 
-  .metal-cta::before {
+/* CTA 带：底色仍是品牌蓝，漫反射底换品牌蓝铝（与 metal 搭配使用） */
+@utility metal-cta {
+  &::before {
     background-image: var(--metal-grain), var(--metal-lines), var(--metal-cta);
   }
-  .metal-cta::after { background: var(--metal-veil-cta); }
 
-  /* 金属墨（H2/大数字；子元素 span 需显式恢复 text-fill-color） */
-  .metal-ink {
-    background: var(--metal-text);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+  &::after { background: var(--metal-veil-cta); }
+}
 
-  /* 凹槽分割线：1px 暗线 + 槽底反光 */
-  .groove-rule {
-    border-top: 0;
-    height: 1px;
-    background: var(--ui-border);
-    box-shadow: 0 1px 0 var(--edge-hi);
-  }
+/* 金属墨（H2/大数字；子元素 span 需显式恢复 text-fill-color） */
+@utility metal-ink {
+  background: var(--metal-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 凹槽分割线：1px 暗线 + 槽底反光 */
+@utility groove-rule {
+  height: 1px;
+  background: var(--ui-border);
+  box-shadow: 0 1px 0 var(--edge-hi);
 }
