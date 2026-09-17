@@ -1,6 +1,6 @@
 ---
 name: trellis-spec-bootstrap
-description: "Bootstrap project-specific Trellis coding specs with a platform-neutral single-agent workflow. Use when creating or refreshing .trellis/spec guidelines, analyzing a codebase with GitNexus, ABCoder, or source inspection, decomposing package/layer spec work, and writing real codebase-backed spec docs without placeholder text."
+description: 'Bootstrap project-specific Trellis coding specs with a platform-neutral single-agent workflow. Use when creating or refreshing .trellis/spec guidelines, analyzing a codebase with GitNexus, ABCoder, or source inspection, decomposing package/layer spec work, and writing real codebase-backed spec docs without placeholder text.'
 ---
 
 # Trellis Spec Bootstrap
@@ -17,12 +17,12 @@ Use this skill to create or refresh `.trellis/spec/` guidelines from the real co
 
 ## Reference Routing
 
-| Need | Read |
-|------|------|
-| Repository architecture analysis | [references/repository-analysis.md](references/repository-analysis.md) |
-| Spec work decomposition and task planning | [references/spec-task-planning.md](references/spec-task-planning.md) |
-| Writing high-signal Trellis spec files | [references/spec-writing.md](references/spec-writing.md) |
-| GitNexus and ABCoder MCP setup | [references/mcp-setup.md](references/mcp-setup.md) |
+| Need                                      | Read                                                                   |
+| ----------------------------------------- | ---------------------------------------------------------------------- |
+| Repository architecture analysis          | [references/repository-analysis.md](references/repository-analysis.md) |
+| Spec work decomposition and task planning | [references/spec-task-planning.md](references/spec-task-planning.md)   |
+| Writing high-signal Trellis spec files    | [references/spec-writing.md](references/spec-writing.md)               |
+| GitNexus and ABCoder MCP setup            | [references/mcp-setup.md](references/mcp-setup.md)                     |
 
 ## Operating Rules
 

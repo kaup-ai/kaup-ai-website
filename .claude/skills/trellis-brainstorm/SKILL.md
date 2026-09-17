@@ -1,6 +1,6 @@
 ---
 name: trellis-brainstorm
-description: "Guides collaborative requirements discovery before implementation. Creates task directory, seeds PRD, asks high-value questions one at a time, researches technical choices, and converges on MVP scope. Use when requirements are unclear, there are multiple valid approaches, or the user describes a new feature or complex task."
+description: 'Guides collaborative requirements discovery before implementation. Creates task directory, seeds PRD, asks high-value questions one at a time, researches technical choices, and converges on MVP scope. Use when requirements are unclear, there are multiple valid approaches, or the user describes a new feature or complex task.'
 ---
 
 # Trellis Brainstorm
@@ -96,12 +96,12 @@ Strip away implementation details to one sentence.
 
 What is absolutely true (not opinion or convention)?
 
-| Category | Examples |
-|----------|----------|
+| Category                 | Examples                                 |
+| ------------------------ | ---------------------------------------- |
 | **Physical constraints** | Network latency ≥ 0, disk I/O has limits |
-| **Business rules** | "Users must see their own data" |
-| **Technical invariants** | "Data must be consistent" |
-| **User needs** | "The user wants X within Y seconds" |
+| **Business rules**       | "Users must see their own data"          |
+| **Technical invariants** | "Data must be consistent"                |
+| **User needs**           | "The user wants X within Y seconds"      |
 
 ### Step 3: Challenge Assumptions
 

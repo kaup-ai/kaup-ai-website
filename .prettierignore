@@ -21,3 +21,6 @@ design-system/DESIGN-MANIFEST.json
 
 # TypeScript config（重排无收益）
 tsconfig.json
+
+# design-system 为外部原件存档（对照源），工具不碰
+design-system/

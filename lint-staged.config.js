@@ -13,5 +13,5 @@ export default {
   '*.{yaml,yml}': ['prettier --write'],
   // 密钥检测：secretlint（对齐 kaup-core detect-secrets）
   // secretlint 接 filenames，非零退出码 = 有密钥 → 拒绝提交
-  '*.{ts,js,mjs,vue,json,yaml,yml,sh}': ['secretlint'],
+  '*.{ts,js,mjs,vue,json,yaml,yml,sh}': ['secretlint']
 }
