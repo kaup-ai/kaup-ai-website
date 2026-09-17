@@ -1,357 +1,336 @@
 <script setup lang="ts">
-definePageMeta({
-  colorMode: 'dark'
-})
-
-const { data: page } = await useAsyncData('index', () => queryCollection('content').first())
+/* 首页（源 legacy/index.html）：hero 金属主视觉 + 获客链路 + facts + 痛点 + 形态对比
+   + 能力图谱 + 服务模式 + 合作流程 + CTA。文案在 content/index.yml。
+   琥珀预算：hero 屏 = 呼吸灯 1 处；链路屏 = eyebrow 圆点 + HITL 标签 = 2 处（封顶）。 */
+const { data: page } = await useAsyncData('home', () => queryCollection('index').first())
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page not found',
+    fatal: true
+  })
 }
-
-const title = page.value?.seo?.title || page.value?.title
-const description = page.value?.seo?.description || page.value?.description
 
 useSeoMeta({
-  title,
-  ogTitle: title,
-  description,
-  ogDescription: description
+  title: page.value.seo.title,
+  ogTitle: page.value.seo.title,
+  description: page.value.seo.description,
+  ogDescription: page.value.seo.description
 })
-
-const heroTitle = computed(() => {
-  const [primary = '', ...secondaryParts] = (page.value?.title ?? '').split('\n')
-
-  return {
-    primary,
-    secondary: secondaryParts.join(' ').trim()
-  }
-})
-
-function enterMotion(delay: number = 0) {
-  return {
-    initial: { opacity: 0, y: 16 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, delay }
-  }
-}
-
-function scrollMotion(delay: number = 0) {
-  return {
-    initial: { opacity: 0, y: 16 },
-    whileInView: { opacity: 1, y: 0 },
-    inViewOptions: { once: true, amount: 1 },
-    transition: { duration: 0.6, delay }
-  }
-}
-
-function staggerMotion(index: number = 0) {
-  return {
-    initial: { opacity: 0 },
-    whileInView: { opacity: 1 },
-    inViewOptions: { once: true, amount: 1 },
-    transition: { duration: 0.6, delay: index * 0.08 }
-  }
-}
-
-const { copy, copied } = useClipboard()
 </script>
 
 <template>
   <div v-if="page">
-    <!-- Hero -->
-    <UPageHero
-      :ui="{
-        root: 'pb-24 sm:pb-32',
-        container: 'relative z-10 lg:py-32',
-        wrapper: 'flex flex-col items-center',
-        title: 'sm:text-6xl lg:text-7xl xl:text-[80px] tracking-tighter leading-[1.05]',
-        description: 'mt-5 max-w-xl mx-auto text-base sm:text-lg leading-relaxed text-default',
-        links: 'gap-3'
-      }"
-    >
-      <template #top>
-        <Motion v-bind="staggerMotion(0)">
-          <HeroShaders class="absolute top-0 inset-x-0 opacity-15 h-full" />
-        </Motion>
+    <!-- ============ HERO（金属 · 全站两处拉丝之一） ============ -->
+    <section class="metal text-center">
+      <UContainer
+        class="flex flex-col items-center pt-[clamp(96px,16vh,150px)] pb-[clamp(40px,6vh,64px)]"
+      >
+        <!-- lockup 容器宽 = viewBox 框宽（中轴 = 整块墨迹中轴，元素居中即墨迹居中） -->
+        <div class="flex w-[min(88%,76vh,500px)] flex-col items-center">
+          <h1 class="w-full">
+            <HeroLockup />
+          </h1>
+        </div>
 
-        <GradientGlow class="top-0 w-2/3 h-1/2" />
-      </template>
-
-      <template #headline>
-        <Motion v-bind="enterMotion(0.2)">
-          <UBadge
-            color="neutral"
-            variant="soft"
-            :label="page.hero.headline"
-            class="rounded-full px-3 py-1.5 gap-1.5 bg-white/5 backdrop-blur-sm"
-          >
-            <template #leading>
-              <UChip
-                inset
-                standalone
-                :ui="{ base: 'animate-pulse ring-0' }"
-              />
-            </template>
-          </UBadge>
-        </Motion>
-      </template>
-
-      <template #title>
-        <Motion
-          as="span"
-          v-bind="enterMotion(0.35)"
-          class="inline-block"
+        <span class="mt-[clamp(20px,3vh,32px)] text-xs font-medium tracking-[0.08em] text-muted"
+          >智以为御，无疆为境 · Kaup Your Trade</span
         >
-          {{ heroTitle.primary }}
-          <br v-if="heroTitle.secondary">
-          <span
-            v-if="heroTitle.secondary"
-            class="animate-shimmer bg-size-[200%_auto] bg-clip-text text-transparent"
-            :style="{
-              backgroundImage: 'linear-gradient(135deg, var(--color-primary-400), var(--color-primary-300), var(--color-primary-200), var(--color-primary-100), var(--color-primary-200), var(--color-primary-300), var(--color-primary-400))',
-              animationDuration: '10s'
-            }"
-          >
-            {{ heroTitle.secondary }}
-          </span>
-        </Motion>
-      </template>
 
-      <template #description>
-        <Motion
-          as="span"
-          v-bind="enterMotion(0.5)"
-          class="inline-block"
+        <p
+          class="mt-[clamp(32px,5vh,64px)] max-w-[32em] text-[clamp(17px,1.55vw,22px)] leading-relaxed font-medium text-default"
         >
-          {{ page.description }}
-        </Motion>
-      </template>
+          以 AI 助力企业超越能力和效率的边界，<br class="claim-br" />重新定义无限可能
+        </p>
 
-      <template #links>
-        <Motion
-          class="flex flex-wrap justify-center gap-6"
-          v-bind="enterMotion(0.65)"
+        <!-- 产品实拍：浅/深随主题切换；srcset 三档宽度防 UI 小字发虚，固有尺寸防 CLS -->
+        <div
+          class="mt-[clamp(28px,4vh,44px)] w-[min(100%,1080px)] overflow-hidden rounded-2xl border border-default shadow-[var(--elev-4),inset_0_0_0_1px_var(--edge-hi)]"
         >
-          <UButton
-            v-for="link in page.hero.links"
-            :key="link.label"
-            v-bind="link"
+          <img
+            src="/hero/kaup-desktop-light.png"
+            srcset="
+              /hero/kaup-desktop-light-1280.png 1280w,
+              /hero/kaup-desktop-light-1920.png 1920w,
+              /hero/kaup-desktop-light.png      2560w
+            "
+            sizes="(max-width: 1160px) calc(100vw - 40px), 1080px"
+            alt="智御无疆桌面端：线索工作台界面"
+            width="2560"
+            height="1600"
+            decoding="async"
+            fetchpriority="high"
+            class="block w-full dark:hidden"
           />
-        </Motion>
-      </template>
+          <img
+            src="/hero/kaup-desktop-dark.png"
+            srcset="
+              /hero/kaup-desktop-dark-1280.png 1280w,
+              /hero/kaup-desktop-dark-1920.png 1920w,
+              /hero/kaup-desktop-dark.png      2560w
+            "
+            sizes="(max-width: 1160px) calc(100vw - 40px), 1080px"
+            alt=""
+            aria-hidden="true"
+            width="2560"
+            height="1600"
+            decoding="async"
+            loading="lazy"
+            class="hidden w-full dark:block"
+          />
+        </div>
 
-      <Motion
-        as-child
-        v-bind="enterMotion(0.85)"
-        class="max-w-2xl mx-auto w-full"
-      >
-        <HeroTerminal :lines="page.terminal.lines" />
-      </Motion>
+        <div class="mt-[clamp(24px,3.5vh,40px)] flex flex-wrap justify-center gap-3">
+          <NuxtLink
+            to="/contact"
+            class="metal-btn inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-6 text-base font-medium active:translate-y-[1px]"
+          >
+            预约方案沟通
+          </NuxtLink>
+          <UButton to="/capabilities" size="xl" color="neutral" variant="outline">
+            查看能力图谱
+          </UButton>
+        </div>
 
-      <Motion
-        class="max-w-lg mx-auto w-full"
-        v-bind="scrollMotion(0.95)"
-      >
-        <UPageLogos
-          :title="page.logos.title"
-          :items="page.logos.items"
-          :ui="{
-            title: 'font-mono uppercase text-xs tracking-[0.12em] text-dimmed',
-            logos: 'gap-0',
-            logo: 'text-muted size-6'
-          }"
+        <p class="mt-5 max-w-[48em] text-sm text-muted">
+          {{ page.hero.note }}
+        </p>
+
+        <a
+          href="#chain"
+          class="mt-[clamp(24px,4vh,48px)] inline-flex items-center gap-2 text-xs tracking-[0.08em] text-muted hover:text-default"
+        >
+          <span>向下了解</span>
+          <UIcon name="i-lucide-arrow-down" class="size-3.5" />
+        </a>
+      </UContainer>
+    </section>
+
+    <!-- ============ 获客链路 ============ -->
+    <section id="chain" class="pt-10 pb-24">
+      <UContainer>
+        <KSecHead :eyebrow="page.chain.eyebrow" :title="page.chain.title" :lede="page.chain.lede" />
+        <ol
+          aria-label="外贸获客链路的五个环节"
+          class="grid grid-cols-5 gap-6 max-[900px]:grid-cols-1 max-[900px]:pl-10"
+        >
+          <li
+            v-for="s in page.chain.steps"
+            :key="s.n"
+            class="relative flex flex-col gap-2 rounded-xl border border-default bg-[image:var(--metal-card)] px-5 py-4 shadow-[var(--plate-shadow)] after:pointer-events-none after:absolute after:top-1/2 after:-right-6 after:w-6 after:-translate-y-1/2 after:text-center after:text-sm after:text-dimmed after:content-['→'] last:after:content-none max-[900px]:flex-row max-[900px]:flex-wrap max-[900px]:items-center max-[900px]:gap-x-2 max-[900px]:rounded-none max-[900px]:border-0 max-[900px]:bg-none max-[900px]:p-0 max-[900px]:shadow-none max-[900px]:after:content-none not-last:max-[900px]:before:absolute not-last:max-[900px]:before:top-3 not-last:max-[900px]:before:-bottom-9 not-last:max-[900px]:before:-left-8 not-last:max-[900px]:before:w-0.5 not-last:max-[900px]:before:bg-default not-last:max-[900px]:before:content-['']"
+          >
+            <span class="mb-1 flex items-center justify-between gap-2 max-[900px]:contents">
+              <span
+                class="font-mono text-xs text-dimmed max-[900px]:absolute max-[900px]:-left-11 max-[900px]:-top-0.5 max-[900px]:z-10 max-[900px]:flex max-[900px]:size-7 max-[900px]:items-center max-[900px]:justify-center max-[900px]:rounded-full max-[900px]:border max-[900px]:border-default max-[900px]:bg-default"
+                :class="
+                  s.hitl ? 'max-[900px]:border-viking-400 max-[900px]:text-viking-700' : undefined
+                "
+                >{{ s.n }}</span
+              >
+              <span
+                class="order-2 inline-flex h-[22px] shrink-0 items-center whitespace-nowrap rounded-full border border-transparent px-2 text-[11px] font-medium tracking-[0.02em]"
+                :class="
+                  s.hitl
+                    ? 'bg-viking-50 text-viking-700 dark:bg-viking-950 dark:text-viking-300'
+                    : 'bg-fjord-100 text-fjord-600 dark:bg-[#152D4D] dark:text-fjord-500'
+                "
+                >{{ s.hitl ? '人工确认' : 'Agent' }}</span
+              >
+            </span>
+            <span class="order-1 flex items-center gap-2 text-base font-semibold">
+              <UIcon :name="s.icon" class="size-[18px] shrink-0 text-primary" />{{ s.name }}
+            </span>
+            <span
+              class="text-xs text-muted max-[900px]:order-3 max-[900px]:mt-1 max-[900px]:basis-full"
+              >{{ s.desc }}</span
+            >
+          </li>
+        </ol>
+        <p class="mt-6 text-xs text-muted">
+          {{ page.chain.note }}
+        </p>
+      </UContainer>
+    </section>
+
+    <!-- ============ FACTS ============ -->
+    <section>
+      <UContainer>
+        <div class="grid border-y border-default md:grid-cols-3">
+          <div
+            v-for="(f, i) in page.facts"
+            :key="f.num"
+            class="border-default py-8 max-md:border-b last:max-md:border-b-0 md:border-r last:md:border-r-0"
+            :class="i === 0 ? 'md:pr-8' : 'md:px-8'"
+          >
+            <UIcon :name="f.icon" class="mb-3 block size-[22px] text-primary" />
+            <span
+              class="metal-ink block font-mono text-[clamp(28px,3.4vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em]"
+              >{{ f.num
+              }}<span
+                v-if="f.unit"
+                class="ml-1.5 text-[0.5em] font-medium tracking-normal text-muted [-webkit-text-fill-color:var(--ui-text-muted)]"
+                >{{ f.unit }}</span
+              ></span
+            >
+            <p class="mt-3 text-sm text-toned">
+              {{ f.label }}
+            </p>
+            <span class="mt-2 block text-xs text-dimmed">{{ f.src }}</span>
+          </div>
+        </div>
+      </UContainer>
+    </section>
+
+    <!-- ============ 痛点 ============ -->
+    <section class="py-24">
+      <UContainer>
+        <KSecHead :eyebrow="page.pain.eyebrow" :title="page.pain.title" :lede="page.pain.lede" />
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <KCard v-for="c in page.pain.cards" :key="c.title" as="article" class="p-6">
+            <span
+              class="mb-5 inline-flex size-[34px] items-center justify-center rounded-lg bg-[image:var(--chip-bg)] text-primary shadow-[inset_0_1px_0_var(--edge-hi),var(--elev-1)]"
+            >
+              <UIcon :name="c.icon" class="size-[17px]" />
+            </span>
+            <h3 class="mb-3 text-[15px] font-semibold">
+              {{ c.title }}
+            </h3>
+            <p class="text-sm leading-relaxed text-toned">
+              {{ c.body }}
+            </p>
+          </KCard>
+        </div>
+      </UContainer>
+    </section>
+
+    <!-- ============ 形态对比 ============ -->
+    <section class="pb-24">
+      <UContainer>
+        <KSecHead
+          :eyebrow="page.compare.eyebrow"
+          :title="page.compare.title"
+          :lede="page.compare.lede"
         />
-      </Motion>
-    </UPageHero>
-
-    <!-- Features -->
-    <UPageSection
-      id="features"
-      :ui="{
-        root: 'py-24 sm:py-32 scroll-mt-(--ui-header-height)',
-        container: 'max-w-5xl',
-        headline: 'font-mono font-medium text-xs text-primary uppercase tracking-[0.12em] text-center',
-        title: 'max-w-lg mx-auto',
-        description: 'max-w-md mx-auto text-dimmed'
-      }"
-    >
-      <template #headline>
-        <Motion
-          as="span"
-          v-bind="scrollMotion()"
-          class="inline-block"
+        <div
+          class="grid overflow-hidden rounded-xl border border-default bg-default shadow-[var(--plate-shadow)] md:grid-cols-2"
         >
-          {{ page.features.headline }}
-        </Motion>
-      </template>
-
-      <template #title>
-        <Motion
-          as="span"
-          v-bind="scrollMotion(0.1)"
-          class="inline-block"
-        >
-          {{ page.features.title }}
-        </Motion>
-      </template>
-
-      <template #description>
-        <Motion
-          as="span"
-          v-bind="scrollMotion(0.2)"
-          class="inline-block"
-        >
-          {{ page.features.description }}
-        </Motion>
-      </template>
-
-      <div class="rounded-2xl border border-default bg-default overflow-hidden">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px">
-          <Motion
-            v-for="(feature, index) in page.features.items"
-            :key="feature.title"
-            v-bind="staggerMotion(index)"
+          <div
+            v-for="p in page.compare.panels"
+            :key="p.tag"
+            class="border-default p-8 max-[760px]:border-t max-[760px]:first:border-t-0 md:border-l md:first:border-l-0"
           >
-            <UPageCard
-              :icon="feature.icon"
-              :title="feature.title"
-              :description="feature.description"
-              class="rounded-none duration-300"
-              to="#"
-              :ui="{
-                leading: 'mb-5 flex size-9 justify-center rounded-lg bg-primary/10',
-                title: 'text-sm tracking-tight',
-                description: 'text-sm leading-relaxed sm:line-clamp-2 lg:line-clamp-3 text-dimmed'
-              }"
-            />
-          </Motion>
+            <div class="mb-5 flex items-center gap-3 border-b border-default pb-5 font-medium">
+              <span
+                class="inline-flex h-[22px] shrink-0 items-center whitespace-nowrap rounded-full border px-2 text-[11px] font-medium tracking-[0.02em]"
+                :class="
+                  p.agent
+                    ? 'border-transparent bg-fjord-100 text-fjord-600 dark:bg-[#152D4D] dark:text-fjord-500'
+                    : 'border-default text-muted'
+                "
+                >{{ p.tag }}</span
+              >
+              <span>{{ p.head }}</span>
+            </div>
+            <ul class="flex flex-col gap-3 text-sm text-toned">
+              <li v-for="item in p.items" :key="item" class="flex gap-2.5">
+                <span
+                  class="mt-[9px] size-[5px] shrink-0 rounded-full"
+                  :class="p.agent ? 'bg-primary' : 'bg-accented'"
+                />
+                <span>{{ item }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </UPageSection>
+      </UContainer>
+    </section>
 
-    <!-- Metrics -->
-    <UPageSection
-      id="metrics"
-      :ui="{
-        root: 'py-24 sm:py-32 scroll-mt-(--ui-header-height)',
-        container: 'max-w-5xl',
-        headline: 'font-mono font-medium text-xs text-primary uppercase tracking-[0.12em] text-center',
-        title: 'max-w-lg mx-auto',
-        description: 'max-w-md mx-auto text-dimmed'
-      }"
-    >
-      <template #headline>
-        <Motion
-          as="span"
-          v-bind="scrollMotion()"
-          class="inline-block"
+    <!-- ============ 能力图谱 ============ -->
+    <section class="pb-24">
+      <UContainer>
+        <KSecHead
+          :eyebrow="page.capabilities.eyebrow"
+          :title="page.capabilities.title"
+          :lede="page.capabilities.lede"
+          split
         >
-          {{ page.metrics.headline }}
-        </Motion>
-      </template>
-
-      <template #title>
-        <Motion
-          as="span"
-          v-bind="scrollMotion(0.1)"
-          class="inline-block"
-        >
-          {{ page.metrics.title }}
-        </Motion>
-      </template>
-
-      <template #description>
-        <Motion
-          as="span"
-          v-bind="scrollMotion(0.2)"
-          class="inline-block"
-        >
-          {{ page.metrics.description }}
-        </Motion>
-      </template>
-
-      <div class="rounded-2xl border border-default bg-default overflow-hidden">
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-px">
-          <Motion
-            v-for="(metric, index) in page.metrics.items"
-            :key="metric.label"
-            v-bind="staggerMotion(index)"
+          <KLinkMore :label="page.capabilities.more.label" :to="page.capabilities.more.to" />
+        </KSecHead>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <KCard
+            v-for="g in page.capabilities.groups"
+            :key="g.title"
+            as="article"
+            class="flex flex-col p-6"
           >
-            <UPageCard
-              :title="metric.value"
-              :description="metric.label"
-              class="rounded-none duration-300"
-              to="#"
-              :ui="{
-                root: 'text-center',
-                wrapper: 'items-center',
-                title: ['text-4xl font-bold tracking-tight leading-none', metric.class],
-                description: 'font-mono text-xs uppercase tracking-[0.06em] text-dimmed mt-3'
-              }"
-            />
-          </Motion>
+            <div class="mb-5 flex items-baseline gap-3">
+              <h3 class="flex items-center gap-2 text-[15px] font-semibold">
+                <UIcon :name="g.icon" class="size-[18px] shrink-0 text-primary" />{{ g.title }}
+              </h3>
+              <span class="ml-auto font-mono text-xs text-dimmed">{{ g.count }}</span>
+            </div>
+            <p class="text-sm text-toned">
+              {{ g.lede }}
+            </p>
+            <ul class="mt-5 flex flex-col gap-4">
+              <li v-for="item in g.items" :key="item.n" class="flex gap-3 text-sm text-toned">
+                <span class="w-5 shrink-0 pt-0.5 font-mono text-xs text-dimmed">{{ item.n }}</span>
+                <span
+                  ><strong class="font-medium text-default">{{ item.strong }}</strong> ·
+                  {{ item.desc }}</span
+                >
+              </li>
+            </ul>
+          </KCard>
+
+          <KCard as="article" class="flex flex-col justify-center p-6">
+            <h3 class="text-base font-semibold">
+              {{ page.capabilities.help.title }}
+            </h3>
+            <p class="mt-3 text-sm text-toned">
+              {{ page.capabilities.help.body }}
+            </p>
+            <p class="mt-5">
+              <KLinkMore
+                :label="page.capabilities.help.link.label"
+                :to="page.capabilities.help.link.to"
+              />
+            </p>
+          </KCard>
         </div>
-      </div>
-    </UPageSection>
+      </UContainer>
+    </section>
 
-    <!-- CTA -->
-    <UPageCTA
-      variant="naked"
-      :ui="{
-        root: 'py-24 sm:py-32',
-        container: 'max-w-3xl text-center',
-        title: 'lg:text-5xl tracking-tighter whitespace-pre-line',
-        description: 'mx-auto max-w-sm leading-relaxed text-dimmed'
-      }"
-    >
-      <template #top>
-        <GradientGlow class="bottom-0 w-2/3 h-1/2" />
-      </template>
-
-      <template #title>
-        <Motion
-          as="span"
-          v-bind="scrollMotion()"
-          class="inline-block"
+    <!-- ============ 服务模式 ============ -->
+    <section class="pb-24">
+      <UContainer>
+        <KSecHead
+          :eyebrow="page.modes.eyebrow"
+          :title="page.modes.title"
+          :lede="page.modes.lede"
+          split
         >
-          {{ page.cta.title }}
-        </Motion>
-      </template>
+          <KLinkMore :label="page.modes.more.label" :to="page.modes.more.to" />
+        </KSecHead>
+        <div class="grid gap-6 md:grid-cols-2">
+          <KModeCard v-for="m in page.modes.cards" :key="m.tag" v-bind="m" />
+        </div>
+      </UContainer>
+    </section>
 
-      <template #description>
-        <Motion
-          as="span"
-          v-bind="scrollMotion(0.1)"
-          class="inline-block"
-        >
-          {{ page.cta.description }}
-        </Motion>
-      </template>
+    <!-- ============ 合作流程 ============ -->
+    <section class="pb-24">
+      <UContainer>
+        <KSecHead
+          :eyebrow="page.process.eyebrow"
+          :title="page.process.title"
+          :lede="page.process.lede"
+        />
+        <KStepsTrack :steps="page.process.steps" />
+      </UContainer>
+    </section>
 
-      <template #links>
-        <Motion
-          class="flex flex-col items-center justify-center gap-6"
-          v-bind="scrollMotion(0.2)"
-        >
-          <UButton
-            v-for="link in page.cta.links"
-            :key="link.label"
-            v-bind="link"
-            size="xl"
-          />
-
-          <UButton
-            :label="page.cta.command"
-            :trailing-icon="copied ? 'i-lucide-copy-check' : 'i-lucide-copy'"
-            color="neutral"
-            variant="subtle"
-            class="font-mono font-light text-toned gap-4"
-            size="xl"
-            :ui="{ trailingIcon: 'size-5' }"
-            @click="copy(page.cta.command)"
-          />
-        </Motion>
-      </template>
-    </UPageCTA>
+    <!-- ============ CTA（金属 · 全站两处拉丝之二） ============ -->
+    <KCtaBand v-bind="page.cta" />
   </div>
 </template>

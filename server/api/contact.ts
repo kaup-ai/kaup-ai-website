@@ -5,12 +5,25 @@
 import { createHmac } from 'node:crypto'
 import type { H3Event } from 'h3'
 
-interface Lead { company: string, name: string, phone: string }
+interface Lead {
+  company: string
+  name: string
+  phone: string
+}
 
 /* 飞书开放平台响应的最小类型面（契约 C9/C14 相关字段） */
-interface FeishuTokenResp { code: number, tenant_access_token?: string, expire?: number }
-interface FeishuBaseResp { code: number, data?: { record?: { record_id?: string } } }
-interface FeishuWebhookResp { code: number }
+interface FeishuTokenResp {
+  code: number
+  tenant_access_token?: string
+  expire?: number
+}
+interface FeishuBaseResp {
+  code: number
+  data?: { record?: { record_id?: string } }
+}
+interface FeishuWebhookResp {
+  code: number
+}
 
 /* ---------- 滑动窗口限流（零依赖 · C3） ---------- */
 const RATE_WINDOW_MS = 60 * 60 * 1000
@@ -65,9 +78,7 @@ function validate({ company, name, phone }: Lead): string | null {
    官方算法：以 timestamp + "\n" + secret 为 HmacSHA256 的密钥，
    对空串签名后 Base64；请求体携带 timestamp（秒级）与 sign。 */
 function genSign(secret: string, timestamp: number): string {
-  return createHmac('sha256', `${timestamp}\n${secret}`)
-    .update('')
-    .digest('base64')
+  return createHmac('sha256', `${timestamp}\n${secret}`).update('').digest('base64')
 }
 
 /* 用户输入进 lark_md 前转义：防止恶意提交注入 markdown 链接、
@@ -117,21 +128,28 @@ let tokenCache = { token: null as string | null, expireAt: 0 }
 async function getTenantAccessToken(appId: string, appSecret: string): Promise<string> {
   const now = Date.now()
   if (tokenCache.token && now < tokenCache.expireAt) return tokenCache.token
-  const resp = await fetch('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ app_id: appId, app_secret: appSecret })
-  })
+  const resp = await fetch(
+    'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ app_id: appId, app_secret: appSecret })
+    }
+  )
   const result: FeishuTokenResp = await resp.json().catch(() => ({}))
   if (!resp.ok || result.code !== 0) {
     throw new Error(`tenant_access_token failed: ${resp.status} ${JSON.stringify(result)}`)
   }
-  tokenCache = { token: result.tenant_access_token ?? null, expireAt: now + ((result.expire ?? 7200) - 300) * 1000 }
+  tokenCache = {
+    token: result.tenant_access_token ?? null,
+    expireAt: now + ((result.expire ?? 7200) - 300) * 1000
+  }
   return result.tenant_access_token as string
 }
 
-async function createBaseRecord(lead: Lead): Promise<{ skipped: boolean, recordId?: string }> {
-  const { FEISHU_APP_ID, FEISHU_APP_SECRET, FEISHU_BASE_APP_TOKEN, FEISHU_BASE_TABLE_ID } = process.env as Record<string, string | undefined>
+async function createBaseRecord(lead: Lead): Promise<{ skipped: boolean; recordId?: string }> {
+  const { FEISHU_APP_ID, FEISHU_APP_SECRET, FEISHU_BASE_APP_TOKEN, FEISHU_BASE_TABLE_ID } =
+    process.env as Record<string, string | undefined>
   if (!FEISHU_APP_ID || !FEISHU_APP_SECRET || !FEISHU_BASE_APP_TOKEN || !FEISHU_BASE_TABLE_ID) {
     return { skipped: true }
   }
@@ -144,7 +162,7 @@ async function createBaseRecord(lead: Lead): Promise<{ skipped: boolean, recordI
         `https://open.feishu.cn/open-apis/bitable/v1/apps/${FEISHU_BASE_APP_TOKEN}/tables/${FEISHU_BASE_TABLE_ID}/records`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({
             fields: {
               公司名称: lead.company,
@@ -200,7 +218,10 @@ export default defineEventHandler(async (event) => {
   const xff = String(headers['x-forwarded-for'] || '').split(',')
   const ip = String(headers['x-real-ip'] || xff[xff.length - 1] || '').trim() || 'unknown'
   if (isRateLimited(ip)) {
-    return json(event, 429, { ok: false, error: '提交太频繁，请稍后再试，或直接发邮件至 sales@kaup.ai' })
+    return json(event, 429, {
+      ok: false,
+      error: '提交太频繁，请稍后再试，或直接发邮件至 sales@kaup.ai'
+    })
   }
 
   const lead: Lead = {
@@ -224,12 +245,15 @@ export default defineEventHandler(async (event) => {
   /* C6/C7：顺序 —— 先写 Base（事实源），再发群卡片（通知）。
      Base 失败 → 502 让用户重试：此时群里还没发卡片，重试零副作用，
      不会产生「群里有、表里无」的静默丢失。 */
-  let base: { skipped: boolean, recordId?: string }
+  let base: { skipped: boolean; recordId?: string }
   try {
     base = await createBaseRecord(lead)
   } catch (err) {
     console.error('contact: base record write failed', err)
-    return json(event, 502, { ok: false, error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai' })
+    return json(event, 502, {
+      ok: false,
+      error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai'
+    })
   }
 
   const timestamp = Math.floor(Date.now() / 1000)
@@ -250,11 +274,17 @@ export default defineEventHandler(async (event) => {
     const result: FeishuWebhookResp = await resp.json().catch(() => ({}))
     if (!resp.ok || result.code !== 0) {
       console.error('contact: feishu webhook failed (lead already in base)', resp.status, result)
-      return json(event, 502, { ok: false, error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai' })
+      return json(event, 502, {
+        ok: false,
+        error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai'
+      })
     }
     return json(event, 200, { ok: true, base: !base.skipped })
   } catch (err) {
     console.error('contact: feishu webhook error (lead already in base)', err)
-    return json(event, 502, { ok: false, error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai' })
+    return json(event, 502, {
+      ok: false,
+      error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai'
+    })
   }
 })

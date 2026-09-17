@@ -52,15 +52,23 @@ const contact = [
         <div>
           <h4 class="text-sm font-semibold">联系</h4>
           <ul class="mt-4 space-y-2.5 text-sm text-muted">
-            <li><ULink :to="contact[0]!.to" class="font-mono hover:text-default">{{ contact[0]!.label }}</ULink></li>
-            <li><ULink :to="contact[1]!.to" class="hover:text-default">{{ contact[1]!.label }}</ULink></li>
+            <li>
+              <ULink :to="contact[0]!.to" class="font-mono hover:text-default">{{
+                contact[0]!.label
+              }}</ULink>
+            </li>
+            <li>
+              <ULink :to="contact[1]!.to" class="hover:text-default">{{ contact[1]!.label }}</ULink>
+            </li>
             <li>辽宁 · 大连</li>
           </ul>
         </div>
       </div>
     </UContainer>
     <div class="border-t border-default">
-      <UContainer class="flex flex-wrap items-center justify-between gap-2 py-6 text-xs text-dimmed">
+      <UContainer
+        class="flex flex-wrap items-center justify-between gap-2 py-6 text-xs text-dimmed"
+      >
         <span>© {{ year }} 智御无疆 · Kaup. 保留所有权利。</span>
         <span>智以为御，无疆为境 · Kaup Your Trade</span>
       </UContainer>
