@@ -1,0 +1,26 @@
+{
+  "asset": "app-icon",
+  "viewBox": "0 0 1024 1024",
+  "source_svgs": ["app-icon.svg", "app-icon-dark.svg"],
+  "purpose": "iOS / Android / PWA / OS app icon — square master at 1024×1024",
+  "sizes": {
+    "1024": "iOS App Store / Xcode Asset Catalog master",
+    "512":  "PWA master / large display",
+    "192":  "PWA standard / Android xxxhdpi",
+    "180":  "iOS iPhone @3x",
+    "167":  "iPad Pro @2x",
+    "152":  "iPad @2x",
+    "144":  "Android xxxhdpi (legacy)",
+    "120":  "iOS iPhone @2x",
+    "96":   "Android xhdpi",
+    "87":   "iOS Settings @3x",
+    "80":   "iOS Spotlight @2x",
+    "72":   "Android hdpi",
+    "60":   "iOS iPhone @1x / Spotlight @1x",
+    "48":   "Android mdpi",
+    "40":   "iOS Spotlight @1x",
+    "32":   "favicon HD",
+    "29":   "iOS Settings @1x",
+    "16":   "favicon standard"
+  }
+}

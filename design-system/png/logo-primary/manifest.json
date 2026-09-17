@@ -1,0 +1,14 @@
+{
+  "asset": "logo-primary",
+  "viewBox": "0 0 480 540",
+  "aspect": "8:9 (vertical lockup)",
+  "source_svgs": ["logo-primary.svg", "logo-primary-dark.svg"],
+  "purpose": "Full vertical lockup — chevron mark + 智御无疆 wordmark + Kaup sub-wordmark. Web header, marketing, print, email signature.",
+  "sizes": {
+    "1024w": "print, hero banners, large marketing surfaces (1024×1152 px)",
+    "512w":  "web header, slide deck title (512×576 px)",
+    "256w":  "card thumbnails, mobile header (256×288 px)",
+    "128w":  "small inline references, footer (128×144 px)"
+  },
+  "min_physical_size": "22mm height at 300dpi — below this the chevron stroke starts to feather"
+}

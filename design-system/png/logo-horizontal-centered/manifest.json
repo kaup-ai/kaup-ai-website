@@ -1,0 +1,16 @@
+{
+  "asset": "logo-horizontal-centered",
+  "alignment": "center-aligned (text-anchor: middle, x=300, block centered on viewBox 480)",
+  "viewBox": "0 0 480 160",
+  "aspect": "3:1 (horizontal lockup)",
+  "source_svgs": ["logo-horizontal-centered.svg", "logo-horizontal-centered-dark.svg"],
+  "purpose": "Horizontal lockup, center-aligned — chevron mark + 智御无疆 + Kaup wordmark form a single centered block. Designed for hero sections, marketing headers, email signatures, and card/banner contexts where the lockup is the focal element rather than a navigation anchor.",
+  "sizes": {
+    "1024w": "large marketing headers, hero banners (1024×341 px)",
+    "512w":  "email signature, marketing card (512×170 px)",
+    "256w":  "inline hero lockup, mobile splash (256×85 px)",
+    "128w":  "small footer signature, watermarks (128×43 px)"
+  },
+  "min_physical_size": "30mm width at 300dpi — below this the chevron stroke starts to feather",
+  "use_when": "the lockup is the focal element on a centered composition (hero, splash, signature, card) — NOT for app headers or nav bars"
+}

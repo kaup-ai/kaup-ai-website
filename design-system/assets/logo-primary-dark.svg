@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 540" role="img" aria-label="智御无疆 Kaup 主 Logo — dark variant (curved chevron in glacier white, 15° tilt)">
+  <title>智御无疆 / Kaup — Curved Chevron (15° tilt) + amber north-star dot — dark variant</title>
+
+  <!-- Mark: curved chevron in glacier white, scaled 1.6x, centered, tilted -15° -->
+  <g transform="translate(160 60) scale(1.6)">
+    <g transform="rotate(-15 50 50)">
+      <path d="M 15 15 C 25 20, 55 35, 80 50 C 55 65, 25 80, 15 85 L 40 85 C 50 78, 75 65, 85 50 C 75 35, 50 22, 40 15 Z" fill="#F7F9FC"/>
+      <!-- Amber north-star dot — r=5 (was r=3.5, too small at 40-72px app header to see). Brand promise: always #E89B3C. -->
+      <circle cx="76" cy="50" r="5" fill="#E89B3C"/>
+    </g>
+  </g>
+
+  <!-- 中文 wordmark — glacier white for dark backgrounds -->
+  <text x="240" y="370"
+        style="font-family: 'PingFang SC', 'HarmonyOS Sans SC', 'Source Han Sans SC', 'Noto Sans SC', '微软雅黑', sans-serif; font-size: 80px; font-weight: 600; fill: #F7F9FC; text-anchor: middle; letter-spacing: 0.18em;">智御无疆</text>
+
+  <!-- 英文 wordmark — lighter muted for dark backgrounds -->
+  <text x="240" y="430"
+        style="font-family: Inter, -apple-system, 'SF Pro Display', system-ui, sans-serif; font-size: 24px; font-weight: 500; fill: #8EA0B8; text-anchor: middle; letter-spacing: 0.4em;">Kaup</text>
+</svg>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Kaup app icon light variant (curved chevron in fjord blue on glacier white)">
+  <title>Kaup — Curved Chevron (fjord blue on glacier white, 15° tilt) + amber dot</title>
+
+  <!-- Glacier white background -->
+  <rect width="1024" height="1024" fill="#F7F9FC"/>
+
+  <!-- Mark: curved chevron, fjord deep-blue, scaled 6x, centered (80% safe zone), tilted -15° -->
+  <g transform="translate(212 212) scale(6) rotate(-15 50 50)">
+    <path d="M 15 15 C 25 20, 55 35, 80 50 C 55 65, 25 80, 15 85 L 40 85 C 50 78, 75 65, 85 50 C 75 35, 50 22, 40 15 Z" fill="#0E2A47"/>
+    <!-- Amber north-star dot — r=5 (was r=3.5). Brand promise: always #E89B3C. -->
+    <circle cx="76" cy="50" r="5" fill="#E89B3C"/>
+  </g>
+</svg>
