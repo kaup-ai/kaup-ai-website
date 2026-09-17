@@ -137,7 +137,7 @@ async function onSubmit() {
       :loading="submitting"
       loading-icon="i-lucide-loader-circle"
     >
-      {{ submitting ? '提交中…' : '提交，等待回电' }}
+      {{ submitting ? '提交中…' : '提交' }}
     </UButton>
 
     <p class="text-xs text-muted">提交即表示同意我们仅将以上信息用于业务联系。</p>

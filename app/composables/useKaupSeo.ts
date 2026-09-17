@@ -6,19 +6,22 @@ export interface KaupSeo {
   description: string
   /** og / twitter 专用文案；缺省回退 description */
   ogDescription?: string
+  /** og 专用标题（基线首页 og:title 与 meta title 不同）；缺省回退 title */
+  ogTitle?: string
 }
 
 export function useKaupSeo(seo: KaupSeo, path: string) {
   const url = `https://kaup.ai${path}`
   const ogDesc = seo.ogDescription ?? seo.description
+  const ogTitle = seo.ogTitle ?? seo.title
 
   useSeoMeta({
     title: seo.title,
     description: seo.description,
-    ogTitle: seo.title,
+    ogTitle,
     ogDescription: ogDesc,
     ogUrl: url,
-    twitterTitle: seo.title,
+    twitterTitle: ogTitle,
     twitterDescription: ogDesc
   })
 
@@ -32,7 +35,7 @@ export function useKaupSeo(seo: KaupSeo, path: string) {
           '@type': 'WebPage',
           '@id': `${url}#webpage`,
           url,
-          name: seo.title,
+          name: ogTitle,
           description: ogDesc,
           isPartOf: { '@id': 'https://kaup.ai/#website' },
           about: { '@id': 'https://kaup.ai/#organization' },

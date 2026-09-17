@@ -3,8 +3,9 @@ useKaupSeo(
   {
     title: '联系我们 — 智御无疆 Kaup',
     description:
-      '以 AI 助力企业超越能力和效率的边界，重新定义无限可能。在线表单提交定制开发与本地部署需求，商务联系人一个工作日内回电；也可邮件 sales@kaup.ai 或扫码添加微信。',
-    ogDescription: '在线表单提交定制开发与本地部署需求，商务联系人一个工作日内回电。'
+      '以 AI 助力企业超越能力和效率的边界，重新定义无限可能。联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 sales@kaup.ai、扫码关注公众号或添加联系人微信。',
+    ogDescription:
+      '联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 sales@kaup.ai、扫码关注公众号或添加联系人微信。'
   },
   '/contact'
 )
@@ -67,9 +68,8 @@ const qrs = [
             </KCard>
           </div>
 
-          <div class="lg:pt-9">
-            <!-- kicker 变体（无琥珀点）：本屏琥珀预算已留给「在线提交」1 处 -->
-            <KEyebrow :amber="false" text="其他联系方式" class="mb-4" />
+          <div>
+            <KEyebrow text="其他联系方式" class="mb-4" />
             <ul class="space-y-3 text-sm">
               <li class="flex gap-4">
                 <span class="w-20 shrink-0 text-muted">邮箱</span>
@@ -87,55 +87,24 @@ const qrs = [
               </li>
             </ul>
 
-            <KCard v-reveal class="mt-8 p-6">
-              <h3 class="font-semibold">提交后会发生什么</h3>
-              <ol class="mt-4 space-y-3 text-sm text-toned">
-                <li class="flex gap-3">
-                  <span class="font-mono text-xs text-dimmed">01</span
-                  ><span>一个工作日内，商务联系人按你留的电话回电</span>
-                </li>
-                <li class="flex gap-3">
-                  <span class="font-mono text-xs text-dimmed">02</span
-                  ><span>一次需求沟通，聚焦行业属性、业务流程与合规要求</span>
-                </li>
-                <li class="flex gap-3">
-                  <span class="font-mono text-xs text-dimmed">03</span
-                  ><span>沟通后给出可行的落地顺序与部署方式建议</span>
-                </li>
-              </ol>
-            </KCard>
+            <!-- 二维码（100px，用户定稿：原「提交后会发生什么」位置） -->
+            <ul v-reveal class="mt-8 space-y-5">
+              <li v-for="qr in qrs" :key="qr.src" class="flex items-center gap-4">
+                <img
+                  :src="qr.src"
+                  :alt="qr.alt"
+                  width="100"
+                  height="100"
+                  loading="lazy"
+                  class="size-[100px] shrink-0 rounded-lg border border-default bg-default p-1.5"
+                />
+                <div>
+                  <h3 class="text-sm font-semibold">{{ qr.h }}</h3>
+                  <p class="mt-1 text-xs leading-relaxed text-muted">{{ qr.p }}</p>
+                </div>
+              </li>
+            </ul>
           </div>
-        </div>
-
-        <!-- 二维码 -->
-        <div class="mt-12 grid gap-6 sm:grid-cols-2">
-          <KCard
-            v-for="qr in qrs"
-            :key="qr.src"
-            v-reveal
-            as="article"
-            hover
-            class="p-6 text-center"
-          >
-            <div
-              class="mx-auto size-[260px] max-w-full overflow-hidden rounded-lg border border-default bg-default p-2"
-            >
-              <img
-                :src="qr.src"
-                :alt="qr.alt"
-                width="260"
-                height="260"
-                loading="lazy"
-                class="size-full object-contain"
-              />
-            </div>
-            <h3 class="mt-5 font-semibold">
-              {{ qr.h }}
-            </h3>
-            <p class="mt-2 text-sm text-muted">
-              {{ qr.p }}
-            </p>
-          </KCard>
         </div>
       </UContainer>
     </section>
@@ -144,7 +113,7 @@ const qrs = [
     <section class="pb-24">
       <UContainer>
         <div class="mb-10 max-w-3xl">
-          <KEyebrow :amber="false" text="合作流程" />
+          <KEyebrow text="合作流程" />
           <h2
             class="metal-ink mt-4 text-2xl font-semibold tracking-tight text-highlighted md:text-4xl"
           >

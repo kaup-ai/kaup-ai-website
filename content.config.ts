@@ -7,7 +7,9 @@ const seo = z.object({
   title: z.string().nonempty(),
   description: z.string().nonempty(),
   /** og / twitter 专用文案（基线里与 meta description 是两套），缺省回退 description */
-  ogDescription: z.string().optional()
+  ogDescription: z.string().optional(),
+  /** og 专用标题（基线首页与 meta title 不同），缺省回退 title */
+  ogTitle: z.string().optional()
 })
 
 const secHead = z.object({
