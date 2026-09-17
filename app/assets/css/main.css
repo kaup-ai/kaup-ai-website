@@ -155,12 +155,19 @@
 
   /* 品牌主色的亮色语义：源 tokens.css --brand 浅色 #0E2A47 = fjord-600。
      Nuxt UI 默认 --ui-primary 取 primary-500（#6FA0E0）是暗色面的品牌色，
-     浅色底上过淡（2026-09-17 用户实测 hero logo/文字发灰）；暗色保持默认。 */
+     浅色底上过淡（2026-09-17 用户实测 hero logo/文字发灰）。暗色值见下方 .dark 覆写。 */
   --ui-primary: var(--color-fjord-600);
 
   /* Ink 角色（源 tokens.css --fg / --muted，hero 等处 1:1 引用） */
   --ink: #0a1a2f;
   --ink-muted: #5b6b7e;
+}
+
+/* 品牌主色 · 深色值：源 tokens.css [data-theme=dark] --brand #6FA0E0 = fjord-500。
+   同样必须置于 :root 之后——:root 覆写无主题条件，暗色若不复写会沿用 fjord-600，
+   text-primary 图标（痛点卡片 / 链路步骤 / 能力图谱）近黑不可见（2026-09-17 用户实测）。 */
+.dark {
+  --ui-primary: var(--color-fjord-500);
 }
 
 /* Ink 角色 · 深色值（源 tokens.css [data-theme=dark] --fg / --muted）。
