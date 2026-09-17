@@ -83,14 +83,6 @@ const qrs = [
                   >sales@kaup.ai</a
                 >
               </li>
-              <li class="flex gap-4">
-                <span class="w-20 shrink-0 text-muted">所在地</span>
-                <span>辽宁 · 大连</span>
-              </li>
-              <li class="flex gap-4">
-                <span class="w-20 shrink-0 text-muted">服务范围</span>
-                <span>AI Agent 定制开发 · 本地部署 / 私有化 · 运维支持</span>
-              </li>
             </ul>
 
             <!-- 二维码（100px，用户定稿：原「提交后会发生什么」位置） -->

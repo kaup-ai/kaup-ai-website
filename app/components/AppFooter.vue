@@ -18,8 +18,12 @@ const capabilities = [
 
 const contact = [
   { label: '(0411)8830-9999', to: 'tel:+8641188309999', mono: true },
-  { label: 'sales@kaup.ai', to: 'mailto:sales@kaup.ai', mono: true },
-  { label: '公众号 / 微信二维码', to: '/contact', mono: false }
+  { label: 'sales@kaup.ai', to: 'mailto:sales@kaup.ai', mono: true }
+]
+
+const footerQrs = [
+  { src: '/qr/official-account.jpg', alt: '智御无疆 微信公众号二维码' },
+  { src: '/qr/contact-wechat.png', alt: '智御无疆 商务微信二维码' }
 ]
 </script>
 
@@ -61,8 +65,19 @@ const contact = [
                 >{{ c.label }}</ULink
               >
             </li>
-            <li>辽宁 · 大连</li>
           </ul>
+          <div class="mt-4 flex gap-3">
+            <img
+              v-for="qr in footerQrs"
+              :key="qr.src"
+              :src="qr.src"
+              :alt="qr.alt"
+              width="72"
+              height="72"
+              loading="lazy"
+              class="size-[72px] rounded-lg border border-default bg-default p-1"
+            />
+          </div>
         </div>
       </div>
     </UContainer>
