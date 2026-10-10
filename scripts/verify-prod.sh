@@ -44,6 +44,19 @@ check 'acme 容器在运行' 'true' "$(docker inspect --format '{{.State.Running
 check '入口 conf 语法（nginx -t）' 'syntax is ok' "$(docker compose exec -T nginx-proxy nginx -t 2>&1 | tr -d '\r')"
 check '证书已落盘' 'fullchain.pem' "$(docker compose exec -T nginx-proxy ls /etc/nginx/certs/"$HOSTNAME_DOMAIN" 2>&1 | tr -d '\r')"
 
+# ── 1.5 证书快照：决定后面 HTTPS 判据的口径（占位证书阶段明确提示，而不是丢一堆 curl 报错）──
+handshake() { openssl s_client -connect 127.0.0.1:443 -servername "$HOSTNAME_DOMAIN" </dev/null 2>/dev/null; }
+cert_snap() { handshake | openssl x509 -noout -issuer -ext subjectAltName 2>/dev/null | tr -s ' '; }
+cert="$(cert_snap)"
+PLACEHOLDER=0
+has "Let's Encrypt" "$cert" || PLACEHOLDER=1
+if [ "$PLACEHOLDER" = "1" ]; then
+  echo '-- ⚠ 入口当前用的是自签占位证书（真实证书尚未签发）'
+  echo '   下面 HTTPS 相关判据会因证书不受信而失败，属预期；先解决签发再看它们：'
+  echo '     docker compose logs --tail=50 acme-companion'
+  echo "     docker compose exec -T nginx-proxy ls -a /etc/nginx/certs/$HOSTNAME_DOMAIN   # 有 .companion = 签发成功过"
+fi
+
 # ── 2. 经入口的本机验证（TLS 用真实证书，不带 -k）──────────────────────────────
 echo '-- 入口转发与 TLS（127.0.0.1 + SNI/Host）'
 check 'HTTPS GET / = 200' '^200$' "$(curl -sS -o /dev/null -w '%{http_code}' -m 15 --resolve "$HOSTNAME_DOMAIN:443:127.0.0.1" "https://$HOSTNAME_DOMAIN/" 2>&1)"
@@ -73,9 +86,7 @@ fi
 
 # ── 4. 证书健康度 ────────────────────────────────────────────────────────────
 echo '-- 证书'
-handshake() { openssl s_client -connect 127.0.0.1:443 -servername "$HOSTNAME_DOMAIN" </dev/null 2>/dev/null; }
-cert="$(handshake | openssl x509 -noout -issuer -ext subjectAltName 2>/dev/null | tr -s ' ')"
-if has "Let's Encrypt" "$cert"; then
+if [ "$PLACEHOLDER" = "0" ]; then
   ok '证书由 Let'\''s Encrypt 签发'
   if has 'STAGING' "$cert"; then bad '证书来自 staging CA（应改回生产 CA 重签）'; else ok '非 staging（生产 CA）'; fi
 else
@@ -83,11 +94,17 @@ else
 fi
 check 'SAN 含主域' "$HOSTNAME_DOMAIN" "$cert"
 [ -n "$ALT_DOMAIN" ] && check 'SAN 含附加域' "$ALT_DOMAIN" "$cert"
-end="$(handshake | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)"
-if [ -n "${end:-}" ]; then
-  ts=$(date -d "$end" +%s 2>/dev/null || date -j -f '%b %d %T %Y %Z' "$end" +%s 2>/dev/null || echo 0)
-  days=$(( (ts - $(date +%s)) / 86400 ))
-  check "证书剩余有效期 ≥ 30 天（当前 ${days} 天）" '^[3-9][0-9]$|^[0-9]{3,}$' "$days"
+# 签发成功标记：acme-companion 只在签发/续期成功后写 .companion
+marker="$(docker compose exec -T nginx-proxy sh -c "cat /etc/nginx/certs/$HOSTNAME_DOMAIN/.companion 2>/dev/null || echo MISSING" 2>&1 | tr -d '\r\n')"
+check '签发成功标记 .companion 存在' '^[0-9]' "$marker"
+# 有效期只在真实证书时判（占位证书 30 天，会误导）
+if [ "$PLACEHOLDER" = "0" ]; then
+  end="$(handshake | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)"
+  if [ -n "${end:-}" ]; then
+    ts=$(date -d "$end" +%s 2>/dev/null || date -j -f '%b %d %T %Y %Z' "$end" +%s 2>/dev/null || echo 0)
+    days=$(( (ts - $(date +%s)) / 86400 ))
+    check "证书剩余有效期 ≥ 30 天（当前 ${days} 天）" '^[3-9][0-9]$|^[0-9]{3,}$' "$days"
+  fi
 fi
 
 # ── 5. 自动续期通道 ──────────────────────────────────────────────────────────
