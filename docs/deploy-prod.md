@@ -55,6 +55,40 @@ sudo systemctl restart docker
 - 加速站只是通路，不改变镜像内容；需要核对时可自行比对摘要：
   `docker buildx imagetools inspect node:24-alpine`。
 
+### 境内网络：npm 源（构建依赖）
+
+镜像拉取与 npm 依赖下载是**两条独立通路**：镜像走 daemon 的 `registry-mirrors`（上一节），
+而 `Dockerfile` 里 `corepack` 下载 pnpm 本体、`pnpm install` 拉依赖走的是 **npm 源**。
+`registry.npmjs.org` 在境内常不可达，典型报错：
+
+```
+Error when performing the request to https://registry.npmjs.org/pnpm/-/pnpm-12.4.1.tgz
+  [cause]: AggregateError [ETIMEDOUT] ... connect ETIMEDOUT 104.16.x.x:443
+```
+
+本仓已把**镜像内构建**的 npm 源默认设为 npmmirror（只影响 `docker build`，不影响本地
+`pnpm dev` 与 Vercel 通道）：
+
+```bash
+docker compose up -d --build        # 默认即走 https://registry.npmmirror.com
+
+# 需要官方源时（例如海外构建机）：
+docker build --build-arg NPM_REGISTRY=https://registry.npmjs.org -t kaup-ai-website:latest .
+```
+
+兜底（服务器连 npm 源也不通时）：在能构建的机器上构建好 `web` 镜像搬过去，服务器直接用本地镜像
+（`docker compose up -d` **不加** `--build`）：
+
+```bash
+# 能构建的机器
+docker save kaup-ai-website:latest | gzip > kaup-web-image.tgz
+scp kaup-web-image.tgz admin@<ecs-ip>:~/
+
+# 服务器
+gunzip -c ~/kaup-web-image.tgz | docker load
+docker compose up -d
+```
+
 **安全组 / 防火墙**：必须放行 **80** 与 **443**。HTTP-01 由 Let's Encrypt 从公网回源校验，
 公网访问 `http://kaup-ai.com/.well-known/acme-challenge/<token>` 拿不到文件就会签发失败
 （症状：acme 日志里 `Verification error ... Connection refused` / `Timeout`）。

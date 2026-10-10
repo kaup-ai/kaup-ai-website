@@ -8,17 +8,24 @@
 # ---------- 依赖层：只装依赖，利用层缓存 ----------
 # Node 24（LTS）：Nuxt 4 与 Nuxt Content 的 `sqliteConnector: 'native'`（node:sqlite，>= 22.5）均满足。
 FROM node:24-alpine AS deps
+# npm 源：corepack 下载 pnpm 本体与后续依赖安装都走它。
+# 默认 npmmirror —— 境内/受限网络下 registry.npmjs.org 常不可达（corepack 报 fetch failed / ETIMEDOUT）。
+# 需要官方源时：docker build --build-arg NPM_REGISTRY=https://registry.npmjs.org .
+# 只作用于镜像内构建，不影响本地开发（pnpm dev）与 Vercel 通道。
+ARG NPM_REGISTRY=https://registry.npmmirror.com
 ENV PNPM_HOME=/pnpm \
     PATH=/pnpm:$PATH \
     CI=1 \
-    COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
+    COREPACK_NPM_REGISTRY=$NPM_REGISTRY \
+    npm_config_registry=$NPM_REGISTRY
 RUN corepack enable
 WORKDIR /app
 # lockfile 与 workspace 声明先行：源码变更不使依赖层失效
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # --ignore-scripts：postinstall 的 `nuxt prepare` 此时还没有源码；husky 等宿主脚本在镜像里也无意义。
 # （构建期需要的 prepare 由 `nuxt build` 内部完成）
-RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm install --frozen-lockfile --ignore-scripts --registry="$NPM_REGISTRY"
 
 # ---------- 构建层 ----------
 FROM deps AS build
