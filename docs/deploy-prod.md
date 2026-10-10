@@ -56,10 +56,24 @@
 | 不想用个人账号                          | 建机器账号 + 只读 token，避免人员变动后服务器拉不动            |
 | GHCR 在你那台很慢                       | 回退离线搬运：`docker save/load`（见「境内网络」一节末尾）     |
 
-> **包可见性**：本仓库是公开仓库，GHCR 包首次推送后**默认是 public**。workflow 末尾会尽力改
-> private，但该接口需要包管理员权限（`GITHUB_TOKEN` 可能无权）。一次性可靠做法：
-> 组织 → **Packages** → `kaup-ai-website` → **Package settings** → Danger Zone →
-> Change visibility → **Private**。（改私有前，任何人可匿名拉；改后必须登录。）
+**包可见性**：本仓库是公开仓库，但**本包实测为 private**（判据见下）。workflow 每次运行都会校验，
+一旦变成匿名可拉就直接报红。确实需要改可见性时（例如新建的同名包默认为 public）走 UI：
+组织 → **Packages** → `kaup-ai-website` → **Package settings** → Danger Zone →
+Change visibility → **Private**。
+
+自己怎么验（`401` = 私有；公开包会返回 `200` 并给出 token）：
+
+```bash
+# 本包（私有）
+curl -s -o /dev/null -w '%{http_code}\n' \
+  "https://ghcr.io/token?scope=repository:kaup-ai/kaup-ai-website:pull&service=ghcr.io"   # 401
+# 对照：公开包
+curl -s -o /dev/null -w '%{http_code}\n' \
+  "https://ghcr.io/token?scope=repository:nginx-proxy/nginx-proxy:pull&service=ghcr.io"   # 200
+```
+
+> 注：用 API 改可见性需要带 `packages:write` 的 PAT（且需包管理员权限）；`GITHUB_TOKEN` 调
+> `PATCH /orgs/{org}/packages/container/{pkg}` 会返回 404，所以这一步没有放进 CI。
 
 ### 境内网络：镜像拉取在 daemon 层配置
 

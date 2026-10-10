@@ -72,17 +72,15 @@ jobs:
             echo "- digest: \`${{ steps.push.outputs.digest }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: 尽力把包可见性设为 private
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 校验包为私有（匿名不可拉）
         run: |
-          org="${GITHUB_REPOSITORY%%/*}"; pkg="${GITHUB_REPOSITORY##*/}"
-          code=$(curl -s -o /tmp/resp -w '%{http_code}' -X PATCH \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/orgs/$org/packages/container/$pkg" \
-            -d '{"visibility":"private"}')
-          echo "PATCH visibility → HTTP $code"
-          cat /tmp/resp || true
+          # 判据：GHCR 匿名 token 端点 —— 私有包 401，公开包 200（已用公开包做过对照）。
+          # 改可见性需要包管理员权限（GITHUB_TOKEN 调 org packages API 会 404），故这里只"校验"不"修改"；
+          # 一次性修改路径见 docs/deploy-prod.md「从 GHCR 拉取私有镜像」。
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            "https://ghcr.io/token?scope=repository:${GITHUB_REPOSITORY}:pull&service=ghcr.io")
+          echo "anonymous token endpoint → HTTP $code（期望 401）"
+          if [ "$code" != "401" ]; then
+            echo "::error::GHCR 包当前可被匿名拉取（不是 private）。请到 GitHub → 组织 → Packages → ${GITHUB_REPOSITORY##*/} → Package settings → Danger Zone → Change visibility → Private"
+            exit 1
+          fi
