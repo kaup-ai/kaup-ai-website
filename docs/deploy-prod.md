@@ -29,18 +29,26 @@
 `web` 镜像**不在服务器上构建**：CI（`.github/workflows/docker-image.yml`）每次推送到 `main`
 都会构建并推 `ghcr.io/kaup-ai/kaup-ai-website:latest`。该包是**私有**的 ⇒ 拉取必须带凭据。
 
-1. **建 token**：GitHub → Settings → Developer settings → **Personal access tokens (classic)** →
-   Generate new token，只勾 **`read:packages`**（给服务器单独建一个，标注用途与有效期）。
-2. **登录**：`-u` 写 **GitHub 个人账号名**（**不是组织名** —— 这是最常见的踩坑；写组织名一定 401）。
-   怎么拿到这个名字：`gh api user --jq .login`，或看 PAT 是建在哪个账号下；也可以用你平时登录
-   GitHub 的账号名（本仓当前维护者：`i0r3k`）。
+1. **建 token**：登录 **GitHub 个人账号**（不是组织）→ Settings → Developer settings →
+   **Personal access tokens → Tokens (classic)** → Generate new token (classic)：
+   备注写用途（如 `kaup-site-ghcr-read`）、设有效期，**只勾 `read:packages`**（不要勾 `write:packages`）。
+   生成后页面只显示一次 `ghp_...`，复制下来 —— 这就是下面喂给 `docker login` 的密码。
+   > 这个 token **不进仓库、也不进 `.env`**（本仓 secretlint 也会拦），它只存在于你手上/服务器上。
+2. **登录**（登录一次即可，凭据缓存到 `~/.docker/config.json`）：
+   `-u` 写 **GitHub 个人账号名**（**不是组织名**，写组织名一定 401；本仓维护者账号：`i0r3k`）。
 
    ```bash
-   echo "$GHCR_PAT" | docker login ghcr.io -u <你的GitHub用户名> --password-stdin
+   # 直接粘 token（read -s 不回显、不进 shell 历史；--password-stdin 不出现在进程列表）
+   read -rsp 'GHCR PAT: ' GHCR_PAT && echo
+   echo "$GHCR_PAT" | docker login ghcr.io -u i0r3k --password-stdin
+   unset GHCR_PAT
+
    docker pull ghcr.io/kaup-ai/kaup-ai-website:latest   # 登录是否有效，一拉便知
    ```
 
    凭据落在 `~/.docker/config.json`（base64，非加密）⇒ 用**专用只读** token，别用带写权限的。
+   ⚠️ `sudo docker ...` 用的是 `/root/.docker/config.json`，与普通用户的登录**互不相通** ——
+   用哪个身份跑 compose，就在哪个身份下 `docker login`。
 
 3. **拉取 / 更新**：
 
@@ -158,8 +166,10 @@ vi .env
 #   站点 URL：NUXT_PUBLIC_SITE_URL=https://kaup-ai.com（Dockerfile 已固化为默认值；商务邮箱 sales@kaup-ai.com 随之确定）
 #   应用密钥：FEISHU_*（6 个）
 
-# 3) 登录 GHCR（web 镜像是私有包；凭据只读，见上一节）
-echo "$GHCR_PAT" | docker login ghcr.io -u <你的GitHub用户名> --password-stdin
+# 3) 登录 GHCR（web 镜像是私有包；token 从哪来看上一节「从 GHCR 拉取私有镜像」）
+read -rsp 'GHCR PAT: ' GHCR_PAT && echo
+echo "$GHCR_PAT" | docker login ghcr.io -u i0r3k --password-stdin
+unset GHCR_PAT
 
 # 4) 拉镜像并启动（web 用 CI 产物，不在服务器本地构建）
 docker compose pull

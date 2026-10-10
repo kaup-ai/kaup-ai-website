@@ -80,8 +80,10 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 ### 自托管：起站
 
 ```bash
-# 服务器：web 镜像来自 GHCR 私有包，先登录（token 勾 read:packages）
-echo "$GHCR_PAT" | docker login ghcr.io -u <你的GitHub用户名> --password-stdin
+# 服务器：web 镜像来自 GHCR 私有包，先登录（token 在 GitHub 个人账号下生成，只勾 read:packages）
+read -rsp 'GHCR PAT: ' GHCR_PAT && echo
+echo "$GHCR_PAT" | docker login ghcr.io -u i0r3k --password-stdin
+unset GHCR_PAT
 cp .env.example .env      # 填 ENTRY_HOST / ACME_EMAIL（应用密钥可选，缺省时仅表单返回 500）
 docker compose pull && docker compose up -d
 ```
