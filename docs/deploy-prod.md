@@ -31,10 +31,13 @@
 
 1. **建 token**：GitHub → Settings → Developer settings → **Personal access tokens (classic)** →
    Generate new token，只勾 **`read:packages`**（给服务器单独建一个，标注用途与有效期）。
-2. **登录**（`-u` 写 **GitHub 用户名**，不是组织名 —— 这是最常见的踩坑）：
+2. **登录**：`-u` 写 **GitHub 个人账号名**（**不是组织名** —— 这是最常见的踩坑；写组织名一定 401）。
+   怎么拿到这个名字：`gh api user --jq .login`，或看 PAT 是建在哪个账号下；也可以用你平时登录
+   GitHub 的账号名（本仓当前维护者：`i0r3k`）。
 
    ```bash
    echo "$GHCR_PAT" | docker login ghcr.io -u <你的GitHub用户名> --password-stdin
+   docker pull ghcr.io/kaup-ai/kaup-ai-website:latest   # 登录是否有效，一拉便知
    ```
 
    凭据落在 `~/.docker/config.json`（base64，非加密）⇒ 用**专用只读** token，别用带写权限的。
