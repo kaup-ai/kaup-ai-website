@@ -1,0 +1,88 @@
+# =============================================================================
+# 构建官网镜像并推送到 GHCR
+#   - 触发：push 到 main（"每次提交"；feature 分支不覆盖 latest）＋ 手动 workflow_dispatch
+#   - 产物：ghcr.io/kaup-ai/kaup-ai-website:latest
+#           ghcr.io/kaup-ai/kaup-ai-website:sha-<commit>（不可变，便于回滚）
+#   - 站点 URL 在构建期固化（页面是预渲染的）：自托管通道 = https://kaup-ai.com
+#   - npm 源用官方源（GitHub runner 访问 npmjs 快且权威）；境内自建时 Dockerfile 默认走 npmmirror
+#
+# ⚠️ 包可见性：公开仓库首次推送的 GHCR 包默认是 public。本 workflow 末尾会尽力改成 private，
+#    但该接口需要包管理员权限（GITHUB_TOKEN 可能无权）⇒ 一次性可靠做法见 docs/deploy-prod.md：
+#    组织 → Packages → kaup-ai-website → Package settings → Danger Zone → Change visibility → Private
+# =============================================================================
+name: build-and-push-image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: image-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+  SITE_URL: https://kaup-ai.com
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # 推 GHCR 必需
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: 登录 GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 构建并推送
+        id: push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:sha-${{ github.sha }}
+          build-args: |
+            NUXT_PUBLIC_SITE_URL=${{ env.SITE_URL }}
+            NPM_REGISTRY=https://registry.npmjs.org
+          # 不附加 provenance/sbom（保持镜像清单简单，私有拉取链路里少一层变量）
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: 写运行摘要
+        run: |
+          {
+            echo "### 镜像已推送"
+            echo ""
+            echo "- \`${{ env.IMAGE }}:latest\`"
+            echo "- \`${{ env.IMAGE }}:sha-${{ github.sha }}\`"
+            echo "- digest: \`${{ steps.push.outputs.digest }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 尽力把包可见性设为 private
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          org="${GITHUB_REPOSITORY%%/*}"; pkg="${GITHUB_REPOSITORY##*/}"
+          code=$(curl -s -o /tmp/resp -w '%{http_code}' -X PATCH \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/orgs/$org/packages/container/$pkg" \
+            -d '{"visibility":"private"}')
+          echo "PATCH visibility → HTTP $code"
+          cat /tmp/resp || true

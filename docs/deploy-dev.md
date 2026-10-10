@@ -35,13 +35,18 @@
 ### 3.1 本地 HTTP 档（默认）
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# web 镜像来自 GHCR（CI 产物）。本地没登录过 GHCR 也没构建过，就先本地构建同一 tag：
+docker build -t ghcr.io/kaup-ai/kaup-ai-website:latest .
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8081/     # 200
 ```
 
 - 入口监听宿主 `8081`（纯 HTTP，无证书），上游 = 容器 `web:3000`
 - `acme-companion` 归 `acme` profile ⇒ **不启动**（不签公共 CA）
 - 限流放宽为 `100r/s` / `burst=200`（机制保留，取值放宽）
+
+> 也可以不走本地构建、直接拉 CI 的镜像：`docker login ghcr.io -u <GitHub用户名>`（token 勾
+> `read:packages`）后 `docker compose pull`。改了代码想验证生产镜像时仍需上面那条 `docker build`。
 
 ### 3.2 TLS 档（自签证书；验证 TLS 终止与换证书生效）
 

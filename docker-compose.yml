@@ -1,7 +1,7 @@
 # =============================================================================
 # Kaup 官网自托管通道（kaup-ai.com）生产编排
 #   ⚠️ 域名分工：自托管 = kaup-ai.com；Vercel 通道 = kaup.ai。勿把本档绑到 kaup.ai。
-#   web            Nuxt 4 / Nitro node-server（构建产物镜像，只暴露 3000）
+#   web            Nuxt 4 / Nitro node-server（镜像来自 GHCR 的 CI 产物，只暴露 3000）
 #   nginx-proxy    入口 nginx：TLS 终止 + 限流/安全头/X-Request-Id + 结构化访问日志
 #   acme-companion ACME 客户端（内置 acme.sh）：首签 + 到期自动续期 + reload nginx
 #
@@ -19,10 +19,11 @@ name: kaup-ai-website
 services:
   # ── 官网应用 ───────────────────────────────────────────────────────────────
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: kaup-ai-website:latest
+    # 镜像由 CI 构建并推到 GHCR（.github/workflows/docker-image.yml），包是**私有**的：
+    # 服务器/本地都先 `docker login ghcr.io` 再 `docker compose pull`（见 docs/deploy-prod.md）。
+    # 本地改了代码要本地构建时，用同一个 tag 覆盖即可（compose 会直接用本地镜像）：
+    #   docker build -t ghcr.io/kaup-ai/kaup-ai-website:latest .
+    image: ghcr.io/kaup-ai/kaup-ai-website:latest
     container_name: kaup-site-web
     restart: unless-stopped
     environment:

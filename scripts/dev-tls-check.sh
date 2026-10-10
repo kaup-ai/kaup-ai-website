@@ -20,6 +20,13 @@ ENTRY_NAME="kaup-site-entry"
 
 compose() { docker compose -f "${ROOT}/docker-compose.yml" -f "${ROOT}/docker-compose.dev.yml" "$@"; }
 
+# web 镜像来自 GHCR（私有 CI 产物）；本地没有就先本地构建，保证本脚本可独立跑通
+WEB_IMAGE="ghcr.io/kaup-ai/kaup-ai-website:latest"
+if ! docker image inspect "$WEB_IMAGE" >/dev/null 2>&1; then
+  echo "→ 本地没有 ${WEB_IMAGE}，先本地构建（等价于 CI 的构建，只是不推送）"
+  docker build -t "$WEB_IMAGE" "$ROOT"
+fi
+
 # TLS 档取值（同一模板的变量取值差异，不是机制差异）
 export ENTRY_DEV_PUBLISH="$PORT" ENTRY_DEV_LISTEN_PORT="$PORT"
 export ENTRY_LISTEN_TLS="listen ${PORT} ssl;"
