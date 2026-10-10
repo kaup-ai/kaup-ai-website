@@ -10,21 +10,26 @@ const themeColor = computed(() => (colorMode.value === 'dark' ? '#0A1A2F' : '#F7
 
 const OG_ALT = '智御无疆 Kaup — 以 AI 助力企业超越能力和效率的边界'
 
+/* 站点根 URL：双通道并存（自托管 kaup-ai.com / Vercel kaup.ai），故不硬编码。
+   预渲染页面在构建期定稿（见 Dockerfile 的 NUXT_PUBLIC_SITE_URL 与 README「部署」）。 */
+const siteUrl = useKaupSiteUrl()
+const salesEmail = useKaupSalesEmail()
+
 const orgWebsiteLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'Organization',
-      '@id': 'https://kaup.ai/#organization',
+      '@id': `${siteUrl}/#organization`,
       name: '智御无疆 Kaup',
       alternateName: 'KAUP',
-      url: 'https://kaup.ai/',
-      logo: 'https://kaup.ai/brand/logo-horizontal-1024w.png',
-      image: 'https://kaup.ai/og-image.png',
+      url: `${siteUrl}/`,
+      logo: `${siteUrl}/brand/logo-horizontal-1024w.png`,
+      image: `${siteUrl}/og-image.png`,
       description:
         '赋能企业的 AI 全链路编排与智能调度平台，面向中国 B2B 外贸企业提供 AI Agent 平台订阅、定制开发与本地/私有化部署。',
       slogan: '以 AI 助力企业超越能力和效率的边界，重新定义无限可能',
-      email: 'sales@kaup.ai',
+      email: salesEmail,
       address: {
         '@type': 'PostalAddress',
         addressRegion: '辽宁省',
@@ -49,17 +54,17 @@ const orgWebsiteLd = {
           '@type': 'ContactPoint',
           contactType: 'sales',
           telephone: '+8641188309999',
-          email: 'sales@kaup.ai',
+          email: salesEmail,
           availableLanguage: ['zh-CN']
         }
       ]
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://kaup.ai/#website',
-      url: 'https://kaup.ai/',
+      '@id': `${siteUrl}/#website`,
+      url: `${siteUrl}/`,
       name: '智御无疆 Kaup',
-      publisher: { '@id': 'https://kaup.ai/#organization' },
+      publisher: { '@id': `${siteUrl}/#organization` },
       inLanguage: 'zh-CN'
     }
   ]
@@ -101,13 +106,13 @@ useSeoMeta({
   ogType: 'website',
   ogSiteName: '智御无疆 Kaup',
   ogLocale: 'zh_CN',
-  ogImage: 'https://kaup.ai/og-image.png',
+  ogImage: `${siteUrl}/og-image.png`,
   ogImageType: 'image/png',
   ogImageWidth: 1200,
   ogImageHeight: 630,
   ogImageAlt: OG_ALT,
   twitterCard: 'summary_large_image',
-  twitterImage: 'https://kaup.ai/og-image.png'
+  twitterImage: `${siteUrl}/og-image.png`
 })
 </script>
 

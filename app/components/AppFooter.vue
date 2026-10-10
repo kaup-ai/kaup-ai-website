@@ -16,9 +16,11 @@ const capabilities = [
   { label: '本地部署 / 私有化', to: '/capabilities#deploy' }
 ]
 
+const salesEmail = useKaupSalesEmail()
+
 const contact = [
   { label: '(0411)8830-9999', to: 'tel:+8641188309999', mono: true },
-  { label: 'sales@kaup.ai', to: 'mailto:sales@kaup.ai', mono: true }
+  { label: salesEmail, to: `mailto:${salesEmail}`, mono: true }
 ]
 
 const footerQrs = [

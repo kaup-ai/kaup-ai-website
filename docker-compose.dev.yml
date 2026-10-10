@@ -1,0 +1,42 @@
+# =============================================================================
+# **本地档 override**：只改取值，不改机制（同一模板 / 同一 entrypoint / 同一续期-加载通道）
+#   HTTP 档：docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+#            → 入口监听宿主 8081（HTTP），上游 web:3000
+#            （默认 8081 而非 8080：8080 已被 kaup-core 本地入口占用，两个仓库同时开发时避免撞端口）
+#   TLS 档：见 scripts/dev-tls-check.sh（自签证书挂到 /etc/nginx/dev-tls）
+#   HMR 档：宿主跑 `pnpm dev`，入口指宿主进程
+#            ENTRY_UPSTREAM_WEB=host.docker.internal:3000 \
+#            docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#
+# ⚠️ base 的 ${ENTRY_HOST:?} / ${ACME_EMAIL:?} 在本地档同样必须被 .env 满足：
+#    compose 的变量插值是纯文本层，与 override / profile 无关。
+# =============================================================================
+services:
+  nginx-proxy:
+    # compose 的 ports 是**拼接**而非替换 ⇒ 必须 !override 显式替换，否则 base 的
+    # 80/443 依然生效（本地起 443 常与宿主服务冲突）。!override 需 Docker Compose >= 2.24.4。
+    ports: !override
+      - '${ENTRY_DEV_PUBLISH:-8081}:${ENTRY_DEV_LISTEN_PORT:-8081}'
+    environment:
+      # 监听档：HTTP 档 `listen 8081;`；TLS 档由 scripts/dev-tls-check.sh 导出 `listen 8443 ssl;`
+      ENTRY_LISTEN_TLS: ${ENTRY_LISTEN_TLS:-listen 8081;}
+      # 证书行：HTTP 档为空（零证书摩擦）；TLS 档两行指向自签证书
+      ENTRY_TLS_CERT_LINES: ${ENTRY_TLS_CERT_LINES:-}
+      # 80 跳转 vhost：本地档为空（不发布 80，也不做跳转）
+      ENTRY_HTTP_VHOST: ${ENTRY_HTTP_VHOST:-}
+      ENTRY_UPSTREAM_WEB: ${ENTRY_UPSTREAM_WEB:-web:3000}
+      # 本地宽放限流（机制保留，仅放宽取值）
+      ENTRY_RATE: ${ENTRY_RATE:-100r/s}
+      ENTRY_LIMIT_REQ: ${ENTRY_LIMIT_REQ:-limit_req zone=site_in burst=200 nodelay;}
+    extra_hosts:
+      # HMR 档：入口容器经 host.docker.internal 访问宿主回环上的 pnpm dev
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      # 挂目录（非单文件）：重签走"删+建"时容器内立即可见（单文件挂载会钉住原 inode）
+      - ./nginx/dev-certs:/etc/nginx/dev-tls:ro
+
+  acme-companion:
+    # 本地档不签公共 CA（占位域名/未放行 80 只会刷错误日志）。需要演练签发时：
+    #   docker compose ... --profile acme up -d
+    profiles:
+      - acme

@@ -32,3 +32,12 @@ logs
 
 # husky 运行时 shim（prepare 时重建）
 .husky/_/
+.vercel
+.env*
+
+# Docker/nginx 本地档产物（自签证书由 scripts/gen-dev-certs.sh 生成，不入库）
+nginx/dev-certs/*
+!nginx/dev-certs/.gitkeep
+
+# 放行环境变量模板（上一行 .env* 会连模板一起忽略，这里显式豁免）
+!.env.example

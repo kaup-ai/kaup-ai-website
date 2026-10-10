@@ -1,11 +1,11 @@
 <script setup lang="ts">
+const salesEmail = useKaupSalesEmail()
+
 useKaupSeo(
   {
     title: '联系我们 — 智御无疆 Kaup',
-    description:
-      '以 AI 助力企业超越能力和效率的边界，重新定义无限可能。联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 sales@kaup.ai、扫码关注公众号或添加联系人微信。',
-    ogDescription:
-      '联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 sales@kaup.ai、扫码关注公众号或添加联系人微信。'
+    description: `以 AI 助力企业超越能力和效率的边界，重新定义无限可能。联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 ${salesEmail}、扫码关注公众号或添加联系人微信。`,
+    ogDescription: `联系智御无疆团队，沟通外贸企业 AI Agent 定制开发与本地部署事宜。在线提交公司与联系方式，或发邮件至 ${salesEmail}、扫码关注公众号或添加联系人微信。`
   },
   '/contact'
 )
@@ -79,9 +79,9 @@ const qrs = [
               </li>
               <li class="flex gap-4">
                 <span class="w-20 shrink-0 text-muted">邮箱</span>
-                <a href="mailto:sales@kaup.ai" class="font-mono text-primary hover:underline"
-                  >sales@kaup.ai</a
-                >
+                <a :href="`mailto:${salesEmail}`" class="font-mono text-primary hover:underline">{{
+                  salesEmail
+                }}</a>
               </li>
             </ul>
 

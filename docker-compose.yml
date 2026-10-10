@@ -1,0 +1,190 @@
+# =============================================================================
+# Kaup 官网自托管通道（kaup-ai.com）生产编排
+#   ⚠️ 域名分工：自托管 = kaup-ai.com；Vercel 通道 = kaup.ai。勿把本档绑到 kaup.ai。
+#   web            Nuxt 4 / Nitro node-server（构建产物镜像，只暴露 3000）
+#   nginx-proxy    入口 nginx：TLS 终止 + 限流/安全头/X-Request-Id + 结构化访问日志
+#   acme-companion ACME 客户端（内置 acme.sh）：首签 + 到期自动续期 + reload nginx
+#
+# 入口机制与 kaup-core/infra/domestic 同源（同镜像形态、同 conf 渲染机制、同续期-reload 机制）；
+# 差异项与理由、变量全表、排障与判据见 nginx/README.md。
+#
+# 用法：
+#   1) cp .env.example .env  并填 ENTRY_HOST / ACME_EMAIL
+#   2) docker compose up -d --build
+# 本地档（监听 8081、不签公共 CA）：
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# =============================================================================
+name: kaup-ai-website
+
+services:
+  # ── 官网应用 ───────────────────────────────────────────────────────────────
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kaup-ai-website:latest
+    container_name: kaup-site-web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NITRO_PORT: '3000'
+      NITRO_HOST: 0.0.0.0
+      # 站点根 URL（canonical/og/JSON-LD/robots/sitemap）。页面为预渲染 ⇒ 以**构建期**取值为准
+      # （Dockerfile 的 ARG 默认已是 https://kaup-ai.com）；此处仅保证运行期读取一致。
+      NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-https://kaup-ai.com}
+      # 应用运行时密钥：**逐个显式注入**（不用 env_file —— 否则 .env 里的 ACME/DNS 凭证
+      # 会一并进入 web 容器）。缺 webhook/secret 时 /api/contact 按契约返回 500，
+      # 站点其余部分不受影响（也便于先在无密钥环境验证页面）。
+      FEISHU_WEBHOOK_URL: ${FEISHU_WEBHOOK_URL:-}
+      FEISHU_BOT_SECRET: ${FEISHU_BOT_SECRET:-}
+      FEISHU_APP_ID: ${FEISHU_APP_ID:-}
+      FEISHU_APP_SECRET: ${FEISHU_APP_SECRET:-}
+      FEISHU_BASE_APP_TOKEN: ${FEISHU_BASE_APP_TOKEN:-}
+      FEISHU_BASE_TABLE_ID: ${FEISHU_BASE_TABLE_ID:-}
+    expose:
+      - '3000'
+    healthcheck:
+      # 探静态产物：只证明进程在监听；健康门控用于给入口提供"上游已就绪"的启动顺序
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://127.0.0.1:3000/robots.txt']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    networks:
+      - edge
+
+  # ── 入口 nginx（TLS 终止；路由/限流/安全头/日志）────────────────────────────
+  nginx-proxy:
+    # 固定 tag（与 kaup-core 同版本）；升级前先核对上游 release notes
+    image: nginxproxy/nginx-proxy:1.6
+    container_name: kaup-site-entry
+    restart: unless-stopped
+    depends_on:
+      web:
+        condition: service_healthy
+    ports:
+      # HTTP-01 挑战与 80→443 跳转需要 80；DNS-01 档下 80 仍用于跳转（不发布亦可，改 env 即可）
+      - '80:80'
+      - '443:443'
+    volumes:
+      # nginx-proxy 的 docker-gen 需要（**:ro**）；acme-companion 用它执行 reload
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      # 骨架模板 + 分层片段：挂到 conf.d **之外**（:ro 单文件挂进 conf.d 再 rm 会 EBUSY/EROFS
+      # 中断 entrypoint），渲染产物才落进 conf.d。三个片段同一份渲染白名单。
+      - ./nginx/entry.conf.template:/etc/nginx/entry.conf.template:ro
+      - ./nginx/entry-routing.conf:/etc/nginx/fragments/entry-routing.conf.template:ro
+      - ./nginx/entry-location.conf:/etc/nginx/fragments/entry-location.conf.template:ro
+      # 安全头片段无变量，直接挂载（server 与 /_nuxt/ location 各 include 一次）
+      - ./nginx/entry-security-headers.conf:/etc/nginx/fragments/entry-security-headers.conf:ro
+      # 与 acme-companion 共享的卷：证书 / conf.d / vhost.d / ACME webroot
+      - entry_certs:/etc/nginx/certs
+      - entry_conf:/etc/nginx/conf.d
+      - entry_vhost:/etc/nginx/vhost.d
+      - entry_html:/usr/share/nginx/html
+    environment:
+      # 供 acme-companion 签发**一张多 SAN 证书**（首域决定证书落盘目录）。
+      # 只给 LETSENCRYPT_HOST、不给 VIRTUAL_HOST：docker-gen 不生成 label 式 vhost，
+      # 路由由 entry.conf 显式承担，避免自环。
+      LETSENCRYPT_HOST: '${ENTRY_HOST:?set ENTRY_HOST in .env}${ENTRY_ALT_HOST:+,${ENTRY_ALT_HOST}}'
+      LETSENCRYPT_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL in .env}
+      # ── 渲染变量（白名单见下方 entrypoint）─────────────────────────────────
+      ENTRY_RESOLVER: ${ENTRY_RESOLVER:-127.0.0.11}
+      ENTRY_HOST: ${ENTRY_HOST:?set ENTRY_HOST in .env}
+      ENTRY_ALT_HOST: ${ENTRY_ALT_HOST:-}
+      ENTRY_LISTEN_TLS: ${ENTRY_LISTEN_TLS:-listen 443 ssl;}
+      ENTRY_TLS_CERT_LINES: |
+        ssl_certificate     /etc/nginx/certs/${ENTRY_HOST}/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/${ENTRY_HOST}/key.pem;
+      # 多行值，故**不得**出现在模板注释里（envsubst 连注释一起替换）。
+      # $$ 是 compose 转义：容器里看到的是 nginx 自身变量 host / request_uri。
+      ENTRY_HTTP_VHOST: |
+        server {
+            listen 80;
+            listen [::]:80;
+            server_name ${ENTRY_HOST} ${ENTRY_ALT_HOST};
+
+            # ACME HTTP-01 挑战：与 acme-companion 共享 webroot 卷；DNS-01 档保留亦无副作用
+            location ^~ /.well-known/acme-challenge/ {
+                root /usr/share/nginx/html;
+                access_log off;
+            }
+
+            location / {
+                return 301 https://$$host$$request_uri;
+            }
+        }
+      ENTRY_REAL_IP_CONFIG: ${ENTRY_REAL_IP_CONFIG:-}
+      ENTRY_RATE: ${ENTRY_RATE:-30r/s}
+      ENTRY_LIMIT_REQ: ${ENTRY_LIMIT_REQ:-limit_req zone=site_in burst=60 nodelay;}
+      ENTRY_CONNECT_TIMEOUT: ${ENTRY_CONNECT_TIMEOUT:-5s}
+      ENTRY_SEND_TIMEOUT: ${ENTRY_SEND_TIMEOUT:-30s}
+      ENTRY_READ_TIMEOUT: ${ENTRY_READ_TIMEOUT:-30s}
+      ENTRY_CLIENT_MAX_BODY_SIZE: ${ENTRY_CLIENT_MAX_BODY_SIZE:-1m}
+      ENTRY_UPSTREAM_WEB: ${ENTRY_UPSTREAM_WEB:-web:3000}
+    # 渲染骨架模板 + 两个分层片段（同一白名单）→ 交回镜像原生入口（docker-gen + nginx）。
+    # ⚠️ 必须把镜像 CMD（forego start -r）作为参数传给 /app/docker-entrypoint.sh：该脚本末尾
+    #    是 exec "$@"，且初始化逻辑仅当参数等于 forego start -r 时执行；无参调用等于空跑重启循环。
+    entrypoint:
+      - '/bin/sh'
+      - '-c'
+      - |
+        WL='$$ENTRY_RESOLVER $$ENTRY_HOST $$ENTRY_ALT_HOST $$ENTRY_LISTEN_TLS $$ENTRY_TLS_CERT_LINES $$ENTRY_HTTP_VHOST $$ENTRY_REAL_IP_CONFIG $$ENTRY_RATE $$ENTRY_LIMIT_REQ $$ENTRY_CONNECT_TIMEOUT $$ENTRY_SEND_TIMEOUT $$ENTRY_READ_TIMEOUT $$ENTRY_CLIENT_MAX_BODY_SIZE $$ENTRY_UPSTREAM_WEB';
+        envsubst "$$WL" < /etc/nginx/entry.conf.template > /etc/nginx/conf.d/entry.conf \
+        && envsubst "$$WL" < /etc/nginx/fragments/entry-routing.conf.template > /etc/nginx/entry-routing.conf \
+        && envsubst "$$WL" < /etc/nginx/fragments/entry-location.conf.template > /etc/nginx/entry-location.conf \
+        && exec /app/docker-entrypoint.sh forego start -r
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    networks:
+      - edge
+
+  # ── ACME 证书自动化（首签 + 到期续期 + reload）─────────────────────────────
+  acme-companion:
+    image: nginxproxy/acme-companion:2.5
+    container_name: kaup-site-entry-acme
+    restart: unless-stopped
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - entry_certs:/etc/nginx/certs # 证书落持久化卷（不进镜像层；容器重建不重签）
+      - entry_conf:/etc/nginx/conf.d
+      - entry_vhost:/etc/nginx/vhost.d
+      - entry_html:/usr/share/nginx/html # HTTP-01 挑战文件落此处
+      - acme_state:/etc/acme.sh # acme.sh 账户与续期状态
+    environment:
+      # 目标入口容器名（本文件 container_name = kaup-site-entry）
+      NGINX_PROXY_CONTAINER: kaup-site-entry
+      DEFAULT_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL in .env}
+      # 挑战方式：HTTP-01（默认，零密钥，只需 80 可达）/ DNS-01（可选，需 DNS 服务商 API 凭证；
+      # 80 不可达或经 CDN 吞掉挑战路径时改用，凭证经 ACMESH_DNS_API_CONFIG 从宿主注入，不落仓库）
+      ACME_CHALLENGE: ${ACME_CHALLENGE:-HTTP-01}
+      ACMESH_DNS_API_CONFIG: ${ACMESH_DNS_API_CONFIG:-}
+      # 显式给 CA 目录（默认 Let's Encrypt 生产）；预演用 staging 目录，避免正式环境速率限制
+      ACME_CA_URI: ${ACME_CA_URI:-https://acme-v02.api.letsencrypt.org/directory}
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    networks:
+      - edge
+
+networks:
+  edge:
+    driver: bridge
+
+volumes:
+  entry_certs:
+  entry_conf:
+  entry_vhost:
+  entry_html:
+  acme_state:

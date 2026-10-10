@@ -1,0 +1,96 @@
+# =============================================================================
+# Kaup 官网入口 nginx —— 骨架模板
+#   渲染：compose entrypoint 执行
+#     envsubst "<白名单>" < /etc/nginx/entry.conf.template > /etc/nginx/conf.d/entry.conf
+#   机制与 kaup-core/infra/domestic 同源：nginx-proxy（TLS 终止/路由/限流/日志）
+#   + acme-companion（acme.sh 签发/续期后自动 reload）；分层内容经 include 注入。
+#
+# ⚠️ 注释里不得出现带美元符的白名单变量名：envsubst 连注释一起替换，多行值
+#    （80 跳转 vhost / 证书行 / real_ip 行）会把注释行拆出一个非注释行 ⇒ nginx 解析失败。
+#    白名单（与 docker-compose.yml 的 entrypoint 一致）：
+#      ENTRY_RESOLVER / ENTRY_HOST / ENTRY_ALT_HOST / ENTRY_LISTEN_TLS / ENTRY_TLS_CERT_LINES /
+#      ENTRY_HTTP_VHOST / ENTRY_REAL_IP_CONFIG / ENTRY_RATE / ENTRY_LIMIT_REQ /
+#      ENTRY_CONNECT_TIMEOUT / ENTRY_SEND_TIMEOUT / ENTRY_READ_TIMEOUT /
+#      ENTRY_CLIENT_MAX_BODY_SIZE / ENTRY_UPSTREAM_WEB
+#    nginx 自身变量（uri / host / scheme / request_id / http_* / binary_remote_addr ...）
+#    与容器内其它环境变量一律保留。
+# =============================================================================
+
+# ── 限流区：入口挡未认证洪泛（第一道挡）─────────────────────────────────────
+# 与 kaup-core 同源的立论：业务侧配额（本站 = /api/contact 的进程内滑动窗口限流）
+# 不在此层，入口只反压单 IP 突发。资产路径不套限流（见 entry-location.conf）。
+limit_req_zone $binary_remote_addr zone=site_in:10m rate=$ENTRY_RATE;
+limit_req_status 429;
+
+# ── 分层路由表（map 块，http 上下文）────────────────────────────────────────
+# 片段渲染到 conf.d 之外，只被本模板显式 include（避免被 nginx 自动加载成两份）。
+include /etc/nginx/entry-routing.conf;
+
+# ── X-Request-Id：客户端未带则由入口生成（request_id）并向下游贯通 ───────────
+map $http_x_request_id $entry_request_id {
+    default $http_x_request_id;
+    ""      $request_id;
+}
+
+# ── 结构化访问日志（一行一 JSON，出 stdout）────────────────────────────────
+# 字段可枚举：time / request_id / method / uri / upstream_addr / status /
+#   request_time / upstream_response_time / bytes_sent / remote_addr
+# 出到 stdout ⇒ `docker logs kaup-site-entry` 可直接被外部日志采集/告警规则解析。
+# escape=json：字段值中的引号与控制字符被转义，保证 JSON 不被破坏（nginx >= 1.11.8）。
+log_format entry_json escape=json
+    '{'
+      '"time":"$time_iso8601",'
+      '"request_id":"$entry_request_id",'
+      '"method":"$request_method",'
+      '"uri":"$uri",'
+      '"upstream_addr":"$upstream_addr",'
+      '"status":$status,'
+      '"request_time":$request_time,'
+      '"upstream_response_time":"$upstream_response_time",'
+      '"bytes_sent":$bytes_sent,'
+      '"remote_addr":"$remote_addr"'
+    '}';
+
+# ── 80 端口 vhost（ACME HTTP-01 挑战 + 301 跳 HTTPS）────────────────────────
+# prod 档 = 完整 server 块；dev/HTTP 档 = 空串（此时不发布 80 端口）。
+$ENTRY_HTTP_VHOST
+
+server {
+    # 监听档：prod = `listen 443 ssl;`；本地档 = 纯端口（如 8081/8443）
+    $ENTRY_LISTEN_TLS
+    http2 on;
+    server_name $ENTRY_HOST $ENTRY_ALT_HOST;
+
+    # ── 上游动态解析（server 上下文，不上 http）──────────────────────────────
+    # 变量上游必须配 resolver：否则 web 容器重启换 IP 后 nginx 记着旧地址
+    # （静态 proxy_pass 则在启动期解析，web 未就绪直接起不来）。
+    # 127.0.0.11 = Docker 内嵌 DNS：解析同网络服务名，也转发外部域名。
+    # ipv6=off：compose 网络内服务只监听 IPv4。
+    resolver $ENTRY_RESOLVER valid=30s ipv6=off;
+
+    # ── 真实客户端 IP（可选档；入口前有 CDN / 云 SLB 时填 set_real_ip_from 等）─
+    # 不填 ⇒ 应用侧按 remote_addr 限流；入口前有代理而不填 ⇒ 所有客户端塌成一个限流桶。
+    $ENTRY_REAL_IP_CONFIG
+
+    # ── TLS 参数 ────────────────────────────────────────────────────────────
+    # 协议/套件/会话始终声明（HTTP 档无 ssl listen ⇒ 惰性配置，不生效也不缺要素）；
+    # 证书行单独成变量（HTTP 档为空 ⇒ 零证书摩擦）。
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:entry_ssl:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+    $ENTRY_TLS_CERT_LINES
+
+    # ── 安全响应头（与 /_nuxt/ location 共用一份片段）────────────────────────
+    include /etc/nginx/fragments/entry-security-headers.conf;
+
+    # ── 显式请求体上限（全站只有联系表单一个写入口，默认取小）─────────────────
+    client_max_body_size $ENTRY_CLIENT_MAX_BODY_SIZE;
+
+    server_tokens off;
+    access_log /dev/stdout entry_json;
+
+    include /etc/nginx/entry-location.conf;
+}

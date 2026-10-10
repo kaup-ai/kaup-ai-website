@@ -1,6 +1,7 @@
 /* 每页 SEO：title / description / canonical / og / twitter + WebPage JSON-LD。
    文案与字段面对齐 Phase 1 基线（.playwright-mcp/baseline/seo-extract.txt）：
-   og:description 与 meta description 在基线里是两套文案，故独立可选字段。 */
+   og:description 与 meta description 在基线里是两套文案，故独立可选字段。
+   绝对 URL 的域名来自站点根 URL（见 shared/utils/site-url.ts，自动导入）：双通道并存时不能硬编码。 */
 export interface KaupSeo {
   title: string
   description: string
@@ -11,7 +12,8 @@ export interface KaupSeo {
 }
 
 export function useKaupSeo(seo: KaupSeo, path: string) {
-  const url = `https://kaup.ai${path}`
+  const siteUrl = useKaupSiteUrl()
+  const url = `${siteUrl}${path}`
   const ogDesc = seo.ogDescription ?? seo.description
   const ogTitle = seo.ogTitle ?? seo.title
 
@@ -37,8 +39,8 @@ export function useKaupSeo(seo: KaupSeo, path: string) {
           url,
           name: ogTitle,
           description: ogDesc,
-          isPartOf: { '@id': 'https://kaup.ai/#website' },
-          about: { '@id': 'https://kaup.ai/#organization' },
+          isPartOf: { '@id': `${siteUrl}/#website` },
+          about: { '@id': `${siteUrl}/#organization` },
           inLanguage: 'zh-CN'
         })
       }

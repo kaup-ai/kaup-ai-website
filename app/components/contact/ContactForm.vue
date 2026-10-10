@@ -10,6 +10,7 @@ const company = ref('')
 const name = ref('')
 const phone = ref('')
 const website = ref('') // honeypot，正常人留空
+const salesEmail = useKaupSalesEmail()
 
 const errors = reactive<{ company: string; name: string; phone: string }>({
   company: '',
@@ -58,7 +59,7 @@ async function onSubmit() {
     const { data } = err as { data?: { error?: string } }
     status.value = {
       state: 'error',
-      message: data?.error || '提交失败，请稍后重试，或直接发邮件至 sales@kaup.ai。'
+      message: data?.error || `提交失败，请稍后重试，或直接发邮件至 ${salesEmail}。`
     }
   } finally {
     submitting.value = false

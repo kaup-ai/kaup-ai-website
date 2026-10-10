@@ -1,0 +1,36 @@
+# 依赖与构建产物：镜像内重新安装/构建，绝不从宿主带入
+node_modules
+.output
+.nuxt
+.nitro
+.data
+.cache
+dist
+
+# 版本控制与本地工具目录
+.git
+.gitattributes
+.github
+.husky
+.idea
+.vscode
+.claude
+.codex
+.agents
+.serena
+.omc
+.playwright-mcp
+.trellis
+.vercel
+
+# 密钥（.env 只用于 compose 插值，不得进镜像）
+.env
+.env.*
+
+# 与官网构建无关的大体量源目录（品牌资产已复制进 public/、文案已进 content/）
+design-system
+legacy
+
+# 杂项（注意：不要用 `*.md` —— content/ 将来可能放 Markdown 集合，那会静默漏进构建上下文）
+*.log
+.DS_Store

@@ -192,6 +192,12 @@ async function createBaseRecord(lead: Lead): Promise<{ skipped: boolean; recordI
 }
 
 export default defineEventHandler(async (event) => {
+  /* 商务邮箱：域名跟随站点根 URL（自托管 sales@kaup-ai.com / Vercel sales@kaup.ai）。
+     契约 C3/C7 钉的是中文文案本身，邮箱部分随站点域名变化，故不硬编码。 */
+  const salesEmail = salesEmailFor(
+    normalizeSiteUrl(useRuntimeConfig(event).public.siteUrl as string | undefined)
+  )
+
   /* C1：仅 POST（显式检查保证 405 JSON 体与 legacy 一致） */
   if (event.method !== 'POST') {
     setResponseHeader(event, 'Allow', 'POST')
@@ -220,7 +226,7 @@ export default defineEventHandler(async (event) => {
   if (isRateLimited(ip)) {
     return json(event, 429, {
       ok: false,
-      error: '提交太频繁，请稍后再试，或直接发邮件至 sales@kaup.ai'
+      error: `提交太频繁，请稍后再试，或直接发邮件至 ${salesEmail}`
     })
   }
 
@@ -252,7 +258,7 @@ export default defineEventHandler(async (event) => {
     console.error('contact: base record write failed', err)
     return json(event, 502, {
       ok: false,
-      error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai'
+      error: `提交失败，请稍后重试或直接发邮件至 ${salesEmail}`
     })
   }
 
@@ -276,7 +282,7 @@ export default defineEventHandler(async (event) => {
       console.error('contact: feishu webhook failed (lead already in base)', resp.status, result)
       return json(event, 502, {
         ok: false,
-        error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai'
+        error: `提交失败，请稍后重试或直接发邮件至 ${salesEmail}`
       })
     }
     return json(event, 200, { ok: true, base: !base.skipped })
@@ -284,7 +290,7 @@ export default defineEventHandler(async (event) => {
     console.error('contact: feishu webhook error (lead already in base)', err)
     return json(event, 502, {
       ok: false,
-      error: '提交失败，请稍后重试或直接发邮件至 sales@kaup.ai'
+      error: `提交失败，请稍后重试或直接发邮件至 ${salesEmail}`
     })
   }
 })
