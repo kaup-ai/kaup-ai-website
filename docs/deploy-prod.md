@@ -23,33 +23,54 @@
 
 > 域名分工：**不要把自托管档绑到 `kaup.ai`**（那是 Vercel 通道的域名）。
 
-### 境内主机拉取 Docker Hub 镜像（阿里云等）
+### 境内主机拉取入口镜像（阿里云等）
 
-镜像来自 Docker Hub。境内直连常见两种失败形态：
+**先分清两种报错**：
 
-- `failed to resolve reference ... not found` / `manifest unknown` —— 先确认 tag 是否真实存在
-  （本仓 pin：`nginxproxy/nginx-proxy:1.11-alpine`、`nginxproxy/acme-companion:2.8`）；
-  确认存在后仍报 not found，多为镜像加速器缓存未命中，重试或换加速器。
-- 长时间无输出后 `Interrupted` —— 纯网络问题（不是配置问题）。
+- `failed to resolve reference ... not found` —— 镜像站/加速器**回复了 404**。阿里云加速器
+  （`*.mirror.aliyuncs.com`）是 Docker Hub 的**被动缓存**：未缓存的 tag 会直接回 not found，
+  而 Docker 客户端收到 404 **不会**自动回落到 Docker Hub ⇒ 看起来像"tag 不存在"，其实 tag 是好的。
+- 长时间无输出后 `Interrupted` —— 纯网络超时。
 
-处置顺序：
+**方案 A（推荐，境内最稳）：改用 GHCR**。官方在 GitHub Container Registry **同时发布**，
+且实测镜像 ID 与 Docker Hub **完全一致**（`nginx-proxy` = `sha256:e22c1a44…`、
+`acme-companion` = `sha256:5153afee…`），来源标签指向官方仓库 `github.com/nginx-proxy/*`：
 
 ```bash
-# 1) 配置镜像加速器（容器镜像服务 ACR 个人版免费），然后重启 docker
-sudo tee /etc/docker/daemon.json >/dev/null <<'JSON'
-{ "registry-mirrors": ["https://<你的加速器ID>.mirror.aliyuncs.com"] }
-JSON
-sudo systemctl restart docker
+# .env 里加两行（无需改 compose）
+ENTRY_NGINX_IMAGE=ghcr.io/nginx-proxy/nginx-proxy:1.11-alpine
+ACME_COMPANION_IMAGE=ghcr.io/nginx-proxy/acme-companion:2.8
 
-# 2) 先单独拉两个入口镜像（把大下载与本地构建解耦，失败可逐步重试）
-docker pull nginxproxy/nginx-proxy:1.11-alpine
-docker pull nginxproxy/acme-companion:2.8
-
-# 3) 再起站（此时只剩 web 镜像的本地构建：pnpm 依赖从 npm registry 下载）
+# 先单独拉，再起站（把大下载与本地构建解耦，失败可单步重试）
+docker pull ghcr.io/nginx-proxy/nginx-proxy:1.11-alpine
+docker pull ghcr.io/nginx-proxy/acme-companion:2.8
 docker compose up -d --build
 ```
 
-两个入口镜像都是 Alpine 变体（体积小、拉取快），比 Debian 变体更容易在弱网下拉完。
+**方案 B：换用实测可用的镜像站**（`docker.1ms.run` 实测两个镜像均可拉，ID 与官方一致）：
+
+```bash
+# .env
+ENTRY_NGINX_IMAGE=docker.1ms.run/nginxproxy/nginx-proxy:1.11-alpine
+ACME_COMPANION_IMAGE=docker.1ms.run/nginxproxy/acme-companion:2.8
+```
+
+> 镜像站可用性随时间变化；**别把"会回 404"的站点放在 `registry-mirrors` 靠前位置** ——
+> 404 不会触发回落，只会让后面本来能用的源也没机会被尝试。
+
+**方案 C：离线搬运**（在能直连的环境拉好，搬过去 load；最确定，不受任何镜像站影响）：
+
+```bash
+# 能直连的机器（例如你的开发机）
+docker save nginxproxy/nginx-proxy:1.11-alpine nginxproxy/acme-companion:2.8 | gzip > entry-images.tgz
+scp entry-images.tgz admin@<ecs-ip>:~/
+
+# 服务器
+gunzip -c ~/entry-images.tgz | docker load
+```
+
+`web` 镜像的基础镜像 `node:24-alpine` 若也拉得慢/报 not found，同样三选一：
+`docker.1ms.run/library/node:24-alpine` 或 `docker save/load`（GHCR 没有官方 `node` 镜像）。
 
 **安全组 / 防火墙**：必须放行 **80** 与 **443**。HTTP-01 由 Let's Encrypt 从公网回源校验，
 公网访问 `http://kaup-ai.com/.well-known/acme-challenge/<token>` 拿不到文件就会签发失败
