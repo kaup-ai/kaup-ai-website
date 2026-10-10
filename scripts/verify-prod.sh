@@ -75,8 +75,12 @@ fi
 echo '-- 证书'
 handshake() { openssl s_client -connect 127.0.0.1:443 -servername "$HOSTNAME_DOMAIN" </dev/null 2>/dev/null; }
 cert="$(handshake | openssl x509 -noout -issuer -ext subjectAltName 2>/dev/null | tr -s ' ')"
-check '签发者不是 staging' 'Let.s Encrypt' "$(printf '%s' "$cert" | tr -d '\n')"
-if has 'STAGING' "$cert"; then bad '证书来自 staging CA（应切回生产 CA 重签）'; else ok '非 staging 证书'; fi
+if has "Let's Encrypt" "$cert"; then
+  ok '证书由 Let'\''s Encrypt 签发'
+  if has 'STAGING' "$cert"; then bad '证书来自 staging CA（应改回生产 CA 重签）'; else ok '非 staging（生产 CA）'; fi
+else
+  bad '当前不是 Let'\''s Encrypt 证书（多半还是入口的占位证书 ⇒ 签发未完成：看 docker logs kaup-site-entry-acme）'
+fi
 check 'SAN 含主域' "$HOSTNAME_DOMAIN" "$cert"
 [ -n "$ALT_DOMAIN" ] && check 'SAN 含附加域' "$ALT_DOMAIN" "$cert"
 end="$(handshake | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)"
