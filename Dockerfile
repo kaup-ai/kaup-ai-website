@@ -3,18 +3,11 @@
 #   构建：docker build -t kaup-ai-website:latest .
 #   运行：见 docker-compose.yml（由 nginx 入口做 TLS 终止，本容器只暴露 3000）
 #   产物：仅 .output（server + 预渲染 public），源码与 devDependencies 不进运行层
-#
-# 基础镜像来源可覆盖（受限网络/境内主机）：
-#   docker build --build-arg NODE_IMAGE=docker.1ms.run/library/node:24-alpine .
-#   （BuildKit 解析基础镜像时不保证走 daemon 的 registry-mirrors，故此处留出显式开关；
-#     也可先用 daemon 拉好再构建，见 docs/deploy-prod.md「境内主机」一节）
 # =============================================================================
-
-ARG NODE_IMAGE=node:24-alpine
 
 # ---------- 依赖层：只装依赖，利用层缓存 ----------
 # Node 24（LTS）：Nuxt 4 与 Nuxt Content 的 `sqliteConnector: 'native'`（node:sqlite，>= 22.5）均满足。
-FROM ${NODE_IMAGE} AS deps
+FROM node:24-alpine AS deps
 ENV PNPM_HOME=/pnpm \
     PATH=/pnpm:$PATH \
     CI=1 \
@@ -37,7 +30,7 @@ COPY . .
 RUN pnpm build
 
 # ---------- 运行层 ----------
-FROM ${NODE_IMAGE} AS runner
+FROM node:24-alpine AS runner
 ARG NUXT_PUBLIC_SITE_URL=https://kaup-ai.com
 ENV NODE_ENV=production \
     NITRO_PORT=3000 \

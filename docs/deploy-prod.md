@@ -23,80 +23,37 @@
 
 > 域名分工：**不要把自托管档绑到 `kaup.ai`**（那是 Vercel 通道的域名）。
 
-### 镜像来源：境内/受限网络要「统一改成一个来源」
+### 境内网络：镜像拉取在 daemon 层配置
 
-本栈用到三个镜像，它们**不在同一个发布渠道**，所以不存在"全官方 + 单一来源"的选项：
+本仓不提供任何"换镜像源"的开关，默认全部走 Docker Hub 官方仓库
+（`node:24-alpine`、`nginxproxy/nginx-proxy:1.11-alpine`、`nginxproxy/acme-companion:2.8`）。
+加速在 **Docker daemon** 层做，`/etc/docker/daemon.json`（注意保留你已有的 `log-driver` 等设置）：
 
-| 镜像                                 | Docker Hub        | GHCR                       | 说明                    |
-| ------------------------------------ | ----------------- | -------------------------- | ----------------------- |
-| `node:24-alpine`（web 基础镜像）     | ✅ `library/node` | ❌ 无                      | 官方发布只在 Docker Hub |
-| `nginxproxy/nginx-proxy:1.11-alpine` | ✅                | ✅ `ghcr.io/nginx-proxy/…` | 两边同一制成品          |
-| `nginxproxy/acme-companion:2.8`      | ✅                | ✅ `ghcr.io/nginx-proxy/…` | 两边同一制成品          |
-
-⇒ 只能二选一作为唯一来源：**① 商业镜像加速站**（最省事）或 **② 自持阿里云 ACR**（生产推荐）。
-两种做法都是「三个变量一起改」；**不要混用来源**（GHCR 覆盖不了 `node`，混用等于基础镜像的问题没解决）。
-
-**选项 ①：三个镜像统一走商业镜像加速站**
-
-示例用 `docker.1ms.run`（站点自述为「毫秒镜像」，国内商业 Docker 镜像加速服务：基础服务免费 +
-按量计费，匿名可拉）。属第三方服务，我不掌握其运营主体与长期可用性；**实测三个镜像的
-摘要/ID 与官方完全一致**（`node:24-alpine` digest = `sha256:ebfe2f90…`，两个入口镜像的
-image ID 与 Docker Hub / GHCR 相同）⇒ 换源不引入内容差异。
-
-```bash
-# .env（三行一起设）
-NODE_IMAGE=docker.1ms.run/library/node:24-alpine
-ENTRY_NGINX_IMAGE=docker.1ms.run/nginxproxy/nginx-proxy:1.11-alpine
-ACME_COMPANION_IMAGE=docker.1ms.run/nginxproxy/acme-companion:2.8
-
-# 先单独拉三个镜像（把大下载与本地构建解耦，失败可单步重试），再起站
-docker pull docker.1ms.run/library/node:24-alpine
-docker pull docker.1ms.run/nginxproxy/nginx-proxy:1.11-alpine
-docker pull docker.1ms.run/nginxproxy/acme-companion:2.8
-docker compose up -d --build
-```
-
-**选项 ②（生产推荐）：三个镜像统一走自持阿里云 ACR**
-
-单一来源、同云内网、无第三方依赖；代价是首次把三个镜像搬进自己的命名空间（在能直连的机器上做一次）：
-
-```bash
-ACR=registry.cn-hangzhou.aliyuncs.com/<你的命名空间>
-docker login "$ACR"      # 容器镜像服务的凭证
-for r in library/node:24-alpine nginxproxy/nginx-proxy:1.11-alpine nginxproxy/acme-companion:2.8; do
-  t="$ACR/${r#*/}"
-  docker pull "docker.io/$r" && docker tag "docker.io/$r" "$t" && docker push "$t"
-done
+```json
+{
+  "log-driver": "json-file",
+  "log-opts": { "max-size": "10m", "max-file": "3" },
+  "registry-mirrors": ["https://docker.1ms.run"]
+}
 ```
 
 ```bash
-# 服务器 .env（三行一起设；同地域可用 VPC 端点，内网拉取不计公网流量）
-NODE_IMAGE=registry-vpc.cn-hangzhou.aliyuncs.com/<命名空间>/node:24-alpine
-ENTRY_NGINX_IMAGE=registry-vpc.cn-hangzhou.aliyuncs.com/<命名空间>/nginx-proxy:1.11-alpine
-ACME_COMPANION_IMAGE=registry-vpc.cn-hangzhou.aliyuncs.com/<命名空间>/acme-companion:2.8
+sudo systemctl restart docker
 ```
 
-**两个必须知道的坑**
+- **只列一个可用加速站**：加速器是 Docker Hub 的被动缓存，未缓存的 tag 会直接回 `not found`
+  （现象是"tag 不存在"，其实 tag 是好的），所以别把拿不准的源排在前面。
+- **基础镜像兜底**：`docker build` 解析 `FROM node:24-alpine` 与应用层 pull 不是同一条路径，
+  万一构建仍报 `load metadata for docker.io/library/node:24-alpine ... i/o timeout`，
+  先手动拉一次再构建即可（`docker pull` 会走上面的 `registry-mirrors`）：
 
-1. **BuildKit 解析 `FROM` 基础镜像时不保证走 daemon 的 `registry-mirrors`。**
-   典型报错 `load metadata for docker.io/library/node:24-alpine ... i/o timeout` —— 它直接打了
-   `registry-1.docker.io`，你在 `daemon.json` 里配的加速器根本没参与。这正是 `NODE_IMAGE`
-   也要一起换源的原因。
-2. **会回 404 的镜像站不要放在 `registry-mirrors` 靠前位置。** 阿里云加速器
-   （`*.mirror.aliyuncs.com`）是 Docker Hub 的被动缓存，未缓存的 tag 直接回 `not found`；
-   Docker 客户端收到 404 **不会**回落到 Docker Hub ⇒ 现象是"tag 不存在"，其实 tag 是好的。
+  ```bash
+  docker pull node:24-alpine
+  docker compose up -d --build
+  ```
 
-**兜底：离线搬运**（最确定，不受任何镜像源影响）
-
-```bash
-# 能直连的机器
-docker save node:24-alpine nginxproxy/nginx-proxy:1.11-alpine nginxproxy/acme-companion:2.8 \
-  | gzip > kaup-entry-images.tgz     # 约 108MB
-scp kaup-entry-images.tgz admin@<ecs-ip>:~/
-
-# 服务器
-gunzip -c ~/kaup-entry-images.tgz | docker load
-```
+- 加速站只是通路，不改变镜像内容；需要核对时可自行比对摘要：
+  `docker buildx imagetools inspect node:24-alpine`。
 
 **安全组 / 防火墙**：必须放行 **80** 与 **443**。HTTP-01 由 Let's Encrypt 从公网回源校验，
 公网访问 `http://kaup-ai.com/.well-known/acme-challenge/<token>` 拿不到文件就会签发失败
