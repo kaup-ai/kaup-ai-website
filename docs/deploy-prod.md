@@ -193,6 +193,15 @@ docker compose exec nginx-proxy ls -l /etc/nginx/certs/kaup-ai.com/   # fullchai
 
 ### 首次上线的验收清单
 
+一键跑完（只读、不改配置、不写飞书；退出码 = 失败项数）：
+
+```bash
+bash scripts/verify-prod.sh              # 服务器内视角：容器健康 / conf / 证书 / 站点级文件 / 安全头 / acme 日志
+bash scripts/verify-prod.sh --external   # 额外跑外部视角（该网络须能直连域名，不能有代理劫持）
+```
+
+下面是等价的逐条手工命令，便于某条失败时按需细查：
+
 ```bash
 # 容器与健康
 docker compose ps                                  # web 应 healthy；入口/acme 应 Up

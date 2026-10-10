@@ -92,6 +92,13 @@ docker compose pull && docker compose up -d
 构建并推送 `ghcr.io/kaup-ai/kaup-ai-website:latest`（同时留一个不可变 `sha-<commit>` tag 便于回滚）。
 服务器只拉不构建；本地要构建用 `docker build -t ghcr.io/kaup-ai/kaup-ai-website:latest .`。
 
+上线后自检（只读，逐项 PASS/FAIL）：
+
+```bash
+bash scripts/verify-prod.sh              # 服务器内视角
+bash scripts/verify-prod.sh --external   # 加验外部视角（网络须能直连域名）
+```
+
 入口 nginx 的机制与 `kaup-core/infra/domestic` 同源：`nginxproxy/nginx-proxy` 做 TLS 终止/限流/安全头/
 结构化日志，`nginxproxy/acme-companion`（内置 acme.sh）做签发、到期续期与 `nginx -s reload`，
 证书落持久化卷（容器重建不重签）；conf 由 `envsubst` 白名单渲染 + 分层片段 `include`。
