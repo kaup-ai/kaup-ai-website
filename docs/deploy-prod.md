@@ -23,6 +23,38 @@
 
 > 域名分工：**不要把自托管档绑到 `kaup.ai`**（那是 Vercel 通道的域名）。
 
+### 境内主机拉取 Docker Hub 镜像（阿里云等）
+
+镜像来自 Docker Hub。境内直连常见两种失败形态：
+
+- `failed to resolve reference ... not found` / `manifest unknown` —— 先确认 tag 是否真实存在
+  （本仓 pin：`nginxproxy/nginx-proxy:1.11-alpine`、`nginxproxy/acme-companion:2.8`）；
+  确认存在后仍报 not found，多为镜像加速器缓存未命中，重试或换加速器。
+- 长时间无输出后 `Interrupted` —— 纯网络问题（不是配置问题）。
+
+处置顺序：
+
+```bash
+# 1) 配置镜像加速器（容器镜像服务 ACR 个人版免费），然后重启 docker
+sudo tee /etc/docker/daemon.json >/dev/null <<'JSON'
+{ "registry-mirrors": ["https://<你的加速器ID>.mirror.aliyuncs.com"] }
+JSON
+sudo systemctl restart docker
+
+# 2) 先单独拉两个入口镜像（把大下载与本地构建解耦，失败可逐步重试）
+docker pull nginxproxy/nginx-proxy:1.11-alpine
+docker pull nginxproxy/acme-companion:2.8
+
+# 3) 再起站（此时只剩 web 镜像的本地构建：pnpm 依赖从 npm registry 下载）
+docker compose up -d --build
+```
+
+两个入口镜像都是 Alpine 变体（体积小、拉取快），比 Debian 变体更容易在弱网下拉完。
+
+**安全组 / 防火墙**：必须放行 **80** 与 **443**。HTTP-01 由 Let's Encrypt 从公网回源校验，
+公网访问 `http://kaup-ai.com/.well-known/acme-challenge/<token>` 拿不到文件就会签发失败
+（症状：acme 日志里 `Verification error ... Connection refused` / `Timeout`）。
+
 ## 2. 首次部署
 
 ```bash

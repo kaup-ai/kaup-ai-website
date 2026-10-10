@@ -14,7 +14,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COMPOSE_FILE="${ROOT}/docker-compose.yml"
 DEV_FILE="${ROOT}/docker-compose.dev.yml"
-NGINX_IMAGE="nginxproxy/nginx-proxy:1.6"
+NGINX_IMAGE="nginxproxy/nginx-proxy:1.11-alpine"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 

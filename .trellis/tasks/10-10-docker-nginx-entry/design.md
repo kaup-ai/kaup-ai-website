@@ -4,8 +4,8 @@
 
 | 维度 | 取值 | 说明 |
 |---|---|---|
-| 入口镜像 | `nginxproxy/nginx-proxy:1.6` | 与 kaup-core domestic/overseas 同一镜像形态 |
-| ACME 组件 | `nginxproxy/acme-companion:2.5` | 内置 acme.sh；签发/续期后自动 reload nginx |
+| 入口镜像 | `nginxproxy/nginx-proxy:1.11-alpine` | 与 kaup-core 同一镜像形态（版本各自 pin：kaup-core 用 1.6，本仓用 1.11-alpine） |
+| ACME 组件 | `nginxproxy/acme-companion:2.8` | 内置 acme.sh；签发/续期后自动 reload nginx（kaup-core 用 2.5） |
 | conf 机制 | `envsubst` 白名单渲染 + `include` 分层片段 | 模板挂在 conf.d 之外，渲染产物才进 conf.d |
 | 证书存储 | 具名卷 `entry_certs`（`/etc/nginx/certs/<首域>/`） | 不进镜像层；容器重建不重签 |
 | 续期-加载 | acme-companion 轮询到期 → 续签 → `nginx -s reload` | 无 certbot 式一次性 cron |

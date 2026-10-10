@@ -41,8 +41,8 @@
 | 服务             | 镜像                                   | 端口                        | 卷                                                    |
 | ---------------- | -------------------------------------- | --------------------------- | ----------------------------------------------------- |
 | `web`            | 本仓 `Dockerfile`（Nitro node-server） | 容器内 3000（不发布到宿主） | —                                                     |
-| `nginx-proxy`    | `nginxproxy/nginx-proxy:1.6`           | 宿主 80 / 443               | `entry_certs` `entry_conf` `entry_vhost` `entry_html` |
-| `acme-companion` | `nginxproxy/acme-companion:2.5`        | —                           | 上述共享卷 + `acme_state`                             |
+| `nginx-proxy`    | `nginxproxy/nginx-proxy:1.11-alpine`   | 宿主 80 / 443               | `entry_certs` `entry_conf` `entry_vhost` `entry_html` |
+| `acme-companion` | `nginxproxy/acme-companion:2.8`        | —                           | 上述共享卷 + `acme_state`                             |
 
 - **证书落持久化卷** `entry_certs`（`/etc/nginx/certs/<主域>/`）：不进镜像层，容器重建/重签不会丢。
 - **reload 通道**：acme-companion 续期后经 docker socket 在入口容器执行 `nginx -s reload`，

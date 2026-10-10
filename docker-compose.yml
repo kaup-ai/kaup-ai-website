@@ -60,8 +60,9 @@ services:
 
   # ── 入口 nginx（TLS 终止；路由/限流/安全头/日志）────────────────────────────
   nginx-proxy:
-    # 固定 tag（与 kaup-core 同版本）；升级前先核对上游 release notes
-    image: nginxproxy/nginx-proxy:1.6
+    # 固定 tag（本仓自己的 pin，不跟随 kaup-core 的 1.6）。alpine 变体体积更小、拉取更快。
+    # 升级前先核对上游 release notes，并在本地跑 scripts/render-check.sh + 起一次本地档验证。
+    image: nginxproxy/nginx-proxy:1.11-alpine
     container_name: kaup-site-entry
     restart: unless-stopped
     depends_on:
@@ -148,7 +149,7 @@ services:
 
   # ── ACME 证书自动化（首签 + 到期续期 + reload）─────────────────────────────
   acme-companion:
-    image: nginxproxy/acme-companion:2.5
+    image: nginxproxy/acme-companion:2.8
     container_name: kaup-site-entry-acme
     restart: unless-stopped
     depends_on:
