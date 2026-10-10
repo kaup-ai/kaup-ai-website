@@ -85,7 +85,12 @@ const footerQrs = [
       <UContainer
         class="flex flex-wrap items-center justify-between gap-2 py-6 text-xs text-dimmed"
       >
-        <span>© {{ year }} 智御无疆 · Kaup. 保留所有权利。</span>
+        <span class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span>© {{ year }} 智御无疆 · Kaup. 保留所有权利。</span>
+          <ULink to="https://beian.miit.gov.cn" target="_blank" class="hover:text-default">
+            辽ICP备2026013176号-1
+          </ULink>
+        </span>
         <span>智以为御，无疆为境 · Kaup Your Trade</span>
       </UContainer>
     </div>
