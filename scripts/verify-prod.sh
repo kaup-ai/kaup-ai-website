@@ -33,6 +33,10 @@ check(){ # check <描述> <期望子串> <实际值>
   if printf '%s' "$3" | rg -q -- "$2"; then ok "$1"; else bad "$1（期望含 '$2'，实际：${3:0:120}）"; fi
 }
 has()  { printf '%s' "$2" | rg -q -- "$1"; }
+# 把域名当**字面量**用于判据：`kaup.ai` 里的 `.` 在正则里是通配符，会把 `kaup-ai.com` 误判成"串味"（踩过）
+esc() { printf '%s' "$1" | sed 's/[.[\*^$]/\\&/g'; }
+D_ESC="$(esc "$HOSTNAME_DOMAIN")"
+OTHER_ESC="$(esc "$OTHER_DOMAIN")"
 
 echo "== 目标：主域 ${HOSTNAME_DOMAIN}$([ -n "$ALT_DOMAIN" ] && printf ' / 附加域 %s' "$ALT_DOMAIN") =="
 
@@ -70,15 +74,15 @@ check '_nuxt 资产 immutable 缓存' 'max-age=31536000, immutable' "$(curl -sSI
 # ── 3. 站点级文件与 SEO（域名必须是本档域名）──────────────────────────────────
 echo '-- 站点级文件与 SEO'
 base() { curl -sS -m 20 --resolve "$HOSTNAME_DOMAIN:443:127.0.0.1" "https://$HOSTNAME_DOMAIN$1" 2>/dev/null; }
-check 'canonical 指向本档域名' "https://$HOSTNAME_DOMAIN/" "$(base / | grep -o '<link rel="canonical"[^>]*>' | head -1)"
-check 'JSON-LD email 域名跟随' "sales@$HOSTNAME_DOMAIN" "$(base / | grep -o '"email":"[^"]*"' | head -1)"
-check 'robots.txt 指向本档域名' "https://$HOSTNAME_DOMAIN" "$(base /robots.txt | head -1)"
-check 'sitemap 首条 loc' "<loc>https://$HOSTNAME_DOMAIN/</loc>" "$(base /sitemap.xml | grep -o '<loc>[^<]*</loc>' | head -1)"
-check 'llms.txt 官网行' "https://$HOSTNAME_DOMAIN" "$(base /llms.txt | grep -m1 '官网')"
+check 'canonical 指向本档域名' "https://$D_ESC/" "$(base / | grep -o '<link rel="canonical"[^>]*>' | head -1)"
+check 'JSON-LD email 域名跟随' "sales@$D_ESC" "$(base / | grep -o '"email":"[^"]*"' | head -1)"
+check 'robots.txt 指向本档域名' "https://$D_ESC" "$(base /robots.txt | head -1)"
+check 'sitemap 首条 loc' "<loc>https://$D_ESC/</loc>" "$(base /sitemap.xml | grep -o '<loc>[^<]*</loc>' | head -1)"
+check 'llms.txt 官网行' "https://$D_ESC" "$(base /llms.txt | grep -m1 '官网')"
 arts="$(base / ; base /robots.txt; base /sitemap.xml; base /llms.txt)"
 if [ -z "${arts//[[:space:]]/}" ]; then
   bad '站点级文件取不到内容（入口或上游不正常？）'
-elif has "$OTHER_DOMAIN" "$arts"; then
+elif has "$OTHER_ESC" "$arts"; then
   bad "站点级文件里出现了另一条通道的域名 $OTHER_DOMAIN（串味）"
 else
   ok "站点级文件未串入 $OTHER_DOMAIN"
@@ -96,7 +100,7 @@ check 'SAN 含主域' "$HOSTNAME_DOMAIN" "$cert"
 [ -n "$ALT_DOMAIN" ] && check 'SAN 含附加域' "$ALT_DOMAIN" "$cert"
 # 签发成功标记：acme-companion 只在签发/续期成功后写 .companion
 marker="$(docker compose exec -T nginx-proxy sh -c "cat /etc/nginx/certs/$HOSTNAME_DOMAIN/.companion 2>/dev/null || echo MISSING" 2>&1 | tr -d '\r\n')"
-check '签发成功标记 .companion 存在' '^[0-9]' "$marker"
+check '签发成功标记 .companion 存在' '^v?[0-9]' "$marker"
 # 有效期只在真实证书时判（占位证书 30 天，会误导）
 if [ "$PLACEHOLDER" = "0" ]; then
   end="$(handshake | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)"
