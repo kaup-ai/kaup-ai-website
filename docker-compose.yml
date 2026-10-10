@@ -22,6 +22,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # 基础镜像来源（境内主机可换镜像站，见 docs/deploy-prod.md「境内主机拉取入口镜像」）
+        NODE_IMAGE: ${NODE_IMAGE:-node:24-alpine}
     image: kaup-ai-website:latest
     container_name: kaup-site-web
     restart: unless-stopped

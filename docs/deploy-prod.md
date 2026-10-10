@@ -69,8 +69,45 @@ scp entry-images.tgz admin@<ecs-ip>:~/
 gunzip -c ~/entry-images.tgz | docker load
 ```
 
-`web` 镜像的基础镜像 `node:24-alpine` 若也拉得慢/报 not found，同样三选一：
-`docker.1ms.run/library/node:24-alpine` 或 `docker save/load`（GHCR 没有官方 `node` 镜像）。
+### web 镜像的基础镜像（`node:24-alpine`）
+
+`FROM` 用的 `node:24-alpine` 也在 Docker Hub，但这里有个与 `docker pull` 不同的坑：
+
+> **BuildKit 解析基础镜像时不一定走 daemon 的 `registry-mirrors`。** 典型报错是
+> `load metadata for docker.io/library/node:24-alpine ... dial tcp ...: i/o timeout`
+> —— 它直接打了 `registry-1.docker.io`，你的阿里云加速器根本没参与。
+> 另外 **GHCR 上没有官方 `node` 镜像**（`node` 只在 Docker Hub 的 `library/` 命名空间下），
+> 所以基础镜像不能像入口镜像那样改用 GHCR。
+
+**方案 A（推荐）：换基础镜像来源**（构建参数已留开关，默认值不变）
+
+```bash
+# .env
+NODE_IMAGE=docker.1ms.run/library/node:24-alpine
+docker compose up -d --build
+```
+
+或单次构建：`docker build --build-arg NODE_IMAGE=docker.1ms.run/library/node:24-alpine -t kaup-ai-website:latest .`
+（实测：用该来源完整构建成功。）
+
+**方案 B：先用 daemon 拉好再构建**（`docker pull` 会走加速器；本地已有镜像时 BuildKit 一般直接用本地）
+
+```bash
+docker pull node:24-alpine          # 走加速器；node 属热门镜像，加速器多半有缓存
+docker compose up -d --build
+```
+
+**方案 C：离线搬运**（与入口镜像同一条命令，把基础镜像一起带上）
+
+```bash
+# 能直连的机器
+docker save node:24-alpine nginxproxy/nginx-proxy:1.11-alpine nginxproxy/acme-companion:2.8 \
+  | gzip > kaup-entry-images.tgz     # 三个镜像合计约 108MB
+scp kaup-entry-images.tgz admin@<ecs-ip>:~/
+
+# 服务器
+gunzip -c ~/kaup-entry-images.tgz | docker load
+```
 
 **安全组 / 防火墙**：必须放行 **80** 与 **443**。HTTP-01 由 Let's Encrypt 从公网回源校验，
 公网访问 `http://kaup-ai.com/.well-known/acme-challenge/<token>` 拿不到文件就会签发失败
