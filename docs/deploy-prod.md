@@ -24,6 +24,52 @@
 
 > 域名分工：**不要把自托管档绑到 `kaup.ai`**（那是 Vercel 通道的域名）。
 
+### 飞书 6 个变量怎么拿（表单线索链路）
+
+`server/api/contact.ts` 用两组凭证，各管一段链路：**群机器人**发通知卡片、**自建应用**写多维表格（事实源）。
+
+**A. 群机器人 → `FEISHU_WEBHOOK_URL`、`FEISHU_BOT_SECRET`**
+
+1. 打开要收线索的群 → 右上角设置 → **群机器人** → 添加机器人 → **自定义机器人**（Custom Bot）
+2. 名称随意（如「官网线索」）；安全设置**选「签名校验」** —— 代码把密钥当必填，
+   缺了会直接返回 500「服务配置缺失」（三种安全方式只能选一个：关键词 / IP 白名单 / 签名）
+3. 复制**密钥** → `FEISHU_BOT_SECRET`；复制 **webhook 地址**（`https://open.feishu.cn/open-apis/bot/v2/hook/...`）→ `FEISHU_WEBHOOK_URL`
+   （密钥只显示一次；机器人只在它被添加的那个群里）
+
+**B. 自建应用 → `FEISHU_APP_ID`、`FEISHU_APP_SECRET`、`FEISHU_BASE_APP_TOKEN`、`FEISHU_BASE_TABLE_ID`**
+
+1. 打开 **open.feishu.cn** → 开发者后台 → 创建**企业自建应用**（如 `kaup-website-leads`）
+2. 【凭证与基础信息】→ 复制 **App ID**、**App Secret**
+3. 【权限管理】→ 搜索「多维表格」→ 勾选**新增记录**（含查看/编辑更稳；接口是 `bitable/v1/.../records` 写入）
+4. 【版本管理与发布】→ 创建版本 → 申请发布 → 等管理员审批通过（未发布时调 API 会失败）
+5. **把应用加为该 Base 的协作者**（最常漏的一步）：打开目标多维表格 → 右上角 `···` → 更多 →
+   **添加文档应用**（或在「协作者」里搜应用名）→ 权限给**可编辑**
+6. 打开该多维表格，从地址栏取两个值：
+
+   ```
+   https://<租户>.feishu.cn/base/<APP_TOKEN>?table=<TABLE_ID>
+                                └ FEISHU_BASE_APP_TOKEN   └ FEISHU_BASE_TABLE_ID
+   ```
+
+   - `APP_TOKEN` 形如 `bascn…`/`Basc…`，`TABLE_ID` 形如 `tbl…`
+   - 若地址是 `/wiki/<node>` 形式（知识库里的表），地址里**没有**这两个值 —— 需在多维表格里直接打开，
+     或用 wiki API（`/open-apis/wiki/v2/spaces/get_node`）换出 `obj_token`
+
+7. 表字段名必须与代码一致（大小写/空格都要一致）：`公司名称`、`联系人`、`联系电话`、
+   `提交时间`（**日期字段**，代码写 Unix 毫秒）、`跟进状态`（单选或文本，代码写 `待跟进`）
+
+**C. 放哪 + 怎么校验**
+
+- 自托管：仓库根 `.env`（compose 只把这 6 个注入 `web` 容器，ACME/DNS 凭证不会进 web）；改完 `docker compose up -d web`
+- Vercel 通道：项目 Environment Variables 里配同样 6 个
+- 校验：`docker compose exec -T web env | rg '^FEISHU' | sed 's/=.*/=<已注入>/'`（别打印值），
+  再用一次真实提交验证（会真写表 + `@all` 群）：期望 `{"ok":true,"base":true}`，核对后删掉测试行
+
+**失败症状对照**（契约 C5/C8）：
+
+- `500 服务配置缺失` ⇒ `FEISHU_WEBHOOK_URL` 或 `FEISHU_BOT_SECRET` 缺
+- 卡片到了群里但表里没数据 ⇒ 四个应用变量（App ID/Secret/App Token/Table ID）任缺，或应用没被加为 Base 协作者
+
 ### 从 GHCR 拉取私有镜像（`web` 镜像）
 
 `web` 镜像**不在服务器上构建**：CI（`.github/workflows/docker-image.yml`）每次推送到 `main`
