@@ -325,7 +325,8 @@ curl -s -o /dev/null -w '%{http_code}\n' https://kaup-ai.com/
 本仓 GitHub Actions 拨测的判据（`uptime-check`）：主域与 `www` 的 HTTPS 200、`http://` → 301、
 `/entry-health` = `ok`、证书剩余天数 ≥ 21（**自动续期失败是静默的，这条是外部兜底**）。
 失败时 GitHub 会通知 workflow 维护者；可选再加一个仓库 secret `FEISHU_ALERT_WEBHOOK`（群机器人 webhook）
-推到飞书群 —— 建议用独立于业务告警的机器人，避免和表单线索通知混在一起。
+推到飞书群 —— 建议用独立于业务告警的机器人，避免和表单线索通知混在一起；若该机器人开了**加签**，
+再配一个 `FEISHU_ALERT_SECRET`（workflow 已按飞书算法带 `timestamp` + `sign`，与 `contact.ts` 的签名一致）。
 
 想连 A 记录漂移一起看（域名被误改），在 workflow 的拨测步骤里加一条：
 

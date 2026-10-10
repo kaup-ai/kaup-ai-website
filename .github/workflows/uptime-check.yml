@@ -62,12 +62,21 @@ jobs:
         if: failure()
         env:
           WEBHOOK: ${{ secrets.FEISHU_ALERT_WEBHOOK }}
+          SIGN_SECRET: ${{ secrets.FEISHU_ALERT_SECRET }}
         run: |
           if [ -z "${WEBHOOK:-}" ]; then
             echo '未配置 FEISHU_ALERT_WEBHOOK：本次失败通过 GitHub 通知 workflow 维护者'
             exit 0
           fi
           text="[KAUP 拨测失败] https://kaup-ai.com 未通过检查，详见 ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          # 机器人若开了「加签」，需带 timestamp + sign：string_to_sign = timestamp + "\n" + secret，
+          # 对空串做 HMAC-SHA256（key = string_to_sign）再 base64 —— 与 server/api/contact.ts 的算法一致。
+          sign_fields=''
+          if [ -n "${SIGN_SECRET:-}" ]; then
+            ts=$(date +%s)
+            sign=$(printf '' | openssl dgst -sha256 -hmac "$(printf '%s\n%s' "$ts" "$SIGN_SECRET")" -binary | base64)
+            sign_fields=$(printf ',"timestamp":"%s","sign":"%s"' "$ts" "$sign")
+          fi
           curl -sS -X POST -H 'Content-Type: application/json' \
-            -d "$(printf '{"msg_type":"text","content":{"text":"%s"}}' "$text")" "$WEBHOOK" >/dev/null
-          echo '已推送飞书告警'
+            -d "$(printf '{"msg_type":"text","content":{"text":"%s"}%s}' "$text" "$sign_fields")" "$WEBHOOK" >/dev/null
+          echo "已推送飞书告警（$([ -n "${SIGN_SECRET:-}" ] && echo 带签名 || echo 无签名)）"
