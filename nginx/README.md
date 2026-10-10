@@ -78,6 +78,14 @@ docker compose up -d acme-companion
 - 首次上线建议先用 **staging CA** 演练（避免正式环境速率限制）：
   `.env` 里设 `ACME_CA_URI="https://acme-staging-v02.api.letsencrypt.org/directory"`
   （浏览器会提示证书不受信，属正常）。
+- **首启与占位证书（HTTP-01 必需）**：nginx 在配置解析期就要读 `ssl_certificate` 指向的文件，
+  文件不存在则 nginx **根本起不来** ⇒ 80 端口无法应答 ACME 挑战 ⇒ 证书永远签不下来（真实踩过的死锁）。
+  故入口 entrypoint 在启动前检查证书：缺失时用镜像自带的 `openssl` 生成一张**自签占位证书**
+  （SAN = 主域 + 附加域），让 nginx 先起来、80 先能应答挑战；acme-companion 签发成功后覆盖同名文件
+  并 `nginx -s reload`，站点即从占位证书切到真实证书。
+  - 因此**首次签发的几十秒内**浏览器会提示"证书不受信"——那是占位证书，签发完成即消失。
+  - 占位证书有效期 30 天，只在"证书缺失"时生成；已实测**不会**让 acme.sh 跳过签发（仍完整走 challenge）。
+  - 排查：`docker logs kaup-site-entry | grep 'entry\]'`。
 - **续期是自动的**：acme-companion 周期检查到期并续签 + reload。真实公网续期属部署动作，
   上线后按下面的判据自证一次：
 
@@ -163,15 +171,16 @@ curl -sI http://127.0.0.1:8081/_nuxt/<文件名> | rg -i cache-control        # 
 
 ## 8. 排障
 
-| 现象                             | 排查                                                                                                    |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| 入口起不来 / 反复重启            | `docker logs kaup-site-entry`；渲染失败会停在 entrypoint。重点看模板注释里是否混入了带 `$` 的白名单变量 |
-| 502 `host not found in upstream` | `resolver` 与 `ENTRY_UPSTREAM_WEB` 是否匹配；`docker compose exec nginx-proxy getent hosts web`         |
-| 证书目录为空                     | 80 是否对公网可达（HTTP-01）；或换 DNS-01；`docker logs kaup-site-entry-acme`                           |
-| 表单限流误伤                     | 入口前是否有 CDN/SLB 且未设 `ENTRY_REAL_IP_CONFIG`（应用侧只能看到回源 IP）                             |
-| 413                              | `ENTRY_CLIENT_MAX_BODY_SIZE`（默认 1m）与表单体积                                                       |
-| 页面正常但样式/图片 404          | 上游是否真为本站构建产物：`docker compose exec web ls /app/.output/public/_nuxt                         | head` |
-| 想确认当前生效 conf              | `docker compose exec nginx-proxy cat /etc/nginx/conf.d/entry.conf`                                      |
+| 现象                                    | 排查                                                                                                                                                                |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 入口起不来 / 反复重启                   | `docker logs kaup-site-entry`；渲染失败会停在 entrypoint。重点看模板注释里是否混入了带 `$` 的白名单变量                                                             |
+| `nginx -t` 报 `cannot load certificate` | 占位证书没生成成功：看入口日志有无 `[entry] 占位证书生成失败`；确认 `/etc/nginx/certs/<主域>/` 可写（卷权限）                                                       |
+| 502 `host not found in upstream`        | `resolver` 与 `ENTRY_UPSTREAM_WEB` 是否匹配；`docker compose exec nginx-proxy getent hosts web`                                                                     |
+| 目录里只有自签占位证书                  | 真实证书还没签下来：看 `docker logs kaup-site-entry-acme`。报 `Connection refused` ⇒ 80 没被 nginx 应答（先确认入口在跑）；**超时** ⇒ 查安全组/CDN；必要时切 DNS-01 |
+| 表单限流误伤                            | 入口前是否有 CDN/SLB 且未设 `ENTRY_REAL_IP_CONFIG`（应用侧只能看到回源 IP）                                                                                         |
+| 413                                     | `ENTRY_CLIENT_MAX_BODY_SIZE`（默认 1m）与表单体积                                                                                                                   |
+| 页面正常但样式/图片 404                 | 上游是否真为本站构建产物：`docker compose exec web ls /app/.output/public/_nuxt                                                                                     | head` |
+| 想确认当前生效 conf                     | `docker compose exec nginx-proxy cat /etc/nginx/conf.d/entry.conf`                                                                                                  |
 
 ## 9. 取舍与后续项
 

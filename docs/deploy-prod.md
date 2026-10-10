@@ -185,6 +185,11 @@ docker compose logs -f acme-companion
 docker compose exec nginx-proxy ls -l /etc/nginx/certs/kaup-ai.com/   # fullchain.pem / key.pem
 ```
 
+> **首次签发的几十秒内**，入口会先用一张自签**占位证书**顶着 —— 否则 nginx 会因为证书文件不存在
+> 而起不来，80 端口也就无法应答 ACME 挑战（首启死锁）。此时浏览器会提示"证书不受信"，属正常；
+> 签发完成后 acme-companion 覆盖证书并 reload，随即变成 Let's Encrypt 证书。判断是否已切换：
+> `openssl s_client -connect 127.0.0.1:443 -servername kaup-ai.com </dev/null 2>/dev/null | openssl x509 -noout -issuer`
+
 ### 建议：先用 staging CA 演练一次
 
 在 `.env` 里临时设 `ACME_CA_URI="https://acme-staging-v02.api.letsencrypt.org/directory"`

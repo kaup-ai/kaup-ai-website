@@ -135,6 +135,21 @@ services:
       - '/bin/sh'
       - '-c'
       - |
+        # 首启死锁修复（HTTP-01 必需）：nginx 在配置解析期就要读 ssl_certificate 指向的文件，
+        # 文件不存在则根本起不来 ⇒ 80 端口无法应答 ACME 挑战 ⇒ 证书永远签不下来（实测踩到）。
+        # 故启动前若证书缺失，先生成自签占位证书（SAN 含主域与附加域）让 nginx 先起来；
+        # acme-companion 随后正常签发并覆盖同名文件 + reload（已实测：占位证书不会让 acme.sh 跳过签发）。
+        CERT_DIR="/etc/nginx/certs/$$ENTRY_HOST";
+        if [ ! -s "$$CERT_DIR/fullchain.pem" ] || [ ! -s "$$CERT_DIR/key.pem" ]; then
+          echo "[entry] 未发现证书，生成自签占位证书（acme-companion 签发后会覆盖并 reload）";
+          mkdir -p "$$CERT_DIR";
+          SAN="DNS:$$ENTRY_HOST"; [ -n "$$ENTRY_ALT_HOST" ] && SAN="$$SAN,DNS:$$ENTRY_ALT_HOST";
+          openssl req -x509 -newkey rsa:2048 -nodes -days 30 -sha256 \
+            -keyout "$$CERT_DIR/key.pem" -out "$$CERT_DIR/fullchain.pem" \
+            -subj "/CN=$$ENTRY_HOST" -addext "subjectAltName=$$SAN" >/dev/null 2>&1 \
+            && echo "[entry] 占位证书已生成（$$SAN）" \
+            || echo "[entry] 占位证书生成失败（openssl 不可用？）—— nginx 可能起不来";
+        fi;
         WL='$$ENTRY_RESOLVER $$ENTRY_HOST $$ENTRY_ALT_HOST $$ENTRY_LISTEN_TLS $$ENTRY_TLS_CERT_LINES $$ENTRY_HTTP_VHOST $$ENTRY_REAL_IP_CONFIG $$ENTRY_RATE $$ENTRY_LIMIT_REQ $$ENTRY_CONNECT_TIMEOUT $$ENTRY_SEND_TIMEOUT $$ENTRY_READ_TIMEOUT $$ENTRY_CLIENT_MAX_BODY_SIZE $$ENTRY_UPSTREAM_WEB';
         envsubst "$$WL" < /etc/nginx/entry.conf.template > /etc/nginx/conf.d/entry.conf \
         && envsubst "$$WL" < /etc/nginx/fragments/entry-routing.conf.template > /etc/nginx/entry-routing.conf \
