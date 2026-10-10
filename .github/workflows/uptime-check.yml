@@ -1,0 +1,73 @@
+# =============================================================================
+# 外部拨测：站点存活 + 证书到期（从 GitHub runner 发起 ⇒ 天然在故障域之外）
+#   - 触发：每 15 分钟（GitHub 的 schedule 是尽力而为，可能延迟几分钟）+ 手动
+#   - 判据：主域与 www 的 HTTPS 200、http→301、入口探针、证书剩余天数 ≥ 21
+#   - 告警：失败时 GitHub 会通知 workflow 文件最后修改者；另可选配
+#           repository secret `FEISHU_ALERT_WEBHOOK` 推到飞书群
+#   ⚠️ 两个坑：① schedule 可能延迟几分钟；② 仓库连续 60 天无活动时，GitHub 会自动停用
+#      定时工作流（届时 Console 里会有提示，重新 enable 即可）。长期生产建议再加一层
+#      云厂商拨测（阿里云云监控站点监控 / UptimeRobot），互相独立。
+# =============================================================================
+name: uptime-check
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拨测（存活 / 跳转 / 探针 / 证书）
+        run: |
+          set -uo pipefail
+          DOMAIN=kaup-ai.com
+          ALT=www.kaup-ai.com
+          fails=()
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -m 20 "https://$DOMAIN/" || true)
+          [ "$code" = "200" ] || fails+=("https://$DOMAIN/ 返回 $code（期望 200）")
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -m 20 "https://$ALT/" || true)
+          [ "$code" = "200" ] || fails+=("https://$ALT/ 返回 $code（期望 200）")
+
+          redir=$(curl -sS -o /dev/null -w '%{http_code} %{redirect_url}' -m 20 "http://$DOMAIN/" || true)
+          case "$redir" in "301 https://$DOMAIN/"*) ;; *) fails+=("http://$DOMAIN/ 未 301 跳转（实际：$redir）") ;; esac
+
+          probe=$(curl -sS -m 20 "https://$DOMAIN/entry-health" || true)
+          [ "$probe" = "ok" ] || fails+=("入口探针 /entry-health 返回 '$probe'（期望 ok）")
+
+          # 证书到期：续期失败是静默的，所以这一条是"自动续期"的外部兜底
+          end=$(echo | openssl s_client -connect "$DOMAIN:443" -servername "$DOMAIN" 2>/dev/null \
+            | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+          if [ -n "$end" ]; then
+            days=$(( ( $(date -d "$end" +%s) - $(date +%s) ) / 86400 ))
+            echo "证书到期：$end（剩余 ${days} 天）"
+            [ "$days" -ge 21 ] || fails+=("证书仅剩 ${days} 天（<21，自动续期可能已失败）")
+          else
+            fails+=("取不到证书到期时间（TLS 握手失败？）")
+          fi
+
+          if [ "${#fails[@]}" -gt 0 ]; then
+            printf '拨测失败：\n'; printf '  - %s\n' "${fails[@]}"
+            exit 1
+          fi
+          echo "拨测全通过（主域 / www / 跳转 / 探针 / 证书剩余 ${days} 天）"
+
+      - name: 飞书告警（可选；未配 FEISHU_ALERT_WEBHOOK 则跳过）
+        if: failure()
+        env:
+          WEBHOOK: ${{ secrets.FEISHU_ALERT_WEBHOOK }}
+        run: |
+          if [ -z "${WEBHOOK:-}" ]; then
+            echo '未配置 FEISHU_ALERT_WEBHOOK：本次失败通过 GitHub 通知 workflow 维护者'
+            exit 0
+          fi
+          text="[KAUP 拨测失败] https://kaup-ai.com 未通过检查，详见 ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          curl -sS -X POST -H 'Content-Type: application/json' \
+            -d "$(printf '{"msg_type":"text","content":{"text":"%s"}}' "$text")" "$WEBHOOK" >/dev/null
+          echo '已推送飞书告警'
